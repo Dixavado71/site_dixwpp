@@ -1,20 +1,17 @@
-```
+```gitignore
 # Dependencies
 node_modules/
 
 # Build outputs
 dist/
 build/
-.next/
-.nuxt/
-.un~$*
+*.js.map
 *.tsbuildinfo
 
 # Environment variables
 .env
 .env.local
-.env.*
-!.env.example
+*.env.*
 
 # IDE files
 .vscode/
@@ -25,15 +22,26 @@ build/
 # Logs
 *.log
 
+# Temporary files
+*.tmp
+
+# Python cache (if any Python files exist in the project)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Distribution / packaging
+*.tar.gz
+*.whl
+*.egg-info/
+
 # OS generated files
 .DS_Store
 Thumbs.db
-
-# TypeScript
-*.js.map
-*.ts.map
-
-# Temporary files
-*.tmp
-*.temp
 ```

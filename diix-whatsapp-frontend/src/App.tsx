@@ -79,7 +79,7 @@ function App() {
           const user = await authService.getCurrentUser()
           setUser(user)
         } catch {
-          // Not authenticated
+          // Not authenticated - this is normal on first load
           setUser(null)
         }
       } catch (error) {
@@ -96,8 +96,11 @@ function App() {
 
   if (!isInitialized) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-primary"></div>
+      <div className="min-h-screen bg-animated-gradient flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-primary mx-auto mb-4"></div>
+          <p className="text-text-muted">Carregando...</p>
+        </div>
       </div>
     )
   }
