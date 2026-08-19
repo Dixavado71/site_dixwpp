@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
-import { User, Lock, Loader2 } from 'lucide-react';
+import { User, Lock, Loader2, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,8 +13,9 @@ import { authService } from '@/services';
 import { useAuthStore } from '@/store/authStore';
 import type { LoginCredentials, User as UserType } from '@/types';
 
+// Schema atualizado para aceitar 'identifier' (username ou email) conforme API backend
 const loginSchema = z.object({
-  username: z.string().min(3, 'Usuário deve ter pelo menos 3 caracteres'),
+  identifier: z.string().min(3, 'Usuário ou e-mail é obrigatório'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
 });
 
@@ -24,19 +25,28 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
 
+  // Detectar automaticamente se o usuário digitou email ou username
+  const identifierValue = watch('identifier');
+  const isEmail = identifierValue && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifierValue);
+  
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      await authService.login(data);
+      // Enviar como 'identifier' conforme atualização da API backend
+      await authService.login({
+        identifier: data.identifier,
+        password: data.password,
+      });
 
       // Fetch current user after successful login
       const user = await authService.getCurrentUser();
@@ -100,12 +110,12 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                label="Usuário"
-                type="text"
-                placeholder="seu.usuario"
-                icon={<User className="h-4 w-4" />}
-                error={errors.username?.message}
-                {...register('username')}
+                label={isEmail ? "E-mail" : "Usuário"}
+                type={isEmail ? "email" : "text"}
+                placeholder={isEmail ? "seu@email.com" : "seu.usuario"}
+                icon={isEmail ? <Mail className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                error={errors.identifier?.message}
+                {...register('identifier')}
               />
 
               <Input

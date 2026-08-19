@@ -80,7 +80,7 @@ export interface DashboardStats {
 }
 
 export interface LoginCredentials {
-  username: string;
+  identifier: string; // Pode ser username ou email conforme API
   password: string;
 }
 
