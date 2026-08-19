@@ -5,11 +5,8 @@ node_modules/
 # Build outputs
 dist/
 build/
-target/
-
-# TypeScript/JavaScript build outputs
-*.js.map
-*.tsbuildinfo
+.next/
+out/
 
 # Environment variables
 .env
@@ -22,19 +19,10 @@ target/
 *.swp
 *.swo
 
-# OS files
-.DS_Store
-Thumbs.db
-
 # Logs
 *.log
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# Python caches (if any Python files exist)
+# Python specific
 __pycache__/
 *.pyc
 *.pyo
@@ -46,14 +34,12 @@ __pycache__/
 *.tmp
 *.temp
 
-# Package manager
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
 
-# Development tools
-.nyc_output/
-.mypy_cache/
-.pytest_cache/
-.cargo/
+# OS generated files
+.DS_Store
+Thumbs.db
 ```
