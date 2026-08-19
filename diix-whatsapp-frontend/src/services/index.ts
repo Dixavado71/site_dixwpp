@@ -22,7 +22,11 @@ import type {
 // Auth Services - Based on API documentation
 export const authService = {
   login: async (credentials: LoginCredentials) => {
-    const response = await apiClient.post('/login', credentials);
+    // Backend espera { identifier, password } conforme documentação
+    const response = await apiClient.post('/login', {
+      identifier: credentials.identifier,
+      password: credentials.password
+    });
     return response.data;
   },
 
