@@ -22,11 +22,17 @@
 
 @layer components {
   .glass-card {
-    @apply backdrop-blur-xl bg-white/3 border border-white/8 shadow-glass;
+    @apply backdrop-blur-xl;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
   
   .glass-panel {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10 shadow-glass;
+    @apply backdrop-blur-xl;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   }
   
   .neon-glow-green {
