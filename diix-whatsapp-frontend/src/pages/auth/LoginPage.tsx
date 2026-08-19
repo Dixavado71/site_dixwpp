@@ -98,7 +98,6 @@ export default function LoginPage() {
                 label="E-mail"
                 type="email"
                 placeholder="seu@email.com"
-                icon={<Mail className="h-4 w-4" />}
                 error={errors.email?.message}
                 {...register('email')}
               />
@@ -107,7 +106,6 @@ export default function LoginPage() {
                 label="Senha"
                 type="password"
                 placeholder="••••••••"
-                icon={<Lock className="h-4 w-4" />}
                 error={errors.password?.message}
                 {...register('password')}
               />
