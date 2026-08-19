@@ -16,13 +16,13 @@ import TenantDashboard from './pages/tenant/Dashboard'
 import TenantClients from './pages/tenant/Clients'
 import TenantProducts from './pages/tenant/Products'
 import TenantServices from './pages/tenant/Services'
-import TenantPromotions from './pages/tenant/Promotions'
+import TenantPromotion from './pages/tenant/Promotions'
 import TenantSettings from './pages/tenant/Settings'
 
 // Protected Route Component
 interface ProtectedRouteProps {
   children: React.ReactNode
-  allowedRoles?: ('admin' | 'tenant')[]
+  allowedRoles?: ('MASTER' | 'TENANT_ADMIN' | 'TENANT_USER')[]
 }
 
 function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
@@ -73,11 +73,13 @@ function App() {
         } catch (csrfError) {
           console.warn('CSRF token initialization failed (backend may not be available):', csrfError)
         }
-        
+
         // Try to get current user
         try {
           const user = await authService.getCurrentUser()
-          setUser(user)
+          if (user) {
+            setUser(user)
+          }
         } catch {
           // Not authenticated - this is normal on first load
           setUser(null)
@@ -111,11 +113,11 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-      {/* Admin Routes */}
+      {/* Admin Routes - MASTER role only */}
       <Route
         path="/admin"
         element={
-          <ProtectedRoute allowedRoles={['admin']}>
+          <ProtectedRoute allowedRoles={['MASTER']}>
             <AdminLayout />
           </ProtectedRoute>
         }
@@ -125,11 +127,11 @@ function App() {
         <Route path="users" element={<AdminUsers />} />
       </Route>
 
-      {/* Tenant Routes */}
+      {/* Tenant Routes - TENANT_ADMIN and TENANT_USER roles */}
       <Route
         path="/tenant"
         element={
-          <ProtectedRoute allowedRoles={['tenant']}>
+          <ProtectedRoute allowedRoles={['TENANT_ADMIN', 'TENANT_USER']}>
             <TenantLayout />
           </ProtectedRoute>
         }
@@ -138,7 +140,7 @@ function App() {
         <Route path="clients" element={<TenantClients />} />
         <Route path="products" element={<TenantProducts />} />
         <Route path="services" element={<TenantServices />} />
-        <Route path="promotions" element={<TenantPromotions />} />
+        <Route path="promotions" element={<TenantPromotion />} />
         <Route path="settings" element={<TenantSettings />} />
       </Route>
 
