@@ -1,4 +1,5 @@
 import apiClient, { initializeCsrfToken } from './api';
+export { initializeCsrfToken };
 import type { 
   User, 
   Tenant, 
