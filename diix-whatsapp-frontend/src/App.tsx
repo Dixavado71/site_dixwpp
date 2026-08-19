@@ -67,8 +67,12 @@ function App() {
   useEffect(() => {
     const initApp = async () => {
       try {
-        // Initialize CSRF token
-        await initializeCsrfToken()
+        // Initialize CSRF token (optional - won't block if fails)
+        try {
+          await initializeCsrfToken()
+        } catch (csrfError) {
+          console.warn('CSRF token initialization failed (backend may not be available):', csrfError)
+        }
         
         // Try to get current user
         try {
