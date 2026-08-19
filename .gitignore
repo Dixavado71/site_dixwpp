@@ -1,31 +1,31 @@
-```gitignore
+```
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build artifacts
 dist/
 build/
-*.js.map
-*.tsbuildinfo
+*.js
+*.ts
+*.tsx
+*.css
 
 # Environment variables
 .env
 .env.local
 *.env.*
 
+# Logs
+*.log
+
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Logs
-*.log
-
-# Temporary files
 *.tmp
 
-# Python cache (if any Python files exist in the project)
+# Python artifacts (if any Python in project)
 __pycache__/
 *.pyc
 *.pyo
@@ -34,14 +34,17 @@ __pycache__/
 # Coverage reports
 coverage/
 htmlcov/
-*.coverage
-
-# Distribution / packaging
-*.tar.gz
-*.whl
-*.egg-info/
+.coverage
 
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Testing
+.nyc_output/
+coverage/
+
+# Distribution / packaging
+*.tar.gz
+*.egg-info/
 ```

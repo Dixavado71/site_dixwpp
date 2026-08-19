@@ -1,124 +1,145 @@
 export interface User {
   id: string;
+  username: string;
   email: string;
-  name: string;
-  role: 'admin' | 'tenant';
-  tenantId?: string;
+  role: 'MASTER' | 'TENANT_ADMIN' | 'TENANT_USER';
+  tenantId?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Tenant {
   id: string;
   name: string;
-  companyName: string;
-  slug: string;
+  document: string;
   email: string;
-  plan: 'basic' | 'pro' | 'enterprise';
-  status: 'active' | 'inactive';
+  phone: string;
+  active: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface Client {
   id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  tags?: string[];
   tenantId: string;
+  name: string;
+  email: string;
+  phone: string;
+  document: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Product {
   id: string;
-  name: string;
-  description?: string;
-  price: number;
-  imageUrl?: string;
   tenantId: string;
+  name: string;
+  description: string;
+  price: number;
+  slug: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Service {
   id: string;
+  tenantId: string;
   name: string;
-  description?: string;
+  description: string;
   price: number;
   duration: number; // in minutes
-  tenantId: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface Promotion {
   id: string;
+  tenantId: string;
   title: string;
-  description?: string;
+  description: string;
   discount: number;
   startDate: string;
   endDate: string;
-  isActive: boolean;
-  tenantId: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface DashboardStats {
-  totalClients?: number;
-  totalProducts?: number;
-  totalServices?: number;
+  total?: number;
+  active?: number;
+  inactive?: number;
+  totalUsers?: number;
+  products?: number;
+  clients?: number;
+  services?: number;
+  promotions?: number;
+  users?: number;
   messagesSentToday?: number;
   messagesSentMonth?: number;
   activeCampaigns?: number;
-  totalTenants?: number;
-  activeTenants?: number;
-  totalUsers?: number;
-  recurringRevenue?: number;
 }
 
 export interface LoginCredentials {
-  email: string;
+  username: string;
   password: string;
 }
 
 export interface CreateTenantDTO {
   name: string;
-  companyName: string;
-  slug: string;
+  document: string;
   email: string;
-  password: string;
-  plan: 'basic' | 'pro' | 'enterprise';
+  phone: string;
+  active?: boolean;
 }
 
 export interface UpdateTenantDTO {
   name?: string;
-  companyName?: string;
-  plan?: 'basic' | 'pro' | 'enterprise';
-  status?: 'active' | 'inactive';
+  document?: string;
+  email?: string;
+  phone?: string;
+  active?: boolean;
 }
 
 export interface CreateClientDTO {
   name: string;
+  email: string;
   phone: string;
-  email?: string;
-  tags?: string[];
+  document: string;
 }
 
 export interface CreateProductDTO {
   name: string;
-  description?: string;
+  description: string;
   price: number;
-  imageUrl?: string;
+  slug: string;
 }
 
 export interface CreateServiceDTO {
   name: string;
-  description?: string;
+  description: string;
   price: number;
   duration: number;
 }
 
 export interface CreatePromotionDTO {
   title: string;
-  description?: string;
+  description: string;
   discount: number;
   startDate: string;
   endDate: string;
+}
+
+export interface CreateUserDTO {
+  username: string;
+  password: string;
+  email: string;
+  role: 'TENANT_ADMIN' | 'TENANT_USER';
+  tenantId?: string;
+}
+
+export interface UpdateUserDTO {
+  username?: string;
+  email?: string;
+  role?: 'MASTER' | 'TENANT_ADMIN' | 'TENANT_USER';
+  tenantId?: string | null;
 }

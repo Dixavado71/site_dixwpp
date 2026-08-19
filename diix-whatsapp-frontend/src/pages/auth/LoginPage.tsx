@@ -4,17 +4,17 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Loader2 } from 'lucide-react';
+import { User, Lock, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { authService } from '@/services';
 import { useAuthStore } from '@/store/authStore';
-import type { LoginCredentials } from '@/types';
+import type { LoginCredentials, User as UserType } from '@/types';
 
 const loginSchema = z.object({
-  email: z.string().email('E-mail inválido'),
+  username: z.string().min(3, 'Usuário deve ter pelo menos 3 caracteres'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
 });
 
@@ -37,22 +37,27 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await authService.login(data);
-      
+
       // Fetch current user after successful login
       const user = await authService.getCurrentUser();
+      
+      if (!user) {
+        throw new Error('Failed to get user data');
+      }
+      
       setUser(user);
-      
+
       toast.success('Login realizado com sucesso!');
-      
-      // Redirect based on role
-      if (user.role === 'admin') {
+
+      // Redirect based on role - matching API documentation
+      if (user.role === 'MASTER') {
         navigate('/admin');
       } else {
         navigate('/tenant');
       }
     } catch (error: any) {
       console.error('Login error:', error);
-      const message = error.response?.data?.message || 'Credenciais inválidas. Tente novamente.';
+      const message = error.response?.data?.message || error.response?.data?.error || 'Credenciais inválidas. Tente novamente.';
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -95,17 +100,19 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                label="E-mail"
-                type="email"
-                placeholder="seu@email.com"
-                error={errors.email?.message}
-                {...register('email')}
+                label="Usuário"
+                type="text"
+                placeholder="seu.usuario"
+                icon={<User className="h-4 w-4" />}
+                error={errors.username?.message}
+                {...register('username')}
               />
 
               <Input
                 label="Senha"
                 type="password"
                 placeholder="••••••••"
+                icon={<Lock className="h-4 w-4" />}
                 error={errors.password?.message}
                 {...register('password')}
               />
