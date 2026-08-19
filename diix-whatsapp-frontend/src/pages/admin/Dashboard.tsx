@@ -1,50 +1,76 @@
-import { motion } from 'framer-motion'
-import { Building2, Users, TrendingUp, DollarSign } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-
-// Mock data - will be replaced with API data
-const chartData = [
-  { date: '01/12', tenants: 12 },
-  { date: '05/12', tenants: 19 },
-  { date: '10/12', tenants: 25 },
-  { date: '15/12', tenants: 32 },
-  { date: '20/12', tenants: 38 },
-  { date: '25/12', tenants: 45 },
-  { date: '30/12', tenants: 52 },
-]
-
-const kpiCards = [
-  {
-    title: 'Total de Tenants',
-    value: '52',
-    icon: Building2,
-    color: 'from-accent-primary to-accent-cyan',
-    glow: 'neon-glow-green',
-  },
-  {
-    title: 'Tenants Ativos',
-    value: '48',
-    icon: Users,
-    color: 'from-accent-secondary to-accent-cyan',
-    glow: 'neon-glow-purple',
-  },
-  {
-    title: 'Usuários Totais',
-    value: '1,234',
-    icon: TrendingUp,
-    color: 'from-accent-cyan to-accent-primary',
-    glow: 'neon-glow-cyan',
-  },
-  {
-    title: 'Receita Recorrente',
-    value: 'R$ 12.500',
-    icon: DollarSign,
-    color: 'from-accent-primary to-accent-secondary',
-    glow: 'neon-glow-green',
-  },
-]
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { Building2, Users, TrendingUp, DollarSign, Loader2 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { adminService } from '@/services';
+import type { DashboardStats, Tenant } from '@/types';
 
 export default function AdminDashboard() {
+  const queryClient = useQueryClient();
+
+  // Fetch dashboard stats from API
+  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
+    queryKey: ['adminDashboardStats'],
+    queryFn: async () => {
+      const response = await adminService.getDashboardStats();
+      return response;
+    },
+  });
+
+  // Fetch recent tenants from API
+  const { data: tenants, isLoading: tenantsLoading } = useQuery<Tenant[]>({
+    queryKey: ['recentTenants'],
+    queryFn: async () => {
+      const response = await adminService.getTenants();
+      return response.slice(0, 5); // Get only first 5 for the list
+    },
+  });
+
+  // Generate chart data from tenants
+  const chartData = tenants?.map((tenant, index) => ({
+    date: new Date(tenant.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+    tenants: index + 1,
+  })) || [];
+
+  const kpiCards = [
+    {
+      title: 'Total de Tenants',
+      value: stats?.total?.toString() || '0',
+      icon: Building2,
+      color: 'from-accent-primary to-accent-cyan',
+      glow: 'neon-glow-green',
+    },
+    {
+      title: 'Tenants Ativos',
+      value: stats?.active?.toString() || '0',
+      icon: Users,
+      color: 'from-accent-secondary to-accent-cyan',
+      glow: 'neon-glow-purple',
+    },
+    {
+      title: 'Usuários Totais',
+      value: stats?.totalUsers?.toString() || '0',
+      icon: TrendingUp,
+      color: 'from-accent-cyan to-accent-primary',
+      glow: 'neon-glow-cyan',
+    },
+    {
+      title: 'Receita Recorrente',
+      value: `R$ ${(stats?.total ? (stats.total * 250).toFixed(2) : '0.00')}`,
+      icon: DollarSign,
+      color: 'from-accent-primary to-accent-secondary',
+      glow: 'neon-glow-green',
+    },
+  ];
+
+  if (statsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-accent-primary" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -128,35 +154,43 @@ export default function AdminDashboard() {
         className="glass-card rounded-xl p-6"
       >
         <h2 className="text-xl font-bold text-text-primary mb-6">Últimos Tenants Cadastrados</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left py-3 px-4 text-text-muted font-medium">Empresa</th>
-                <th className="text-left py-3 px-4 text-text-muted font-medium">Plano</th>
-                <th className="text-left py-3 px-4 text-text-muted font-medium">Status</th>
-                <th className="text-left py-3 px-4 text-text-muted font-medium">Data</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                  <td className="py-3 px-4 text-text-primary">Empresa {i}</td>
-                  <td className="py-3 px-4 text-text-secondary">Profissional</td>
-                  <td className="py-3 px-4">
-                    <span className="px-2 py-1 rounded-full text-xs bg-accent-primary/10 text-accent-primary">
-                      Ativo
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-text-muted">
-                    {new Date().toLocaleDateString('pt-BR')}
-                  </td>
+        {tenantsLoading ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-accent-primary" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left py-3 px-4 text-text-muted font-medium">Empresa</th>
+                  <th className="text-left py-3 px-4 text-text-muted font-medium">Email</th>
+                  <th className="text-left py-3 px-4 text-text-muted font-medium">Status</th>
+                  <th className="text-left py-3 px-4 text-text-muted font-medium">Data</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {tenants?.map((tenant) => (
+                  <tr key={tenant.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                    <td className="py-3 px-4 text-text-primary">{tenant.name}</td>
+                    <td className="py-3 px-4 text-text-secondary">{tenant.email}</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        tenant.active ? 'bg-accent-primary/10 text-accent-primary' : 'bg-error/10 text-error'
+                      }`}>
+                        {tenant.active ? 'Ativo' : 'Inativo'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-text-muted">
+                      {new Date(tenant.createdAt).toLocaleDateString('pt-BR')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </motion.div>
     </div>
-  )
+  );
 }
