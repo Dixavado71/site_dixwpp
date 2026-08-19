@@ -1,4 +1,4 @@
-import apiClient from './api';
+import apiClient, { initializeCsrfToken } from './api';
 import type { 
   User, 
   Tenant, 
