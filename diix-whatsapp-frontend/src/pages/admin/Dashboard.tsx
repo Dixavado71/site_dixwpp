@@ -35,28 +35,28 @@ export default function AdminDashboard() {
   const kpiCards = [
     {
       title: 'Total de Tenants',
-      value: stats?.total?.toString() || '0',
+      value: stats?.stats?.totalTenants?.toString() || '0',
       icon: Building2,
       color: 'from-accent-primary to-accent-cyan',
       glow: 'neon-glow-green',
     },
     {
       title: 'Tenants Ativos',
-      value: stats?.active?.toString() || '0',
+      value: stats?.stats?.activeTenants?.toString() || '0',
       icon: Users,
       color: 'from-accent-secondary to-accent-cyan',
       glow: 'neon-glow-purple',
     },
     {
       title: 'Usuários Totais',
-      value: stats?.totalUsers?.toString() || '0',
+      value: stats?.stats?.totalUsers?.toString() || '0',
       icon: TrendingUp,
       color: 'from-accent-cyan to-accent-primary',
       glow: 'neon-glow-cyan',
     },
     {
       title: 'Receita Recorrente',
-      value: `R$ ${(stats?.total ? (stats.total * 250).toFixed(2) : '0.00')}`,
+      value: `R$ ${(stats?.stats?.totalTenants ? (stats.stats.totalTenants * 250).toFixed(2) : '0.00')}`,
       icon: DollarSign,
       color: 'from-accent-primary to-accent-secondary',
       glow: 'neon-glow-green',
