@@ -237,11 +237,15 @@ export const tenantService = {
 // Initialize CSRF Token
 export const initializeCsrfToken = async (): Promise<void> => {
   try {
-    const response = await api.get('/csrf-token');
-    if (response.data.csrfToken) {
-      localStorage.setItem('csrf_token', response.data.csrfToken);
-    }
+    // Faz uma requisição GET para obter o token CSRF do backend
+    // O backend deve definir o cookie XSRF-TOKEN nesta requisição
+    await api.get('/csrf-token');
+    
+    // Após a requisição, o cookie XSRF-TOKEN deve estar definido
+    // O interceptor de request já vai pegá-lo automaticamente
+    console.log('CSRF token initialized from cookie');
   } catch (error) {
     console.error('Failed to initialize CSRF token:', error);
+    // Se falhar, tentamos continuar sem o token (depende da configuração do backend)
   }
 };
