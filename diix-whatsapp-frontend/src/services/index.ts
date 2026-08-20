@@ -1,5 +1,5 @@
 import api from './api';
-import { 
+import type { 
   User, 
   LoginCredentials, 
   Tenant, 
@@ -84,6 +84,11 @@ export const adminService = {
 
   async deleteTenant(id: string): Promise<ApiResponse<void>> {
     const response = await api.delete(`/admin/tenants/${id}`);
+    return response.data;
+  },
+
+  async toggleTenantStatus(id: string): Promise<ApiResponse<Tenant>> {
+    const response = await api.patch(`/admin/tenants/${id}/toggle-status`);
     return response.data;
   },
 

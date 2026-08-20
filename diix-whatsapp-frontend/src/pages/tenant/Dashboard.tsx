@@ -6,19 +6,10 @@ import { tenantService } from '@/services';
 import type { Product, Client } from '@/types';
 
 interface TenantDashboardData {
-  data: {
-    stats: {
-      totalProducts: number;
-      totalClients: number;
-      totalServices: number;
-      totalPromotions: number;
-      messagesSentToday?: number;
-      messagesSentMonth?: number;
-      activeCampaigns?: number;
-    };
-    recentProducts: Product[];
-    recentClients: Client[];
-  };
+  totalClients: number;
+  totalProducts: number;
+  totalServices: number;
+  appointmentsToday: number;
 }
 
 export default function TenantDashboard() {
@@ -27,23 +18,23 @@ export default function TenantDashboard() {
     queryKey: ['tenantDashboardStats'],
     queryFn: async () => {
       const response = await tenantService.getDashboardStats();
-      return response as TenantDashboardData;
+      return response.data as TenantDashboardData;
     },
   });
 
-  const stats = dashboardData?.data.stats;
-  const recentProducts = dashboardData?.data.recentProducts || [];
-  const recentClients = dashboardData?.data.recentClients || [];
+  const stats = dashboardData;
+  const recentProducts: Product[] = [];
+  const recentClients: Client[] = [];
 
   // Messages chart data - using real API data if available
   const messagesData = [
-    { day: 'Seg', mensagens: stats?.messagesSentToday || 0 },
-    { day: 'Ter', mensagens: Math.floor((stats?.messagesSentToday || 0) * 1.2) },
-    { day: 'Qua', mensagens: Math.floor((stats?.messagesSentToday || 0) * 0.9) },
-    { day: 'Qui', mensagens: Math.floor((stats?.messagesSentToday || 0) * 1.5) },
-    { day: 'Sex', mensagens: Math.floor((stats?.messagesSentToday || 0) * 1.3) },
-    { day: 'Sab', mensagens: Math.floor((stats?.messagesSentToday || 0) * 0.5) },
-    { day: 'Dom', mensagens: Math.floor((stats?.messagesSentToday || 0) * 0.3) },
+    { day: 'Seg', mensagens: 0 },
+    { day: 'Ter', mensagens: 0 },
+    { day: 'Qua', mensagens: 0 },
+    { day: 'Qui', mensagens: 0 },
+    { day: 'Sex', mensagens: 0 },
+    { day: 'Sab', mensagens: 0 },
+    { day: 'Dom', mensagens: 0 },
   ];
 
   const kpiCards = [
@@ -56,14 +47,14 @@ export default function TenantDashboard() {
     },
     {
       title: 'Mensagens Hoje',
-      value: stats?.messagesSentToday?.toString() || '0',
+      value: '0',
       icon: MessageSquare,
       color: 'from-accent-secondary to-accent-cyan',
       glow: 'neon-glow-purple',
     },
     {
       title: 'Campanhas Ativas',
-      value: stats?.activeCampaigns?.toString() || '0',
+      value: '0',
       icon: TrendingUp,
       color: 'from-accent-cyan to-accent-primary',
       glow: 'neon-glow-cyan',

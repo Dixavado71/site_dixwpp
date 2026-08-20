@@ -15,26 +15,35 @@ export interface LoginCredentials {
 // Tenant types
 export interface Tenant {
   id: string;
-  businessName: string;
-  slug: string;
+  name: string;
+  businessName?: string;
+  slug?: string;
   document: string;
+  email: string;
+  phone: string;
   active: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateTenantDTO {
-  businessName: string;
+  name: string;
+  businessName?: string;
   document: string;
-  slug: string;
+  slug?: string;
   email: string;
-  password: string;
+  phone?: string;
+  password?: string;
+  active?: boolean;
 }
 
 export interface UpdateTenantDTO {
+  name?: string;
   businessName?: string;
   document?: string;
   slug?: string;
+  email?: string;
+  phone?: string;
   active?: boolean;
 }
 
@@ -70,6 +79,8 @@ export interface Product {
   name: string;
   description?: string;
   price: number;
+  stock?: number;
+  slug?: string;
   active: boolean;
   tenantId: string;
   createdAt: string;
@@ -80,6 +91,7 @@ export interface CreateProductDTO {
   name: string;
   description?: string;
   price: number;
+  stock?: number;
   active?: boolean;
 }
 
@@ -87,6 +99,7 @@ export interface UpdateProductDTO {
   name?: string;
   description?: string;
   price?: number;
+  stock?: number;
   active?: boolean;
 }
 

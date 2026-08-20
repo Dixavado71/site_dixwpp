@@ -36,13 +36,15 @@ export default function AdminTenants() {
   })
 
   // Fetch tenants from API
-  const { data: tenants, isLoading } = useQuery<Tenant[]>({
+  const { data: tenantsData, isLoading } = useQuery({
     queryKey: ['tenants'],
     queryFn: async () => {
       const response = await adminService.getTenants()
-      return response
+      return response.data
     },
   })
+
+  const tenants = tenantsData?.items
 
   // Create mutation
   const createMutation = useMutation({

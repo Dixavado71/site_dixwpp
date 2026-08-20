@@ -35,13 +35,15 @@ export default function TenantClients() {
   })
 
   // Fetch clients from API
-  const { data: clients, isLoading } = useQuery<Client[]>({
+  const { data: clientsData, isLoading } = useQuery({
     queryKey: ['clients'],
     queryFn: async () => {
       const response = await tenantService.getClients()
-      return response
+      return response.data
     },
   })
+
+  const clients = clientsData?.items
 
   // Create mutation
   const createMutation = useMutation({
