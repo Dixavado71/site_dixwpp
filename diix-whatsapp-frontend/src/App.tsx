@@ -7,6 +7,10 @@ import AdminLayout from './components/layout/AdminLayout'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminTenants from './pages/admin/Tenants'
 import AdminUsers from './pages/admin/Users'
+import CategoriesPage from './pages/admin/categories/Categories'
+import AdminSettings from './pages/admin/settings/Settings'
+import SalesHistory from './pages/admin/history/SalesHistory'
+import FinancialHistory from './pages/admin/history/FinancialHistory'
 
 // Tenant Pages
 import TenantLayout from './components/layout/TenantLayout'
@@ -94,6 +98,10 @@ function App() {
         <Route index element={<AdminDashboard />} />
         <Route path="tenants" element={<AdminTenants />} />
         <Route path="users" element={<AdminUsers />} />
+        <Route path="categories" element={<CategoriesPage />} />
+        <Route path="settings" element={<AdminSettings />} />
+        <Route path="history/sales" element={<SalesHistory />} />
+        <Route path="history/financial" element={<FinancialHistory />} />
       </Route>
 
       {/* Tenant Routes - tenant role */}
