@@ -209,5 +209,6 @@ export interface PaginatedResponse<T> {
 
 export interface ApiError {
   message: string;
+  error?: string;
   errors?: Record<string, string[]>;
 }

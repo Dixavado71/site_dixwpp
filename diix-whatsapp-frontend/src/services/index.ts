@@ -23,32 +23,23 @@ import type {
   PaginatedResponse 
 } from '../types';
 
-// Auth Service
+// Auth Service - Rotas conforme documentação oficial /api/v1/auth/*
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<ApiResponse<{ user: User; token: string }>> {
+  async login(credentials: LoginCredentials): Promise<ApiResponse<{ user: User; redirect?: string }>> {
+    // POST /api/v1/auth/login - Aceita identifier (email ou username) e password
     const response = await api.post('/auth/login', credentials);
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
-    }
     return response.data;
   },
 
-  async logout(): Promise<void> {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('csrf_token');
-    await api.post('/auth/logout');
-  },
-
-  async getCurrentUser(): Promise<ApiResponse<User>> {
-    const response = await api.get('/auth/me');
+  async logout(): Promise<ApiResponse<{ message: string; redirect?: string }>> {
+    // POST /api/v1/auth/logout - Requer cookie de sessão
+    const response = await api.post('/auth/logout');
     return response.data;
   },
 
-  async refreshToken(): Promise<ApiResponse<{ token: string }>> {
-    const response = await api.post('/auth/refresh');
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token);
-    }
+  async getCurrentUser(): Promise<ApiResponse<{ authenticated: boolean; user?: User; redirect?: string }>> {
+    // GET /api/v1/auth/login - Verifica status de autenticação
+    const response = await api.get('/auth/login');
     return response.data;
   }
 };
@@ -234,18 +225,10 @@ export const tenantService = {
   }
 };
 
-// Initialize CSRF Token
+// Initialize CSRF Token - Não é mais necessário endpoint dedicado
+// O token CSRF é obtido automaticamente do cookie XSRF-TOKEN pelo interceptor
 export const initializeCsrfToken = async (): Promise<void> => {
-  try {
-    // Faz uma requisição GET para obter o token CSRF do backend
-    // O backend deve definir o cookie XSRF-TOKEN nesta requisição
-    await api.get('/csrf-token');
-    
-    // Após a requisição, o cookie XSRF-TOKEN deve estar definido
-    // O interceptor de request já vai pegá-lo automaticamente
-    console.log('CSRF token initialized from cookie');
-  } catch (error) {
-    console.error('Failed to initialize CSRF token:', error);
-    // Se falhar, tentamos continuar sem o token (depende da configuração do backend)
-  }
+  // O backend define o cookie XSRF-TOKEN automaticamente em cada requisição
+  // O interceptor já lê esse cookie e envia no header X-CSRF-Token
+  console.log('CSRF token will be automatically retrieved from XSRF-TOKEN cookie');
 };

@@ -1,10 +1,12 @@
 import axios, { type AxiosInstance, type InternalAxiosRequestConfig, type AxiosError } from 'axios';
 import type { ApiError } from '../types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// Base URL correta conforme documentação oficial: http://localhost:7171/api/v1
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:7171/api/v1';
 
 // Função auxiliar para obter token CSRF do cookie
 const getCsrfTokenFromCookie = (): string | null => {
+  if (typeof document === 'undefined') return null;
   const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
   return match ? decodeURIComponent(match[1]) : null;
 };
@@ -12,30 +14,20 @@ const getCsrfTokenFromCookie = (): string | null => {
 // Create axios instance
 const api: AxiosInstance = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: true, // Importante para cookies de sessão
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor for CSRF token and auth token
+// Request interceptor for CSRF token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Tenta obter o token CSRF do cookie primeiro
-    let csrfToken = getCsrfTokenFromCookie();
-    
-    // Se não encontrou no cookie, tenta do localStorage (fallback)
-    if (!csrfToken) {
-      csrfToken = localStorage.getItem('csrf_token');
-    }
+    // Obtém o token CSRF do cookie XSRF-TOKEN (definido automaticamente pelo backend)
+    const csrfToken = getCsrfTokenFromCookie();
 
     if (csrfToken && config.headers) {
       config.headers['X-CSRF-Token'] = csrfToken;
-    }
-
-    const authToken = localStorage.getItem('auth_token');
-    if (authToken && config.headers) {
-      config.headers.Authorization = `Bearer ${authToken}`;
     }
 
     return config;
@@ -50,13 +42,15 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiError>) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized - clear tokens and redirect to login
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('csrf_token');
+      // Sessão expirada ou inválida - redirect para login
       window.location.href = '/login';
+    } else if (error.response?.status === 403) {
+      // Erro CSRF - recarregar página para obter novo token
+      console.error('Erro CSRF: Token inválido ou ausente. Recarregue a página.');
+      window.location.reload();
     }
 
-    const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
+    const errorMessage = error.response?.data?.message || error.response?.data?.error || 'An unexpected error occurred';
     console.error('API Error:', errorMessage);
     
     return Promise.reject(error);
