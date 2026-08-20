@@ -12,9 +12,13 @@ import type {
   CreateTenantDTO,
   UpdateTenantDTO,
   CreateClientDTO,
+  UpdateClientDTO,
   CreateProductDTO,
+  UpdateProductDTO,
   CreateServiceDTO,
+  UpdateServiceDTO,
   CreatePromotionDTO,
+  UpdatePromotionDTO,
   CreateUserDTO,
   UpdateUserDTO
 } from '../types';
@@ -27,15 +31,15 @@ export const authService = {
     await fetchCsrfToken();
     
     // Passo 2: Enviar login com o token CSRF (adicionado automaticamente pelo interceptor)
-    const response = await apiClient.post('/api/v1/auth/login', {
-      identifier: credentials.identifier,
+    const response = await apiClient.post('/login', {
+      username: credentials.identifier,
       password: credentials.password
     });
     return response.data;
   },
 
   logout: async () => {
-    const response = await apiClient.post('/api/v1/auth/logout');
+    const response = await apiClient.post('/logout');
     return response.data;
   },
 
@@ -68,11 +72,6 @@ export const adminService = {
 
   createTenant: async (data: CreateTenantDTO) => {
     const response = await apiClient.post('/admin/tenants', data);
-    return response.data;
-  },
-
-  updateTenant: async (id: string, data: UpdateTenantDTO) => {
-    const response = await apiClient.post(`/admin/tenants/${id}`, data);
     return response.data;
   },
 
@@ -127,7 +126,7 @@ export const tenantService = {
     return response.data;
   },
 
-  updateProduct: async (id: string, data: Partial<CreateProductDTO>) => {
+  updateProduct: async (id: string, data: UpdateProductDTO) => {
     const response = await apiClient.post(`/tenant/products/${id}`, data);
     return response.data;
   },
@@ -148,7 +147,7 @@ export const tenantService = {
     return response.data;
   },
 
-  updateClient: async (id: string, data: Partial<CreateClientDTO>) => {
+  updateClient: async (id: string, data: UpdateClientDTO) => {
     const response = await apiClient.post(`/tenant/clients/${id}`, data);
     return response.data;
   },
@@ -169,7 +168,7 @@ export const tenantService = {
     return response.data;
   },
 
-  updateService: async (id: string, data: Partial<CreateServiceDTO>) => {
+  updateService: async (id: string, data: UpdateServiceDTO) => {
     const response = await apiClient.post(`/tenant/services/${id}`, data);
     return response.data;
   },
@@ -190,7 +189,7 @@ export const tenantService = {
     return response.data;
   },
 
-  updatePromotion: async (id: string, data: Partial<CreatePromotionDTO>) => {
+  updatePromotion: async (id: string, data: UpdatePromotionDTO) => {
     const response = await apiClient.post(`/tenant/promotions/${id}`, data);
     return response.data;
   },

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
 
-const API_BASE_URL = 'http://localhost:7171';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 // Create axios instance with credentials enabled for cookie-based auth
 const apiClient: AxiosInstance = axios.create({
@@ -20,8 +20,8 @@ let csrfToken: string | null = null;
 export const fetchCsrfToken = async (): Promise<string | null> => {
   try {
     // Make a GET request to the root or health endpoint to get the session cookie and CSRF token
-    // The backend sets the diixwhatsapp.sid cookie and returns X-CSRF-Token header
-    const response = await axios.get(`${API_BASE_URL}/api/v1/auth/csrf-token`, {
+    // The backend sets the connect.sid cookie and returns X-CSRF-Token header
+    const response = await axios.get(`${API_BASE_URL}/health`, {
       withCredentials: true, // CRUCIAL: Send and receive cookies
     });
     
