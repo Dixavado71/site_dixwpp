@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { tenantService } from '../../services';
 import type { Promotion, CreatePromotionDTO, UpdatePromotionDTO } from '../../types';
-import TenantLayout from '../../components/layout/TenantLayout';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -98,74 +97,70 @@ export default function Promotions() {
 
   if (loading) {
     return (
-      <TenantLayout>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500">Loading...</p>
-        </div>
-      </TenantLayout>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-gray-500">Loading...</p>
+      </div>
     );
   }
 
   return (
-    <TenantLayout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Promotions</h1>
-            <p className="text-gray-600 mt-1">Manage your promotional offers</p>
-          </div>
-          <Button onClick={() => handleOpenModal()} variant="primary">
-            New Promotion
-          </Button>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Promotions</h1>
+          <p className="text-gray-600 mt-1">Manage your promotional offers</p>
         </div>
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-600">{error}</p>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {promotions.map((promotion) => (
-            <Card key={promotion.id}>
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">{promotion.title}</h3>
-                <span className={`px-2 py-1 text-xs rounded-full ${promotion.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                  {promotion.active ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              {promotion.description && (
-                <p className="text-gray-600 text-sm mb-4">{promotion.description}</p>
-              )}
-              <div className="space-y-2 text-sm">
-                <p className="text-gray-600">
-                  <span className="font-medium">Discount:</span> {promotion.discount}%
-                </p>
-                <p className="text-gray-600">
-                  <span className="font-medium">Start:</span> {new Date(promotion.startDate).toLocaleDateString()}
-                </p>
-                <p className="text-gray-600">
-                  <span className="font-medium">End:</span> {new Date(promotion.endDate).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="flex gap-2 mt-4">
-                <Button onClick={() => handleOpenModal(promotion)} variant="secondary" size="sm" className="flex-1">
-                  Edit
-                </Button>
-                <Button onClick={() => handleDelete(promotion.id)} variant="danger" size="sm" className="flex-1">
-                  Delete
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {promotions.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No promotions found. Create your first promotion!</p>
-          </div>
-        )}
+        <Button onClick={() => handleOpenModal()} variant="primary">
+          New Promotion
+        </Button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-600">{error}</p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {promotions.map((promotion) => (
+          <Card key={promotion.id}>
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">{promotion.title}</h3>
+              <span className={`px-2 py-1 text-xs rounded-full ${promotion.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                {promotion.active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            {promotion.description && (
+              <p className="text-gray-600 text-sm mb-4">{promotion.description}</p>
+            )}
+            <div className="space-y-2 text-sm">
+              <p className="text-gray-600">
+                <span className="font-medium">Discount:</span> {promotion.discount}%
+              </p>
+              <p className="text-gray-600">
+                <span className="font-medium">Start:</span> {new Date(promotion.startDate).toLocaleDateString()}
+              </p>
+              <p className="text-gray-600">
+                <span className="font-medium">End:</span> {new Date(promotion.endDate).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <Button onClick={() => handleOpenModal(promotion)} variant="secondary" size="sm" className="flex-1">
+                Edit
+              </Button>
+              <Button onClick={() => handleDelete(promotion.id)} variant="danger" size="sm" className="flex-1">
+                Delete
+              </Button>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {promotions.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-500">No promotions found. Create your first promotion!</p>
+        </div>
+      )}
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -247,6 +242,6 @@ export default function Promotions() {
           </div>
         </div>
       )}
-    </TenantLayout>
+    </div>
   );
 }
