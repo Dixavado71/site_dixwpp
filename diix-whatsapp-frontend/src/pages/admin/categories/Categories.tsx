@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { FolderPlus, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { useCategoryStore } from '@/stores/categoryStore';
 import { CategoryList } from '@/components/categories/CategoryList';
 import { CategoryModal } from '@/components/modals/CategoryModal';
-import { useCategoryStore } from '@/stores/categoryStore';
 import type { Category, CreateCategoryDTO, UpdateCategoryDTO } from '@/types';
-import { toast } from 'sonner';
+import { KPICard, EmptyState } from '@/components/ui/Card';
+import { useModal } from '@/hooks/useModal';
 
 export default function CategoriesPage() {
   const { 
@@ -18,39 +18,22 @@ export default function CategoriesPage() {
     toggleCategoryStatus,
     isLoading 
   } = useCategoryStore();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const modal = useModal();
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  const handleCreate = () => {
-    setEditingCategory(null);
-    setIsModalOpen(true);
-  };
-
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
-    setIsModalOpen(true);
+    modal.open();
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.')) {
-      try {
-        await deleteCategory(id);
-      } catch (error) {
-        // Error já tratado no store
-      }
-    }
-  };
-
-  const handleToggleStatus = async (id: string) => {
-    try {
-      await toggleCategoryStatus(id);
-    } catch (error) {
-      // Error já tratado no store
+    if (window.confirm('Tem certeza que deseja excluir esta categoria?')) {
+      await deleteCategory(id);
     }
   };
 
@@ -60,100 +43,70 @@ export default function CategoriesPage() {
     } else {
       await createCategory(data as CreateCategoryDTO);
     }
-    setIsModalOpen(false);
+    modal.close();
     setEditingCategory(null);
+  };
+
+  const stats = {
+    total: categories.length,
+    active: categories.filter(c => c.status === 'active').length,
+    subcategories: categories.filter(c => c.parentId).length,
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-text-primary">Categorias</h1>
           <p className="text-text-muted mt-1">Gerencie categorias e subcategorias com drag-and-drop</p>
         </div>
-        <Button variant="primary" onClick={handleCreate}>
+        <Button variant="primary" onClick={modal.open}>
           <FolderPlus className="w-5 h-5 mr-2" />
           Nova Categoria
         </Button>
-      </motion.div>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid gap-6 md:grid-cols-3">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-          className="glass-card rounded-xl p-6"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-text-muted">Total de Categorias</p>
-              <p className="text-2xl font-bold text-text-primary mt-1">{categories.length}</p>
-            </div>
-            <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary">
-              <FolderPlus className="h-6 w-6" />
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="glass-card rounded-xl p-6"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-text-muted">Categorias Ativas</p>
-              <p className="text-2xl font-bold text-text-primary mt-1">
-                {categories.filter(c => c.status === 'active').length}
-              </p>
-            </div>
-            <div className="p-3 rounded-xl bg-green-500/10 text-green-400">
-              <GripVertical className="h-6 w-6" />
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-          className="glass-card rounded-xl p-6"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-text-muted">Subcategorias</p>
-              <p className="text-2xl font-bold text-text-primary mt-1">
-                {categories.filter(c => c.parentId).length}
-              </p>
-            </div>
-            <div className="p-3 rounded-xl bg-accent-cyan/10 text-accent-cyan">
-              <FolderPlus className="h-6 w-6" />
-            </div>
-          </div>
-        </motion.div>
+        <KPICard
+          title="Total de Categorias"
+          value={stats.total}
+          icon={<FolderPlus className="h-6 w-6" />}
+        />
+        <KPICard
+          title="Categorias Ativas"
+          value={stats.active}
+          icon={<GripVertical className="h-6 w-6" />}
+        />
+        <KPICard
+          title="Subcategorias"
+          value={stats.subcategories}
+          icon={<FolderPlus className="h-6 w-6" />}
+        />
       </div>
 
       {/* Lista de Categorias */}
-      <CategoryList
-        categories={categories}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onToggleStatus={handleToggleStatus}
-        isLoading={isLoading}
-      />
+      {isLoading ? (
+        <EmptyState
+          icon={<div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-accent-primary" />}
+          title="Carregando..."
+          description=""
+        />
+      ) : (
+        <CategoryList
+          categories={categories}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onToggleStatus={toggleCategoryStatus}
+        />
+      )}
 
       {/* Modal */}
       <CategoryModal
-        isOpen={isModalOpen}
+        isOpen={modal.isOpen}
         onClose={() => {
-          setIsModalOpen(false);
+          modal.close();
           setEditingCategory(null);
         }}
         onSubmit={handleSubmitCategory}
