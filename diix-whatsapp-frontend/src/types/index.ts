@@ -56,12 +56,27 @@ export interface Promotion {
   id: string;
   tenantId: string;
   title: string;
-  description: string;
-  discount: number;
+  description?: string;
+  discountType: 'PERCENTAGE' | 'FIXED_AMOUNT';
+  discountValue: number;
   startDate: string;
   endDate: string;
+  isActive: boolean;
+  serviceIds: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TenantSettings {
+  businessName: string;
+  whatsappNumber: string;
+  timezone: string;
+  notificationPreferences: {
+    newAppointment: boolean;
+    appointmentReminder: boolean;
+    promotionExpiring: boolean;
+    marketingMessages: boolean;
+  };
 }
 
 export interface DashboardStats {
@@ -123,10 +138,25 @@ export interface CreateServiceDTO {
 
 export interface CreatePromotionDTO {
   title: string;
-  description: string;
-  discount: number;
+  description?: string;
+  discountType: 'PERCENTAGE' | 'FIXED_AMOUNT';
+  discountValue: number;
   startDate: string;
   endDate: string;
+  isActive: boolean;
+  serviceIds: string[];
+}
+
+export interface UpdateTenantSettingsDTO {
+  businessName?: string;
+  whatsappNumber?: string;
+  timezone?: string;
+  notificationPreferences?: {
+    newAppointment: boolean;
+    appointmentReminder: boolean;
+    promotionExpiring: boolean;
+    marketingMessages: boolean;
+  };
 }
 
 export interface CreateUserDTO {

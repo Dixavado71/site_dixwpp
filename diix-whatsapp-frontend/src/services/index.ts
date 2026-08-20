@@ -16,7 +16,9 @@ import type {
   CreateServiceDTO,
   CreatePromotionDTO,
   CreateUserDTO,
-  UpdateUserDTO
+  UpdateUserDTO,
+  TenantSettings,
+  UpdateTenantSettingsDTO
 } from '../types';
 
 // Auth Services - Based on API documentation
@@ -193,6 +195,17 @@ export const tenantService = {
 
   deletePromotion: async (id: string) => {
     const response = await apiClient.post(`/tenant/promotions/${id}/delete`);
+    return response.data;
+  },
+
+  // Settings
+  getSettings: async (): Promise<TenantSettings> => {
+    const response = await apiClient.get('/tenant/settings');
+    return response.data;
+  },
+
+  updateSettings: async (data: UpdateTenantSettingsDTO) => {
+    const response = await apiClient.put('/tenant/settings', data);
     return response.data;
   },
 
