@@ -2,41 +2,70 @@
 # Dependencies
 node_modules/
 
-# Build artifacts
+# Build outputs
 dist/
 build/
-*.js
-*.ts
-*.tsx
-*.jsx
+target/
 
-# Environment
+# Environment variables
 .env
 .env.local
 .env.*
-
-# Logs
-*.log
-
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# Coverage
-coverage/
-htmlcov/
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
 .coverage
-
-# System
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+*.tmp
+*.swp
 .DS_Store
 Thumbs.db
+
+# TypeScript/JavaScript
+*.tsbuildinfo
+*.js.map
+*.jsx.map
+*.ts.map
+next-env.d.ts
+
+# VSCode
+.vscode/
+
+# IDE
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.DS_Store
+Thumbs.db
+
+# OS generated files
+ehthumbs.db
+Icon?
+```
+
+Wait, let me reconsider this. The only changes are TypeScript source files in a frontend project. There are no build artifacts, dependency directories, or temporary files shown in the changes. Following rule #6, since this appears to be only source/config files without build artifacts or dependencies, I should output nothing.
+
+```
+
 ```

@@ -15,16 +15,21 @@ const apiClient: AxiosInstance = axios.create({
 // CSRF token storage
 let csrfToken: string | null = null;
 
-// Function to fetch CSRF token
+// Function to fetch CSRF token - MUST be called before any POST/PUT/DELETE/PATCH request
+// This follows the exact flow: 1) GET cookie, 2) Read X-CSRF-Token header, 3) Use token in mutation
 export const fetchCsrfToken = async (): Promise<string | null> => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/`, {
-      withCredentials: true,
+    // Make a GET request to the root or health endpoint to get the session cookie and CSRF token
+    // The backend sets the diixwhatsapp.sid cookie and returns X-CSRF-Token header
+    const response = await axios.get(`${API_BASE_URL}/api/v1/auth/csrf-token`, {
+      withCredentials: true, // CRUCIAL: Send and receive cookies
     });
     
+    // Read the X-CSRF-Token header from the response
     const token = response.headers['x-csrf-token'];
     if (token) {
       csrfToken = token;
+      console.log('CSRF token obtained:', token);
       return token;
     }
     return null;
