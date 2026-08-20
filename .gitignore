@@ -2,70 +2,54 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build artifacts
 dist/
 build/
-target/
+*.js.map
+*.ts.map
 
 # Environment variables
 .env
 .env.local
-.env.*
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-*.tmp
-*.swp
-.DS_Store
-Thumbs.db
-
-# TypeScript/JavaScript
-*.tsbuildinfo
-*.js.map
-*.jsx.map
-*.ts.map
-next-env.d.ts
-
-# VSCode
-.vscode/
-
-# IDE
-.idea/
+*.env.*
 
 # Logs
 *.log
 
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python artifacts (if any Python files exist in the project)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
 # Temporary files
 *.tmp
 *.temp
-*~
+
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# OS generated files
-ehthumbs.db
-Icon?
-```
+# Testing
+.jest/
+.nyc_output/
+coverage/
 
-Wait, let me reconsider this. The only changes are TypeScript source files in a frontend project. There are no build artifacts, dependency directories, or temporary files shown in the changes. Following rule #6, since this appears to be only source/config files without build artifacts or dependencies, I should output nothing.
-
-```
-
+# TypeScript/JavaScript specific
+.next/
+.nuxt/
+public/dist/
+*.min.js
+*.min.css
 ```

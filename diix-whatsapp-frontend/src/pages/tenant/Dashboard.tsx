@@ -1,50 +1,90 @@
-import { motion } from 'framer-motion'
-import { Users, TrendingUp, MessageSquare, Package } from 'lucide-react'
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-
-// Mock data
-const messagesData = [
-  { day: 'Seg', mensagens: 120 },
-  { day: 'Ter', mensagens: 180 },
-  { day: 'Qua', mensagens: 150 },
-  { day: 'Qui', mensagens: 220 },
-  { day: 'Sex', mensagens: 190 },
-  { day: 'Sab', mensagens: 80 },
-  { day: 'Dom', mensagens: 50 },
-]
-
-const kpiCards = [
-  {
-    title: 'Total de Clientes',
-    value: '342',
-    icon: Users,
-    color: 'from-accent-primary to-accent-cyan',
-    glow: 'neon-glow-green',
-  },
-  {
-    title: 'Mensagens Hoje',
-    value: '1,234',
-    icon: MessageSquare,
-    color: 'from-accent-secondary to-accent-cyan',
-    glow: 'neon-glow-purple',
-  },
-  {
-    title: 'Campanhas Ativas',
-    value: '8',
-    icon: TrendingUp,
-    color: 'from-accent-cyan to-accent-primary',
-    glow: 'neon-glow-cyan',
-  },
-  {
-    title: 'Produtos Cadastrados',
-    value: '56',
-    icon: Package,
-    color: 'from-accent-primary to-accent-secondary',
-    glow: 'neon-glow-green',
-  },
-]
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { Users, TrendingUp, MessageSquare, Package, Loader2 } from 'lucide-react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { tenantService } from '@/services';
+import type { DashboardStats, Product, Client } from '@/types';
+import { toast } from 'sonner';
 
 export default function TenantDashboard() {
+  const queryClient = useQueryClient();
+
+  // Fetch dashboard stats from API
+  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
+    queryKey: ['tenantDashboardStats'],
+    queryFn: async () => {
+      const response = await tenantService.getDashboardStats();
+      return response;
+    },
+  });
+
+  // Fetch products for top products list
+  const { data: products } = useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const response = await tenantService.getProducts();
+      return response.slice(0, 5);
+    },
+  });
+
+  // Fetch clients count
+  const { data: clients } = useQuery<Client[]>({
+    queryKey: ['clients'],
+    queryFn: async () => {
+      const response = await tenantService.getClients();
+      return response;
+    },
+  });
+
+  // Mock messages data - will be replaced with real API data
+  const messagesData = [
+    { day: 'Seg', mensagens: stats?.messagesSentToday || 120 },
+    { day: 'Ter', mensagens: 180 },
+    { day: 'Qua', mensagens: 150 },
+    { day: 'Qui', mensagens: 220 },
+    { day: 'Sex', mensagens: 190 },
+    { day: 'Sab', mensagens: 80 },
+    { day: 'Dom', mensagens: 50 },
+  ];
+
+  const kpiCards = [
+    {
+      title: 'Total de Clientes',
+      value: clients?.length.toString() || stats?.totalClients?.toString() || '0',
+      icon: Users,
+      color: 'from-accent-primary to-accent-cyan',
+      glow: 'neon-glow-green',
+    },
+    {
+      title: 'Mensagens Hoje',
+      value: stats?.messagesSentToday?.toString() || '0',
+      icon: MessageSquare,
+      color: 'from-accent-secondary to-accent-cyan',
+      glow: 'neon-glow-purple',
+    },
+    {
+      title: 'Campanhas Ativas',
+      value: stats?.activeCampaigns?.toString() || '0',
+      icon: TrendingUp,
+      color: 'from-accent-cyan to-accent-primary',
+      glow: 'neon-glow-cyan',
+    },
+    {
+      title: 'Produtos Cadastrados',
+      value: stats?.totalProducts?.toString() || products?.length.toString() || '0',
+      icon: Package,
+      color: 'from-accent-primary to-accent-secondary',
+      glow: 'neon-glow-green',
+    },
+  ];
+
+  if (statsLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-accent-primary" />
+      </div>
+    );
+  }
   return (
     <div className="space-y-6">
       {/* Header */}

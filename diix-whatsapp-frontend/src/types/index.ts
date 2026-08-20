@@ -23,9 +23,9 @@ export interface Client {
   id: string;
   tenantId: string;
   name: string;
-  email: string;
+  email?: string;
   phone: string;
-  document: string;
+  document?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -34,9 +34,11 @@ export interface Product {
   id: string;
   tenantId: string;
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  slug: string;
+  slug?: string;
+  stock?: number;
+  active?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -45,7 +47,7 @@ export interface Service {
   id: string;
   tenantId: string;
   name: string;
-  description: string;
+  description?: string;
   price: number;
   duration: number; // in minutes
   createdAt: string;
@@ -55,32 +57,33 @@ export interface Service {
 export interface Promotion {
   id: string;
   tenantId: string;
-  title: string;
-  description: string;
-  discount: number;
+  name: string;
+  discountType: 'PERCENTAGE' | 'FIXED';
+  discountValue: number;
   startDate: string;
   endDate: string;
+  active?: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface DashboardStats {
-  total?: number;
-  active?: number;
-  inactive?: number;
+  totalTenants?: number;
+  activeTenants?: number;
+  inactiveTenants?: number;
   totalUsers?: number;
-  products?: number;
-  clients?: number;
-  services?: number;
-  promotions?: number;
-  users?: number;
+  totalProducts?: number;
+  totalClients?: number;
+  totalServices?: number;
+  totalPromotions?: number;
   messagesSentToday?: number;
   messagesSentMonth?: number;
   activeCampaigns?: number;
+  revenue?: number;
 }
 
 export interface LoginCredentials {
-  identifier: string; // Pode ser username ou email conforme API
+  identifier: string; // username or email as per API
   password: string;
 }
 
@@ -102,31 +105,66 @@ export interface UpdateTenantDTO {
 
 export interface CreateClientDTO {
   name: string;
-  email: string;
+  email?: string;
   phone: string;
-  document: string;
+  document?: string;
+}
+
+export interface UpdateClientDTO {
+  name?: string;
+  email?: string;
+  phone?: string;
+  document?: string;
 }
 
 export interface CreateProductDTO {
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  slug: string;
+  slug?: string;
+  stock?: number;
+  active?: boolean;
+}
+
+export interface UpdateProductDTO {
+  name?: string;
+  description?: string;
+  price?: number;
+  slug?: string;
+  stock?: number;
+  active?: boolean;
 }
 
 export interface CreateServiceDTO {
   name: string;
-  description: string;
+  description?: string;
   price: number;
   duration: number;
 }
 
+export interface UpdateServiceDTO {
+  name?: string;
+  description?: string;
+  price?: number;
+  duration?: number;
+}
+
 export interface CreatePromotionDTO {
-  title: string;
-  description: string;
-  discount: number;
+  name: string;
+  discountType: 'PERCENTAGE' | 'FIXED';
+  discountValue: number;
   startDate: string;
   endDate: string;
+  active?: boolean;
+}
+
+export interface UpdatePromotionDTO {
+  name?: string;
+  discountType?: 'PERCENTAGE' | 'FIXED';
+  discountValue?: number;
+  startDate?: string;
+  endDate?: string;
+  active?: boolean;
 }
 
 export interface CreateUserDTO {
