@@ -25,7 +25,7 @@ import type {
 export const authService = {
   login: async (credentials: LoginCredentials) => {
     // Backend espera { identifier, password } conforme documentação
-    const response = await apiClient.post('/login', {
+    const response = await apiClient.post('/auth/login', {
       identifier: credentials.identifier,
       password: credentials.password
     });
@@ -33,13 +33,13 @@ export const authService = {
   },
 
   logout: async () => {
-    const response = await apiClient.post('/logout');
+    const response = await apiClient.post('/auth/logout');
     return response.data;
   },
 
   getCurrentUser: async (): Promise<User | null> => {
     try {
-      const response = await apiClient.get('/login');
+      const response = await apiClient.get('/auth/login');
       if (response.data.authenticated) {
         return response.data.user;
       }
@@ -55,13 +55,13 @@ export const adminService = {
   // Dashboard
   getDashboardStats: async (): Promise<DashboardStats> => {
     const response = await apiClient.get('/admin/dashboard');
-    return response.data;
+    return response.data.data;
   },
 
   // Tenants
   getTenants: async (): Promise<Tenant[]> => {
     const response = await apiClient.get('/admin/tenants');
-    return response.data;
+    return response.data.data.tenants;
   },
 
   createTenant: async (data: CreateTenantDTO) => {
@@ -87,7 +87,7 @@ export const adminService = {
   // Users
   getUsers: async (): Promise<User[]> => {
     const response = await apiClient.get('/admin/users');
-    return response.data;
+    return response.data.data.users;
   },
 
   createUser: async (data: CreateUserDTO) => {
@@ -111,90 +111,90 @@ export const tenantService = {
   // Dashboard
   getDashboardStats: async (): Promise<DashboardStats> => {
     const response = await apiClient.get('/tenant/dashboard');
-    return response.data;
+    return response.data.data;
   },
 
   // Products
   getProducts: async (): Promise<Product[]> => {
-    const response = await apiClient.get('/tenant/products');
-    return response.data;
+    const response = await apiClient.get('/tenant/products/products');
+    return response.data.data.products;
   },
 
   createProduct: async (data: CreateProductDTO) => {
-    const response = await apiClient.post('/tenant/products', data);
+    const response = await apiClient.post('/tenant/products/products', data);
     return response.data;
   },
 
   updateProduct: async (id: string, data: Partial<CreateProductDTO>) => {
-    const response = await apiClient.post(`/tenant/products/${id}`, data);
+    const response = await apiClient.post(`/tenant/products/products/${id}`, data);
     return response.data;
   },
 
   deleteProduct: async (id: string) => {
-    const response = await apiClient.post(`/tenant/products/${id}/delete`);
+    const response = await apiClient.post(`/tenant/products/products/${id}/delete`);
     return response.data;
   },
 
   // Clients
   getClients: async (): Promise<Client[]> => {
-    const response = await apiClient.get('/tenant/clients');
-    return response.data;
+    const response = await apiClient.get('/tenant/clients/clients');
+    return response.data.data.clients;
   },
 
   createClient: async (data: CreateClientDTO) => {
-    const response = await apiClient.post('/tenant/clients', data);
+    const response = await apiClient.post('/tenant/clients/clients', data);
     return response.data;
   },
 
   updateClient: async (id: string, data: Partial<CreateClientDTO>) => {
-    const response = await apiClient.post(`/tenant/clients/${id}`, data);
+    const response = await apiClient.post(`/tenant/clients/clients/${id}`, data);
     return response.data;
   },
 
   deleteClient: async (id: string) => {
-    const response = await apiClient.post(`/tenant/clients/${id}/delete`);
+    const response = await apiClient.post(`/tenant/clients/clients/${id}/delete`);
     return response.data;
   },
 
   // Services
   getServices: async (): Promise<Service[]> => {
-    const response = await apiClient.get('/tenant/services');
-    return response.data;
+    const response = await apiClient.get('/tenant/services/services');
+    return response.data.data.services;
   },
 
   createService: async (data: CreateServiceDTO) => {
-    const response = await apiClient.post('/tenant/services', data);
+    const response = await apiClient.post('/tenant/services/services', data);
     return response.data;
   },
 
   updateService: async (id: string, data: Partial<CreateServiceDTO>) => {
-    const response = await apiClient.post(`/tenant/services/${id}`, data);
+    const response = await apiClient.post(`/tenant/services/services/${id}`, data);
     return response.data;
   },
 
   deleteService: async (id: string) => {
-    const response = await apiClient.post(`/tenant/services/${id}/delete`);
+    const response = await apiClient.post(`/tenant/services/services/${id}/delete`);
     return response.data;
   },
 
   // Promotions
   getPromotions: async (): Promise<Promotion[]> => {
-    const response = await apiClient.get('/tenant/promotions');
-    return response.data;
+    const response = await apiClient.get('/tenant/promotions/promotions');
+    return response.data.data.promotions;
   },
 
   createPromotion: async (data: CreatePromotionDTO) => {
-    const response = await apiClient.post('/tenant/promotions', data);
+    const response = await apiClient.post('/tenant/promotions/promotions', data);
     return response.data;
   },
 
   updatePromotion: async (id: string, data: Partial<CreatePromotionDTO>) => {
-    const response = await apiClient.post(`/tenant/promotions/${id}`, data);
+    const response = await apiClient.post(`/tenant/promotions/promotions/${id}`, data);
     return response.data;
   },
 
   deletePromotion: async (id: string) => {
-    const response = await apiClient.post(`/tenant/promotions/${id}/delete`);
+    const response = await apiClient.post(`/tenant/promotions/promotions/${id}/delete`);
     return response.data;
   },
 
@@ -211,22 +211,22 @@ export const tenantService = {
 
   // Tenant Users
   getUsers: async (): Promise<User[]> => {
-    const response = await apiClient.get('/tenant/users');
-    return response.data;
+    const response = await apiClient.get('/tenant/users/users');
+    return response.data.data.users;
   },
 
   createUser: async (data: CreateUserDTO) => {
-    const response = await apiClient.post('/tenant/users', data);
+    const response = await apiClient.post('/tenant/users/users', data);
     return response.data;
   },
 
   updateUser: async (id: string, data: UpdateUserDTO) => {
-    const response = await apiClient.post(`/tenant/users/${id}`, data);
+    const response = await apiClient.post(`/tenant/users/users/${id}`, data);
     return response.data;
   },
 
   deleteUser: async (id: string) => {
-    const response = await apiClient.post(`/tenant/users/${id}/delete`);
+    const response = await apiClient.post(`/tenant/users/users/${id}/delete`);
     return response.data;
   },
 };

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance, InternalAxiosRequestConfig, AxiosError } from 'axios';
 
-const API_BASE_URL = 'http://localhost:7171';
+const API_BASE_URL = 'http://localhost:7171/api/v1';
 
 // Create axios instance with credentials enabled for cookie-based auth
 const apiClient: AxiosInstance = axios.create({

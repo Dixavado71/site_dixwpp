@@ -80,10 +80,17 @@ export interface TenantSettings {
 }
 
 export interface DashboardStats {
-  total?: number;
-  active?: number;
-  inactive?: number;
-  totalUsers?: number;
+  stats?: {
+    totalTenants?: number;
+    activeTenants?: number;
+    totalUsers?: number;
+    totalProducts?: number;
+    totalClients?: number;
+  };
+  tenants?: any[];
+  recentTenants?: any[];
+  recentProducts?: any[];
+  recentClients?: any[];
   products?: number;
   clients?: number;
   services?: number;
