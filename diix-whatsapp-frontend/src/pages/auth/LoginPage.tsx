@@ -14,9 +14,14 @@ import { useAuthStore } from '@/store/authStore';
 import type { LoginCredentials, User as UserType } from '@/types';
 
 // Schema atualizado para aceitar 'identifier' (username ou email) conforme API backend
+// Password validation follows API requirements: min 8 chars, 1 uppercase, 1 number, 1 special char
 const loginSchema = z.object({
   identifier: z.string().min(3, 'Usuário ou e-mail é obrigatório'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  password: z.string()
+    .min(8, 'Mínimo 8 caracteres')
+    .regex(/[A-Z]/, 'Deve conter letra maiúscula')
+    .regex(/[0-9]/, 'Deve conter número')
+    .regex(/[^A-Za-z0-9]/, 'Deve conter caractere especial'),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
