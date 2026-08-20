@@ -5,10 +5,12 @@ export interface User {
   email: string;
   role: 'admin' | 'tenant';
   tenantId?: string;
+  isActive?: boolean;
+  lastLogin?: string;
 }
 
 export interface LoginCredentials {
-  email: string;
+  identifier: string;
   password: string;
 }
 
@@ -22,6 +24,7 @@ export interface Tenant {
   email: string;
   phone: string;
   active: boolean;
+  plan: 'basic' | 'standard' | 'premium' | 'enterprise';
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +38,7 @@ export interface CreateTenantDTO {
   phone?: string;
   password?: string;
   active?: boolean;
+  plan?: 'basic' | 'standard' | 'premium' | 'enterprise';
 }
 
 export interface UpdateTenantDTO {
@@ -45,6 +49,7 @@ export interface UpdateTenantDTO {
   email?: string;
   phone?: string;
   active?: boolean;
+  plan?: 'basic' | 'standard' | 'premium' | 'enterprise';
 }
 
 // Client types
@@ -83,6 +88,7 @@ export interface Product {
   slug?: string;
   active: boolean;
   tenantId: string;
+  categoryId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -93,6 +99,7 @@ export interface CreateProductDTO {
   price: number;
   stock?: number;
   active?: boolean;
+  categoryId?: string;
 }
 
 export interface UpdateProductDTO {
@@ -101,6 +108,7 @@ export interface UpdateProductDTO {
   price?: number;
   stock?: number;
   active?: boolean;
+  categoryId?: string;
 }
 
 // Service types
@@ -164,6 +172,110 @@ export interface UpdatePromotionDTO {
   active?: boolean;
 }
 
+// Category types
+export interface Category {
+  id: string;
+  name: string;
+  icon?: string;
+  color?: string;
+  parentId?: string;
+  order: number;
+  active: boolean;
+  tenantId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCategoryDTO {
+  name: string;
+  icon?: string;
+  color?: string;
+  parentId?: string;
+  order?: number;
+  active?: boolean;
+  tenantId?: string;
+}
+
+export interface UpdateCategoryDTO {
+  name?: string;
+  icon?: string;
+  color?: string;
+  parentId?: string;
+  order?: number;
+  active?: boolean;
+}
+
+// Sales/Transaction types
+export interface Sale {
+  id: string;
+  tenantId: string;
+  clientId: string;
+  clientName: string;
+  items: SaleItem[];
+  total: number;
+  status: 'completed' | 'pending' | 'cancelled';
+  paymentMethod: 'credit_card' | 'debit_card' | 'cash' | 'pix' | 'bank_transfer';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SaleItem {
+  id: string;
+  productId?: string;
+  serviceName?: string;
+  name: string;
+  quantity: number;
+  price: number;
+  subtotal: number;
+}
+
+export interface CreateSaleDTO {
+  clientId: string;
+  items: {
+    productId?: string;
+    serviceName?: string;
+    quantity: number;
+    price: number;
+  }[];
+  paymentMethod: 'credit_card' | 'debit_card' | 'cash' | 'pix' | 'bank_transfer';
+}
+
+// Financial types
+export interface FinancialTransaction {
+  id: string;
+  tenantId: string;
+  type: 'income' | 'expense';
+  category: string;
+  description: string;
+  amount: number;
+  status: 'pending' | 'paid' | 'cancelled';
+  dueDate: string;
+  paidDate?: string;
+  paymentMethod?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateFinancialTransactionDTO {
+  type: 'income' | 'expense';
+  category: string;
+  description: string;
+  amount: number;
+  dueDate: string;
+  paymentMethod?: string;
+}
+
+export interface UpdateFinancialTransactionDTO {
+  type?: 'income' | 'expense';
+  category?: string;
+  description?: string;
+  amount?: number;
+  status?: 'pending' | 'paid' | 'cancelled';
+  dueDate?: string;
+  paidDate?: string;
+  paymentMethod?: string;
+}
+
 // Settings types
 export interface TenantSettings {
   id: string;
@@ -190,6 +302,35 @@ export interface UpdateTenantSettingsDTO {
     appointmentReminder?: boolean;
     promotionExpiring?: boolean;
     marketingMessages?: boolean;
+  };
+}
+
+// Admin Settings types
+export interface AdminSettings {
+  general: {
+    siteName: string;
+    supportEmail: string;
+    maxTenants: number;
+  };
+  security: {
+    requireTwoFactor: boolean;
+    sessionTimeout: number;
+    passwordMinLength: number;
+  };
+  notifications: {
+    emailEnabled: boolean;
+    smsEnabled: boolean;
+    pushEnabled: boolean;
+  };
+  integrations: {
+    stripeEnabled: boolean;
+    paypalEnabled: boolean;
+    whatsappEnabled: boolean;
+  };
+  appearance: {
+    theme: 'light' | 'dark' | 'system';
+    primaryColor: string;
+    logoUrl?: string;
   };
 }
 
