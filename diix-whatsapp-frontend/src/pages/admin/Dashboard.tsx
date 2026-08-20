@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Building2, CheckCircle, TrendingUp, DollarSign, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import AdminLayout from '@/components/layout/AdminLayout';
+
 
 // Dados fictícios para demonstração
 const mockStats = {
@@ -27,7 +27,7 @@ export default function AdminDashboard() {
   const [recentTenants] = useState(mockRecentTenants);
 
   return (
-    <AdminLayout>
+    
       <div className="space-y-6">
         {/* Header */}
         <motion.div
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
           </Card>
         </motion.div>
       </div>
-    </AdminLayout>
+    
   );
 }
 

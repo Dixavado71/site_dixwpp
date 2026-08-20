@@ -1,16 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { useAuthStore } from './store/authStore'
-import { authService, initializeCsrfToken } from './services'
 import LoginPage from './pages/auth/LoginPage'
 
-// Admin Pages (will be created)
+// Admin Pages
 import AdminLayout from './components/layout/AdminLayout'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminTenants from './pages/admin/Tenants'
 import AdminUsers from './pages/admin/Users'
 
-// Tenant Pages (will be created)
+// Tenant Pages
 import TenantLayout from './components/layout/TenantLayout'
 import TenantDashboard from './pages/tenant/Dashboard'
 import TenantClients from './pages/tenant/Clients'
@@ -19,6 +17,14 @@ import TenantServices from './pages/tenant/Services'
 import TenantPromotion from './pages/tenant/Promotions'
 import TenantSettings from './pages/tenant/Settings'
 
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'tenant';
+  isActive: boolean;
+}
+
 // Protected Route Component
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -26,7 +32,16 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { user, isAuthenticated, isLoading } = useAuthStore()
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const mockUserStr = localStorage.getItem('mock_user');
+    if (mockUserStr) {
+      setUser(JSON.parse(mockUserStr));
+    }
+    setIsLoading(false);
+  }, []);
 
   if (isLoading) {
     return (
@@ -36,7 +51,7 @@ function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
     )
   }
 
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return <Navigate to="/login" replace />
   }
 
@@ -61,52 +76,6 @@ function UnauthorizedPage() {
 }
 
 function App() {
-  const { setUser, setLoading } = useAuthStore()
-  const [isInitialized, setIsInitialized] = useState(false)
-
-  useEffect(() => {
-    const initApp = async () => {
-      try {
-        // Initialize CSRF token (optional - won't block if fails)
-        try {
-          await initializeCsrfToken()
-        } catch (csrfError) {
-          console.warn('CSRF token initialization failed (backend may not be available):', csrfError)
-        }
-
-        // Try to get current user
-        try {
-          const response = await authService.getCurrentUser()
-          if (response && response.data && response.data.authenticated && response.data.user) {
-            setUser(response.data.user)
-          }
-        } catch {
-          // Not authenticated - this is normal on first load
-          setUser(null)
-        }
-      } catch (error) {
-        console.error('Failed to initialize app:', error)
-        setUser(null)
-      } finally {
-        setLoading(false)
-        setIsInitialized(true)
-      }
-    }
-
-    initApp()
-  }, [setUser, setLoading])
-
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen bg-animated-gradient flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-primary mx-auto mb-4"></div>
-          <p className="text-text-muted">Carregando...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <Routes>
       {/* Public Routes */}

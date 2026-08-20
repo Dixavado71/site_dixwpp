@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
-import TenantLayout from '@/components/layout/TenantLayout';
+
 
 const mockStats = {
   totalClients: 234,
@@ -17,7 +17,7 @@ export default function TenantDashboard() {
   const [stats] = useState(mockStats);
 
   return (
-    <TenantLayout>
+    
       <div className="space-y-6">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
           <h1 className="text-3xl font-bold text-text-primary">Dashboard</h1>
@@ -33,7 +33,7 @@ export default function TenantDashboard() {
           <StatCard title="Receita Mensal" value={`R$ ${stats.revenue}`} icon={<TrendingUp />} trend="+8%" />
         </div>
       </div>
-    </TenantLayout>
+    
   );
 }
 

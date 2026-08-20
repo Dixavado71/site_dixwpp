@@ -4,7 +4,7 @@ import { Tag, Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import TenantLayout from '@/components/layout/TenantLayout';
+
 import { toast } from 'sonner';
 
 const mockPromotions = [
@@ -19,7 +19,7 @@ export default function TenantPromotions() {
   const filteredPromotions = promotions.filter(promo => promo.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <TenantLayout>
+    
       <div className="space-y-6">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
           <div>
@@ -68,6 +68,6 @@ export default function TenantPromotions() {
           </CardContent>
         </Card>
       </div>
-    </TenantLayout>
+    
   );
 }
