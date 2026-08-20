@@ -1,5 +1,5 @@
-import apiClient, { initializeCsrfToken } from './api';
-export { initializeCsrfToken };
+import apiClient, { fetchCsrfToken } from './api';
+export { initializeCsrfToken } from './api';
 import type {
   User,
   Tenant,
@@ -22,8 +22,12 @@ import type {
 // Auth Services - Based on API documentation
 export const authService = {
   login: async (credentials: LoginCredentials) => {
-    // Backend espera { identifier, password } conforme documentação
-    const response = await apiClient.post('/login', {
+    // Passo 1: Obter cookie de sessão e token CSRF antes do login
+    // Isso é crucial para a validação CSRF funcionar corretamente
+    await fetchCsrfToken();
+    
+    // Passo 2: Enviar login com o token CSRF (adicionado automaticamente pelo interceptor)
+    const response = await apiClient.post('/api/v1/auth/login', {
       identifier: credentials.identifier,
       password: credentials.password
     });
@@ -31,13 +35,13 @@ export const authService = {
   },
 
   logout: async () => {
-    const response = await apiClient.post('/logout');
+    const response = await apiClient.post('/api/v1/auth/logout');
     return response.data;
   },
 
   getCurrentUser: async (): Promise<User | null> => {
     try {
-      const response = await apiClient.get('/login');
+      const response = await apiClient.get('/api/v1/auth/me');
       if (response.data.authenticated) {
         return response.data.user;
       }
