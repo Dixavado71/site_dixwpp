@@ -10,6 +10,9 @@ import {
   Menu,
   X,
   Shield,
+  FolderTree,
+  History,
+  DollarSign,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -25,6 +28,16 @@ const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Tenants', href: '/admin/tenants', icon: Building2 },
   { name: 'Usuários', href: '/admin/users', icon: Users },
+  { name: 'Categorias', href: '/admin/categories', icon: FolderTree },
+  { 
+    name: 'Histórico', 
+    href: '#', 
+    icon: History,
+    children: [
+      { name: 'Vendas', href: '/admin/history/sales' },
+      { name: 'Financeiro', href: '/admin/history/financial' },
+    ]
+  },
   { name: 'Configurações', href: '/admin/settings', icon: Settings },
 ]
 
@@ -78,7 +91,44 @@ export default function AdminLayout() {
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-thin">
             {navigation.map((item) => {
-              const isActive = location.pathname === item.href
+              const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
+              
+              // Item com submenus
+              if (item.children) {
+                return (
+                  <div key={item.name} className="space-y-1">
+                    <div className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                      isActive
+                        ? 'bg-accent-primary/10 text-accent-primary border border-accent-primary/20'
+                        : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
+                    }`}>
+                      <item.icon className="w-5 h-5" />
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    {/* Submenu */}
+                    <div className="ml-6 space-y-1">
+                      {item.children.map((child) => {
+                        const isChildActive = location.pathname === child.href
+                        return (
+                          <Link
+                            key={child.name}
+                            to={child.href}
+                            className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
+                              isChildActive
+                                ? 'bg-accent-primary/10 text-accent-primary'
+                                : 'text-text-muted hover:text-text-primary hover:bg-white/5'
+                            }`}
+                          >
+                            {child.name}
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              }
+              
+              // Item normal sem submenu
               return (
                 <Link
                   key={item.name}
