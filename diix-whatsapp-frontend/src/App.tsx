@@ -22,7 +22,7 @@ import TenantSettings from './pages/tenant/Settings'
 // Protected Route Component
 interface ProtectedRouteProps {
   children: React.ReactNode
-  allowedRoles?: ('MASTER' | 'TENANT_ADMIN' | 'TENANT_USER')[]
+  allowedRoles?: ('admin' | 'tenant')[]
 }
 
 function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
@@ -76,9 +76,9 @@ function App() {
 
         // Try to get current user
         try {
-          const user = await authService.getCurrentUser()
-          if (user) {
-            setUser(user)
+          const response = await authService.getCurrentUser()
+          if (response && response.data) {
+            setUser(response.data)
           }
         } catch {
           // Not authenticated - this is normal on first load
@@ -113,11 +113,11 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-      {/* Admin Routes - MASTER role only */}
+      {/* Admin Routes - admin role only */}
       <Route
         path="/admin"
         element={
-          <ProtectedRoute allowedRoles={['MASTER']}>
+          <ProtectedRoute allowedRoles={['admin']}>
             <AdminLayout />
           </ProtectedRoute>
         }
@@ -127,11 +127,11 @@ function App() {
         <Route path="users" element={<AdminUsers />} />
       </Route>
 
-      {/* Tenant Routes - TENANT_ADMIN and TENANT_USER roles */}
+      {/* Tenant Routes - tenant role */}
       <Route
         path="/tenant"
         element={
-          <ProtectedRoute allowedRoles={['TENANT_ADMIN', 'TENANT_USER']}>
+          <ProtectedRoute allowedRoles={['tenant']}>
             <TenantLayout />
           </ProtectedRoute>
         }

@@ -13,10 +13,10 @@ import { authService } from '@/services';
 import { useAuthStore } from '@/store/authStore';
 import type { LoginCredentials, User as UserType } from '@/types';
 
-// Schema atualizado para aceitar 'identifier' (username ou email) conforme API backend
+// Schema atualizado para aceitar email e password conforme API backend
 // Password validation follows API requirements: min 8 chars, 1 uppercase, 1 number, 1 special char
 const loginSchema = z.object({
-  identifier: z.string().min(3, 'Usuário ou e-mail é obrigatório'),
+  email: z.string().email('E-mail inválido'),
   password: z.string()
     .min(8, 'Mínimo 8 caracteres')
     .regex(/[A-Z]/, 'Deve conter letra maiúscula')
@@ -35,37 +35,30 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
-
-  // Detectar automaticamente se o usuário digitou email ou username
-  const identifierValue = watch('identifier');
-  const isEmail = identifierValue && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifierValue);
   
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      // Enviar como 'identifier' conforme atualização da API backend
-      await authService.login({
-        identifier: data.identifier,
+      // Enviar como email e password conforme atualização da API backend
+      const response = await authService.login({
+        email: data.email,
         password: data.password,
       });
 
-      // Fetch current user after successful login
-      const user = await authService.getCurrentUser();
-      
-      if (!user) {
+      if (!response.data || !response.data.user) {
         throw new Error('Failed to get user data');
       }
       
+      const user = response.data.user;
       setUser(user);
 
       toast.success('Login realizado com sucesso!');
 
       // Redirect based on role - matching API documentation
-      if (user.role === 'MASTER') {
+      if (user.role === 'admin') {
         navigate('/admin');
       } else {
         navigate('/tenant');
@@ -115,12 +108,12 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                label={isEmail ? "E-mail" : "Usuário"}
-                type={isEmail ? "email" : "text"}
-                placeholder={isEmail ? "seu@email.com" : "seu.usuario"}
-                icon={isEmail ? <Mail className="h-4 w-4" /> : <User className="h-4 w-4" />}
-                error={errors.identifier?.message}
-                {...register('identifier')}
+                label="E-mail"
+                type="email"
+                placeholder="seu@email.com"
+                icon={<Mail className="h-4 w-4" />}
+                error={errors.email?.message}
+                {...register('email')}
               />
 
               <Input
