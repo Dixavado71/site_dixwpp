@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -13,9 +13,15 @@ import {
   X,
   MessageSquare,
 } from 'lucide-react'
-import { useAuthStore } from '../../store/authStore'
-import { authService } from '../../services'
 import { toast } from 'sonner'
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'tenant';
+  isActive: boolean;
+}
 
 const navigation = [
   { name: 'Dashboard', href: '/tenant', icon: LayoutDashboard },
@@ -28,19 +34,23 @@ const navigation = [
 
 export default function TenantLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [user, setUser] = useState<User | null>(null)
   const location = useLocation()
   const navigate = useNavigate()
-  const { user, setUser } = useAuthStore()
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout()
-      setUser(null)
-      navigate('/login')
-      toast.success('Logout realizado com sucesso!')
-    } catch (error) {
-      toast.error('Erro ao realizar logout')
+  useEffect(() => {
+    const mockUserStr = localStorage.getItem('mock_user');
+    if (mockUserStr) {
+      setUser(JSON.parse(mockUserStr));
     }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('mock_user');
+    localStorage.removeItem('mock_remembered_identifier');
+    localStorage.removeItem('mock_remembered_password');
+    navigate('/login')
+    toast.success('Logout realizado com sucesso!')
   }
 
   return (

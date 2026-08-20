@@ -9,8 +9,6 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { useAuthStore } from '@/store/authStore';
-import type { User as UserType } from '@/types';
 
 const loginSchema = z.object({
   identifier: z.string().min(1, 'Usuário é obrigatório'),
@@ -20,9 +18,18 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: 'admin' | 'tenant';
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   
@@ -32,8 +39,8 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    const savedIdentifier = localStorage.getItem('remembered_identifier');
-    const savedPassword = localStorage.getItem('remembered_password');
+    const savedIdentifier = localStorage.getItem('mock_remembered_identifier');
+    const savedPassword = localStorage.getItem('mock_remembered_password');
     if (savedIdentifier || savedPassword) {
       if (savedIdentifier) setValue('identifier', savedIdentifier);
       if (savedPassword) setValue('password', savedPassword);
@@ -46,7 +53,7 @@ export default function LoginPage() {
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
       const isEmail = data.identifier.includes('@');
-      const mockUser: UserType = {
+      const mockUser: User = {
         id: 'mock-user-' + Date.now(),
         email: isEmail ? data.identifier : `${data.identifier}@demo.local`,
         name: data.identifier,
@@ -55,13 +62,13 @@ export default function LoginPage() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      setUser(mockUser);
+      localStorage.setItem('mock_user', JSON.stringify(mockUser));
       if (data.rememberMe) {
-        localStorage.setItem('remembered_identifier', data.identifier);
-        localStorage.setItem('remembered_password', data.password);
+        localStorage.setItem('mock_remembered_identifier', data.identifier);
+        localStorage.setItem('mock_remembered_password', data.password);
       } else {
-        localStorage.removeItem('remembered_identifier');
-        localStorage.removeItem('remembered_password');
+        localStorage.removeItem('mock_remembered_identifier');
+        localStorage.removeItem('mock_remembered_password');
       }
       toast.success(`Bem-vindo, ${mockUser.name}! (Modo Demonstração)`);
       navigate(mockUser.role === 'admin' ? '/admin' : '/tenant');
