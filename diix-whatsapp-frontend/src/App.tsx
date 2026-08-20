@@ -77,8 +77,8 @@ function App() {
         // Try to get current user
         try {
           const response = await authService.getCurrentUser()
-          if (response && response.data) {
-            setUser(response.data)
+          if (response && response.data && response.data.authenticated && response.data.user) {
+            setUser(response.data.user)
           }
         } catch {
           // Not authenticated - this is normal on first load
