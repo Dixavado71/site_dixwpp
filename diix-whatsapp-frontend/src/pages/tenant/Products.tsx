@@ -37,13 +37,15 @@ export default function TenantProducts() {
   })
 
   // Fetch products from API
-  const { data: products, isLoading } = useQuery<Product[]>({
+  const { data: productsData, isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const response = await tenantService.getProducts()
-      return response
+      return response.data
     },
   })
+
+  const products = productsData?.items
 
   // Create mutation
   const createMutation = useMutation({

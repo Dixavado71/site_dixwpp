@@ -34,10 +34,15 @@ export default function TenantSettings() {
   const [activeTab, setActiveTab] = useState<'profile' | 'notifications'>('profile')
   const queryClient = useQueryClient()
 
-  const { data: settings, isLoading } = useQuery({
+  const { data: settingsData, isLoading } = useQuery({
     queryKey: ['tenant-settings'],
-    queryFn: tenantService.getSettings,
+    queryFn: async () => {
+      const response = await tenantService.getSettings()
+      return response.data
+    },
   })
+
+  const settings = settingsData
 
   const updateMutation = useMutation({
     mutationFn: tenantService.updateSettings,
