@@ -1,50 +1,11 @@
-// Status de transações e entidades
-export const STATUS_OPTIONS = {
-  pending: { label: 'Pendente', color: 'bg-yellow-500/20 text-yellow-400' },
-  paid: { label: 'Pago', color: 'bg-green-500/20 text-green-400' },
-  completed: { label: 'Concluído', color: 'bg-green-500/20 text-green-400' },
-  cancelled: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400' },
-  active: { label: 'Ativo', color: 'bg-green-500/20 text-green-400' },
-  inactive: { label: 'Inativo', color: 'bg-red-500/20 text-red-400' },
-} as const;
+// Constants exports
+export * from './status';
+export * from './options';
+export * from './colors';
 
-// Tipos de transação financeira
-export const TRANSACTION_TYPES = {
-  income: { label: 'Entrada', color: 'bg-green-500/20 text-green-400', icon: '+' },
-  expense: { label: 'Saída', color: 'bg-red-500/20 text-red-400', icon: '-' },
-} as const;
-
-// Métodos de pagamento
-export const PAYMENT_METHODS = {
-  cash: 'Dinheiro',
-  credit: 'Cartão de Crédito',
-  debit: 'Cartão de Débito',
-  pix: 'PIX',
-  other: 'Outro',
-} as const;
-
-// Planos disponíveis
-export const PLANS = {
-  basic: { name: 'Básico', maxUsers: 5, maxClients: 100, maxProducts: 50 },
-  standard: { name: 'Standard', maxUsers: 15, maxClients: 500, maxProducts: 200 },
-  premium: { name: 'Premium', maxUsers: 50, maxClients: 2000, maxProducts: 1000 },
-  enterprise: { name: 'Enterprise', maxUsers: -1, maxClients: -1, maxProducts: -1 },
-} as const;
-
-// Roles do sistema
-export const ROLES = {
-  'admin-global': 'Administrador Global',
-  'admin-tenant': 'Administrador do Tenant',
-  admin: 'Administrador',
-  tenant: 'Tenant',
-  user: 'Usuário',
-} as const;
-
-// Temas disponíveis
-export const THEMES = {
-  dark: 'Escuro',
-  light: 'Claro',
-} as const;
+// Legacy exports for backward compatibility
+import { STATUS_OPTIONS, TRANSACTION_TYPES, PAYMENT_METHODS, PLANS, ROLES, THEMES } from './legacy';
+export { STATUS_OPTIONS, TRANSACTION_TYPES, PAYMENT_METHODS, PLANS, ROLES, THEMES };
 
 // Cores predefinidas para categorias
 export const CATEGORY_COLORS = [
