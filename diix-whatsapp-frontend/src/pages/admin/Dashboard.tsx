@@ -1,36 +1,43 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Building2, Users, TrendingUp, DollarSign, Loader2 } from 'lucide-react';
+import { Building2, Users, TrendingUp, DollarSign, Loader2, XCircle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { adminService } from '@/services';
 import type { DashboardStats, Tenant } from '@/types';
 
-export default function AdminDashboard() {
-  const queryClient = useQueryClient();
+interface AdminDashboardData {
+  data: {
+    stats: {
+      totalTenants: number;
+      activeTenants: number;
+      totalUsers: number;
+      totalProducts: number;
+      totalClients: number;
+    };
+    tenants: Tenant[];
+    recentTenants: Tenant[];
+  };
+}
 
-  // Fetch dashboard stats from API
-  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
+export default function AdminDashboard() {
+  // Fetch dashboard stats from API - GET /api/v1/admin/dashboard
+  const { data: dashboardData, isLoading: dashboardLoading, error: dashboardError } = useQuery({
     queryKey: ['adminDashboardStats'],
     queryFn: async () => {
       const response = await adminService.getDashboardStats();
-      return response;
+      return response as AdminDashboardData;
     },
   });
 
-  // Fetch recent tenants from API
-  const { data: tenants, isLoading: tenantsLoading } = useQuery<Tenant[]>({
-    queryKey: ['recentTenants'],
-    queryFn: async () => {
-      const response = await adminService.getTenants();
-      return response.slice(0, 5); // Get only first 5 for the list
-    },
-  });
+  const stats = dashboardData?.data.stats;
+  const tenants = dashboardData?.data.tenants || [];
+  const recentTenants = dashboardData?.data.recentTenants || [];
 
-  // Generate chart data from tenants
-  const chartData = tenants?.map((tenant, index) => ({
+  // Generate chart data from recent tenants
+  const chartData = recentTenants.map((tenant, index) => ({
     date: new Date(tenant.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
     tenants: index + 1,
-  })) || [];
+  }));
 
   const kpiCards = [
     {
@@ -55,18 +62,30 @@ export default function AdminDashboard() {
       glow: 'neon-glow-cyan',
     },
     {
-      title: 'Receita Recorrente',
-      value: `R$ ${(stats?.revenue ? stats.revenue.toFixed(2) : '0.00')}`,
+      title: 'Total de Produtos',
+      value: stats?.totalProducts?.toString() || '0',
       icon: DollarSign,
       color: 'from-accent-primary to-accent-secondary',
       glow: 'neon-glow-green',
     },
   ];
 
-  if (statsLoading) {
+  if (dashboardLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin text-accent-primary" />
+      </div>
+    );
+  }
+
+  if (dashboardError) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <XCircle className="w-12 h-12 text-error mx-auto mb-4" />
+          <p className="text-text-primary text-lg font-bold">Erro ao carregar dashboard</p>
+          <p className="text-text-muted">Tente recarregar a página</p>
+        </div>
       </div>
     );
   }
@@ -154,23 +173,19 @@ export default function AdminDashboard() {
         className="glass-card rounded-xl p-6"
       >
         <h2 className="text-xl font-bold text-text-primary mb-6">Últimos Tenants Cadastrados</h2>
-        {tenantsLoading ? (
-          <div className="flex justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-accent-primary" />
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left py-3 px-4 text-text-muted font-medium">Empresa</th>
-                  <th className="text-left py-3 px-4 text-text-muted font-medium">Email</th>
-                  <th className="text-left py-3 px-4 text-text-muted font-medium">Status</th>
-                  <th className="text-left py-3 px-4 text-text-muted font-medium">Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tenants?.map((tenant) => (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="text-left py-3 px-4 text-text-muted font-medium">Empresa</th>
+                <th className="text-left py-3 px-4 text-text-muted font-medium">Email</th>
+                <th className="text-left py-3 px-4 text-text-muted font-medium">Status</th>
+                <th className="text-left py-3 px-4 text-text-muted font-medium">Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tenants.length > 0 ? (
+                tenants.map((tenant) => (
                   <tr key={tenant.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                     <td className="py-3 px-4 text-text-primary">{tenant.name}</td>
                     <td className="py-3 px-4 text-text-secondary">{tenant.email}</td>
@@ -185,11 +200,17 @@ export default function AdminDashboard() {
                       {new Date(tenant.createdAt).toLocaleDateString('pt-BR')}
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="py-8 text-center text-text-muted">
+                    Nenhum tenant cadastrado
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </motion.div>
     </div>
   );

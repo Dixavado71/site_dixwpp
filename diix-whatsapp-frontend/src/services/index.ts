@@ -68,7 +68,7 @@ export const authService = {
 // All endpoints follow the pattern: /api/v1/admin/*
 export const adminService = {
   // Dashboard - GET /api/v1/admin/dashboard
-  getDashboardStats: async (): Promise<DashboardStats> => {
+  getDashboardStats: async () => {
     const response = await apiClient.get('/api/v1/admin/dashboard');
     return response.data;
   },
@@ -125,7 +125,7 @@ export const adminService = {
 // All endpoints follow the pattern: /api/v1/tenant/*
 export const tenantService = {
   // Dashboard - GET /api/v1/tenant/dashboard
-  getDashboardStats: async (): Promise<DashboardStats> => {
+  getDashboardStats: async () => {
     const response = await apiClient.get('/api/v1/tenant/dashboard');
     return response.data;
   },
