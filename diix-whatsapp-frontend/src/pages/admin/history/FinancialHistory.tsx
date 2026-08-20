@@ -1,43 +1,108 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { TrendingUp, TrendingDown, DollarSign, Wallet, Filter, Download } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, DollarSign, Wallet } from 'lucide-react';
+import { useFinancialStore } from '@/stores/financialStore';
+import { useDataTable } from '@/hooks/useDataTable';
+import { DataTable, ColumnDef } from '@/components/ui/table/DataTable';
+import { KPICard } from '@/components/ui/KPICard';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { LoadingState } from '@/components/ui/LoadingState';
+import { ActionButton } from '@/components/ui/ActionButton';
 import { Card, CardContent } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import type { FinancialTransaction } from '@/types';
+import { TRANSACTION_TYPES, STATUS_OPTIONS } from '@/constants';
+import { formatCurrency, formatDate } from '@/lib/utils';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-const mockTransactions: FinancialTransaction[] = [
-  { id: '1', tenantId: '1', type: 'income', description: 'Venda #001', amount: 150.00, status: 'paid', dueDate: '2024-12-10', paidDate: '2024-12-10', category: 'Vendas', createdAt: '2024-12-10T10:00:00Z', updatedAt: '2024-12-10T10:00:00Z' },
-  { id: '2', tenantId: '1', type: 'expense', description: 'Fornecedor XYZ', amount: 80.00, status: 'pending', dueDate: '2024-12-15', category: 'Suprimentos', createdAt: '2024-12-10T11:00:00Z', updatedAt: '2024-12-10T11:00:00Z' },
-  { id: '3', tenantId: '2', type: 'income', description: 'Serviço Premium', amount: 250.00, status: 'paid', dueDate: '2024-12-09', paidDate: '2024-12-09', category: 'Serviços', createdAt: '2024-12-09T14:00:00Z', updatedAt: '2024-12-09T14:00:00Z' },
-  { id: '4', tenantId: '2', type: 'expense', description: 'Aluguel', amount: 500.00, status: 'paid', dueDate: '2024-12-05', paidDate: '2024-12-05', category: 'Infraestrutura', createdAt: '2024-12-05T09:00:00Z', updatedAt: '2024-12-05T09:00:00Z' },
-];
-
-const COLORS = ['#00ff9d', '#bd00ff', '#00f3ff', '#ff6b6b', '#ffd93d'];
+const COLORS = ['#00ff9d', '#ff6b6b'];
 
 export default function FinancialHistory() {
-  const [statusFilter, setStatusFilter] = useState<'all' | 'paid' | 'pending' | 'cancelled'>('all');
-  const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
+  const { 
+    transactions, 
+    stats, 
+    filters, 
+    isLoading, 
+    fetchTransactions, 
+    fetchStats, 
+    setFilters, 
+    exportCSV 
+  } = useFinancialStore();
 
-  const filteredTransactions = mockTransactions.filter(t => {
-    const matchesStatus = statusFilter === 'all' || t.status === statusFilter;
-    const matchesType = typeFilter === 'all' || t.type === typeFilter;
-    return matchesStatus && matchesType;
+  useEffect(() => {
+    fetchTransactions({ limit: 10 });
+    fetchStats();
+  }, []);
+
+  const { 
+    data, 
+    searchTerm, 
+    setSearchTerm, 
+    page,
+    totalPages,
+    nextPage,
+    previousPage
+  } = useDataTable({
+    data: transactions,
+    searchKeys: ['description', 'category'],
+    initialPage: 1,
+    pageSize: 10,
   });
 
-  const stats = {
-    totalIncome: mockTransactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0),
-    totalExpenses: mockTransactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0),
-    balance: 0,
-    pendingTransactions: mockTransactions.filter(t => t.status === 'pending').length,
+  const handleExport = () => {
+    exportCSV();
   };
-  stats.balance = stats.totalIncome - stats.totalExpenses;
 
   const chartData = [
-    { name: 'Receita', value: stats.totalIncome },
-    { name: 'Despesa', value: stats.totalExpenses },
+    { name: 'Receita', value: stats?.totalIncome || 0 },
+    { name: 'Despesa', value: stats?.totalExpenses || 0 },
   ];
+
+  const columns: ColumnDef<typeof transactions[0]>[] = [
+    { key: 'description', header: 'Descrição', cell: (item) => item.description },
+    { 
+      key: 'category', 
+      header: 'Categoria', 
+      cell: (item) => <span className="text-text-muted">{item.category || '-'}</span> 
+    },
+    { 
+      key: 'type', 
+      header: 'Tipo', 
+      cell: (item) => (
+        <StatusBadge status={item.type} size="sm" />
+      ) 
+    },
+    { 
+      key: 'dueDate', 
+      header: 'Vencimento', 
+      cell: (item) => formatDate(item.dueDate) 
+    },
+    { 
+      key: 'amount', 
+      header: 'Valor', 
+      cell: (item) => (
+        <span className={`font-medium ${item.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
+          {item.type === 'income' ? '+' : '-'} {formatCurrency(item.amount)}
+        </span>
+      ) 
+    },
+    { 
+      key: 'status', 
+      header: 'Status', 
+      cell: (item) => <StatusBadge status={item.status} size="sm" /> 
+    },
+  ];
+
+  if (isLoading && !transactions.length) {
+    return (
+      <div className="space-y-6">
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 className="text-3xl font-bold text-text-primary">Controle Financeiro</h1>
+          <p className="text-text-muted mt-1">Acompanhe entradas, saídas e conciliação</p>
+        </motion.div>
+        <LoadingState message="Carregando transações..." />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -48,67 +113,30 @@ export default function FinancialHistory() {
 
       {/* KPI Cards */}
       <div className="grid gap-6 md:grid-cols-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-muted">Receitas</p>
-                <p className="text-2xl font-bold text-green-400 mt-1">
-                  R$ {stats.totalIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-              <div className="p-3 rounded-xl bg-green-500/10 text-green-400">
-                <TrendingUp className="h-6 w-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-muted">Despesas</p>
-                <p className="text-2xl font-bold text-red-400 mt-1">
-                  R$ {stats.totalExpenses.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-              <div className="p-3 rounded-xl bg-red-500/10 text-red-400">
-                <TrendingDown className="h-6 w-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-muted">Saldo</p>
-                <p className={`text-2xl font-bold mt-1 ${stats.balance >= 0 ? 'text-accent-primary' : 'text-error'}`}>
-                  R$ {stats.balance.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                </p>
-              </div>
-              <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary">
-                <DollarSign className="h-6 w-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-text-muted">Pendentes</p>
-                <p className="text-2xl font-bold text-yellow-400 mt-1">{stats.pendingTransactions}</p>
-              </div>
-              <div className="p-3 rounded-xl bg-yellow-500/10 text-yellow-400">
-                <Wallet className="h-6 w-6" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <KPICard
+          title="Receitas"
+          value={formatCurrency(stats?.totalIncome || 0)}
+          icon={<TrendingUp className="h-6 w-6" />}
+          color="green"
+        />
+        <KPICard
+          title="Despesas"
+          value={formatCurrency(stats?.totalExpenses || 0)}
+          icon={<TrendingDown className="h-6 w-6" />}
+          color="red"
+        />
+        <KPICard
+          title="Saldo"
+          value={formatCurrency(stats?.balance || 0)}
+          icon={<DollarSign className="h-6 w-6" />}
+          color={((stats?.balance || 0) >= 0 ? 'primary' : 'red') as any}
+        />
+        <KPICard
+          title="Pendentes"
+          value={stats?.pendingTransactions || 0}
+          icon={<Wallet className="h-6 w-6" />}
+          color="yellow"
+        />
       </div>
 
       {/* Gráficos */}
@@ -123,7 +151,7 @@ export default function FinancialHistory() {
                 <YAxis stroke="#a0a0a0" />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                  formatter={(value: number) => [`R$ ${value.toFixed(2)}`, '']}
+                  formatter={(value: number) => [formatCurrency(value), '']}
                 />
                 <Bar dataKey="value" fill="#00ff9d" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -152,7 +180,7 @@ export default function FinancialHistory() {
                 </Pie>
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                  formatter={(value: number) => [`R$ ${value.toFixed(2)}`, '']}
+                  formatter={(value: number) => [formatCurrency(value), '']}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -163,26 +191,38 @@ export default function FinancialHistory() {
       {/* Filtros */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 items-center">
             <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
+              value={filters.status || ''}
+              onChange={(e) => setFilters({ status: e.target.value as any || undefined })}
               className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-text-primary"
             >
-              <option value="all">Todos os Status</option>
-              <option value="paid">Pago</option>
-              <option value="pending">Pendente</option>
-              <option value="cancelled">Cancelado</option>
+              <option value="">Todos os Status</option>
+              {Object.entries(STATUS_OPTIONS).map(([key, { label }]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
             </select>
             <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as any)}
+              value={filters.type || ''}
+              onChange={(e) => setFilters({ type: e.target.value as any || undefined })}
               className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-text-primary"
             >
-              <option value="all">Todos os Tipos</option>
+              <option value="">Todos os Tipos</option>
               <option value="income">Entrada</option>
               <option value="expense">Saída</option>
             </select>
+            <ActionButton
+              icon={<Filter className="w-4 h-4" />}
+              label="Filtrar"
+              variant="outline"
+              onClick={() => {}}
+            />
+            <ActionButton
+              icon={<Download className="w-4 h-4" />}
+              label="Exportar"
+              variant="primary"
+              onClick={handleExport}
+            />
           </div>
         </CardContent>
       </Card>
@@ -190,52 +230,39 @@ export default function FinancialHistory() {
       {/* Tabela */}
       <Card>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-4 px-6 text-sm font-medium text-text-muted">Descrição</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-text-muted">Categoria</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-text-muted">Tipo</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-text-muted">Vencimento</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-text-muted">Valor</th>
-                  <th className="text-left py-4 px-6 text-sm font-medium text-text-muted">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTransactions.map((t) => (
-                  <tr key={t.id} className="border-b border-border hover:bg-white/5">
-                    <td className="py-4 px-6 text-sm text-text-primary">{t.description}</td>
-                    <td className="py-4 px-6 text-sm text-text-muted">{t.category}</td>
-                    <td className="py-4 px-6 text-sm">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        t.type === 'income' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {t.type === 'income' ? 'Entrada' : 'Saída'}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-sm text-text-muted">
-                      {new Date(t.dueDate).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td className={`py-4 px-6 text-sm font-medium ${
-                      t.type === 'income' ? 'text-green-400' : 'text-red-400'
-                    }`}>
-                      {t.type === 'income' ? '+' : '-'} R$ {t.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                    </td>
-                    <td className="py-4 px-6 text-sm">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        t.status === 'paid' ? 'bg-green-500/20 text-green-400' :
-                        t.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-red-500/20 text-red-400'
-                      }`}>
-                        {t.status === 'paid' ? 'Pago' : t.status === 'pending' ? 'Pendente' : 'Cancelado'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {data.length === 0 ? (
+            <EmptyState
+              icon={<DollarSign className="h-8 w-8" />}
+              title="Nenhuma transação encontrada"
+              description="Comece registrando novas transações para ver os dados aqui."
+            />
+          ) : (
+            <>
+              <DataTable columns={columns} data={data} />
+              {/* Paginação */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between p-4 border-t border-border">
+                  <p className="text-sm text-text-muted">
+                    Página {page} de {totalPages}
+                  </p>
+                  <div className="flex gap-2">
+                    <ActionButton
+                      label="Anterior"
+                      variant="outline"
+                      onClick={previousPage}
+                      disabled={page <= 1}
+                    />
+                    <ActionButton
+                      label="Próxima"
+                      variant="outline"
+                      onClick={nextPage}
+                      disabled={page >= totalPages}
+                    />
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

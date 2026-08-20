@@ -5,25 +5,27 @@ node_modules/
 # Build outputs
 dist/
 build/
+target/
+
+# TypeScript/JavaScript
 .next/
-out/
+.nuxt/
+.vuepress/dist/
+.output/
+.vercel/
+.svelte-kit/
 
 # Environment variables
 .env
 .env.local
 .env.*
+!.env.example
 
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
 
 # Logs
 *.log
@@ -38,39 +40,59 @@ coverage/
 htmlcov/
 .coverage
 
-# Testing
-.mypy_cache/
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache/
 .pytest_cache/
+.mypy_cache/
 
-# Compiled binaries
-*.exe
-*.dll
-*.so
-*.a
-*.obj
-*.out
+# Node.js (if applicable)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+jspm_packages/
+typings/
+.nyc_output
+coverage/
+*.lcov
+.nyc_output/
 
-# Compressed files
-*.zip
-*.gz
-*.tar
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.zst
-*.lz4
-*.lzh
-*.cab
-*.arj
-*.rpm
-*.deb
-*.Z
-*.lz
-*.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
+# Compiled JavaScript
+lib-cov
+*.tsbuildinfo
+
+# Next.js
+.next
+out/
+
+# Nuxt.js
+.nuxt
+dist
+.output
+
+# VuePress
+.vuepress/dist
+
+# Vite
+dist
+
+# React Native
+node_modules
+.platforms
+.derived
+.cache
+.temp
+coverage
 ```
