@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion } from 'framer-motion';
-import { User, Lock, Loader2, Mail } from 'lucide-react';
+import { User, Lock, Loader2, Mail, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,15 +13,16 @@ import { authService } from '@/services';
 import { useAuthStore } from '@/store/authStore';
 import type { LoginCredentials, User as UserType } from '@/types';
 
-// Schema atualizado para aceitar email e password conforme API backend
+// Schema atualizado para aceitar email/username e password conforme API backend
 // Password validation follows API requirements: min 8 chars, 1 uppercase, 1 number, 1 special char
 const loginSchema = z.object({
-  email: z.string().email('E-mail inválido'),
+  identifier: z.string().min(1, 'E-mail ou usuário é obrigatório'),
   password: z.string()
     .min(8, 'Mínimo 8 caracteres')
     .regex(/[A-Z]/, 'Deve conter letra maiúscula')
     .regex(/[0-9]/, 'Deve conter número')
     .regex(/[^A-Za-z0-9]/, 'Deve conter caractere especial'),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -30,21 +31,48 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      rememberMe: false,
+    },
   });
+
+  // Carregar dados salvos ao iniciar
+  useEffect(() => {
+    const savedIdentifier = localStorage.getItem('remembered_identifier');
+    const savedPassword = localStorage.getItem('remembered_password');
+    
+    if (savedIdentifier || savedPassword) {
+      // Usar o método setValue do react-hook-form para preencher os campos
+      if (savedIdentifier) {
+        setValue('identifier', savedIdentifier);
+      }
+      if (savedPassword) {
+        setValue('password', savedPassword);
+      }
+      // Marcar automaticamente o checkbox "Lembrar de mim" se houver dados salvos
+      setValue('rememberMe', true);
+    }
+  }, []);
   
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      // Enviar como email e password conforme atualização da API backend
+      // Determinar se é email ou username
+      const isEmail = data.identifier.includes('@');
+      
+      // Enviar como email/username e password conforme API backend
       const response = await authService.login({
-        email: data.email,
+        email: data.identifier, // Backend aceita tanto email quanto username no campo email
         password: data.password,
       });
 
@@ -54,6 +82,15 @@ export default function LoginPage() {
       
       const user = response.data.user;
       setUser(user);
+
+      // Salvar credenciais se "Lembrar de mim" estiver marcado
+      if (data.rememberMe) {
+        localStorage.setItem('remembered_identifier', data.identifier);
+        localStorage.setItem('remembered_password', data.password);
+      } else {
+        localStorage.removeItem('remembered_identifier');
+        localStorage.removeItem('remembered_password');
+      }
 
       toast.success('Login realizado com sucesso!');
 
@@ -108,22 +145,43 @@ export default function LoginPage() {
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                label="E-mail"
-                type="email"
-                placeholder="seu@email.com"
+                label="E-mail ou Usuário"
+                type="text"
+                placeholder="seu@email.com ou usuario"
                 icon={<Mail className="h-4 w-4" />}
-                error={errors.email?.message}
-                {...register('email')}
+                error={errors.identifier?.message}
+                {...register('identifier')}
               />
 
-              <Input
-                label="Senha"
-                type="password"
-                placeholder="••••••••"
-                icon={<Lock className="h-4 w-4" />}
-                error={errors.password?.message}
-                {...register('password')}
-              />
+              <div className="relative">
+                <Input
+                  label="Senha"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  icon={<Lock className="h-4 w-4" />}
+                  error={errors.password?.message}
+                  {...register('password')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[34px] text-text-muted hover:text-text-primary transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-gray-300 text-accent-primary focus:ring-accent-primary"
+                    {...register('rememberMe')}
+                  />
+                  <span className="text-sm text-text-muted">Lembrar de mim</span>
+                </label>
+              </div>
 
               <Button
                 type="submit"
