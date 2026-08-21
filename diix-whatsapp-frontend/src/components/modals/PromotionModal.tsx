@@ -7,7 +7,6 @@ import { promotionCreateSchema, type PromotionCreateFormData } from '@/schemas/p
 import { useTenantPromotionStore } from '@/stores/tenantPromotionStore'
 import { useTenantProductStore } from '@/stores/tenantProductStore'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 import type { Promotion, Product } from '@/types'
 
 interface PromotionModalProps {
@@ -93,15 +92,13 @@ export function PromotionModal({ mode, promotion, isOpen, onClose, onSave }: Pro
       
       if (mode === 'create') {
         await create(createData)
-        toast.success('Promoção criada com sucesso!')
       } else if (mode === 'edit') {
         if (!promotion?.id) throw new Error('Promoção não encontrada')
         await update(promotion.id, createData)
-        toast.success('Promoção atualizada com sucesso!')
       }
       onClose()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao salvar promoção')
+      // Error toast já é disparado pelo store
     } finally {
       setIsSubmitting(false)
     }

@@ -4,7 +4,6 @@ import { tenantCreateSchema, type TenantCreateFormData } from '@/schemas/tenantS
 import { Form, FormInput, FormSelect } from '@/components/ui/form/Form';
 import { Modal } from '@/components/ui/modal/Modal';
 import { useTenantsStore } from '@/stores/tenantsStore';
-import { toast } from 'sonner';
 
 interface TenantModalProps {
   mode: 'create' | 'edit' | 'view';
@@ -59,7 +58,6 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
           plan: data.plan,
           limits: data.limits,
         });
-        toast.success('Tenant criado com sucesso!');
       } else {
         await updateTenant(tenant!.id, {
           name: data.name,
@@ -72,11 +70,10 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
           plan: data.plan,
           limits: data.limits,
         });
-        toast.success('Tenant atualizado com sucesso!');
       }
       onClose();
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao salvar tenant');
+      // Error toast já é disparado pelo store
     }
   };
 

@@ -4,7 +4,6 @@ import { Modal } from '@/components/ui/modal/Modal'
 import { Form, FormInput, FormSelect } from '@/components/ui/form/Form'
 import { Button } from '@/components/ui/Button'
 import { Button as UIButton } from '@/components/ui/Button'
-import { toast } from 'sonner'
 import { useState, useEffect } from 'react'
 import * as z from 'zod'
 
@@ -79,14 +78,9 @@ export function ServiceModal({ mode, service, isOpen, onClose, onSave }: Service
       if (onSave) {
         await onSave(data)
       }
-      if (mode === 'create') {
-        toast.success('Serviço criado com sucesso!')
-      } else if (mode === 'edit') {
-        toast.success('Serviço atualizado com sucesso!')
-      }
       onClose()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao salvar serviço')
+      // Error toast já é disparado pelo onSave ou store
     } finally {
       setIsSubmitting(false)
     }
