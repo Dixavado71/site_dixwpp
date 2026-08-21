@@ -91,8 +91,8 @@ export default function Sidebar({ variant, isOpen, onClose, isMobile }: SidebarP
     localStorage.removeItem('mock_user');
     localStorage.removeItem('mock_remembered_identifier');
     localStorage.removeItem('mock_remembered_password');
-    navigate('/login')
     toast.success('Logout realizado com sucesso!')
+    navigate('/login')
   }
 
   const toggleExpand = (name: string) => {

@@ -29,6 +29,7 @@ const navigation = [
   { name: 'Produtos', href: '/tenant/products', icon: Package },
   { name: 'Serviços', href: '/tenant/services', icon: Briefcase },
   { name: 'Promoções', href: '/tenant/promotions', icon: Percent },
+  { name: 'Mensagens', href: '/tenant/messages', icon: MessageSquare },
   { name: 'Configurações', href: '/tenant/settings', icon: Settings },
 ]
 
@@ -49,8 +50,8 @@ export default function TenantLayout() {
     localStorage.removeItem('mock_user');
     localStorage.removeItem('mock_remembered_identifier');
     localStorage.removeItem('mock_remembered_password');
-    navigate('/login')
     toast.success('Logout realizado com sucesso!')
+    navigate('/login')
   }
 
   return (

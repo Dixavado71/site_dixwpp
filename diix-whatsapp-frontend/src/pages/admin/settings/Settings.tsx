@@ -4,7 +4,7 @@ import { Settings as SettingsIcon, Shield, Bell, Link as LinkIcon, Palette } fro
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { toast } from 'sonner';
+import { useSettingsStore } from '@/stores/settingsStore';
 
 type SettingsTab = 'general' | 'security' | 'notifications' | 'integrations' | 'appearance';
 
@@ -18,9 +18,30 @@ const tabs: { id: SettingsTab; name: string; icon: any }[] = [
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
-
-  const handleSave = () => {
-    toast.success('Configurações salvas com sucesso!');
+  const { updateGeneralSettings, updateSecuritySettings, updateNotificationSettings, updateIntegrationSettings, updateAppearanceSettings } = useSettingsStore();
+  
+  const handleSave = async () => {
+    try {
+      switch (activeTab) {
+        case 'general':
+          await updateGeneralSettings({});
+          break;
+        case 'security':
+          await updateSecuritySettings({});
+          break;
+        case 'notifications':
+          await updateNotificationSettings({});
+          break;
+        case 'integrations':
+          await updateIntegrationSettings({});
+          break;
+        case 'appearance':
+          await updateAppearanceSettings({});
+          break;
+      }
+    } catch (error) {
+      // Erro já tratado no store
+    }
   };
 
   return (

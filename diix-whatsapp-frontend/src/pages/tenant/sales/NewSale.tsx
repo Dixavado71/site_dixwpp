@@ -97,7 +97,7 @@ export default function TenantNewSale() {
 
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (cart.length === 0) {
       toast.error('Adicione itens ao carrinho!');
       return;
@@ -106,11 +106,30 @@ export default function TenantNewSale() {
       toast.error('Selecione um cliente!');
       return;
     }
-    toast.success(`Venda finalizada com sucesso! Total: R$ ${cartTotal.toFixed(2).replace('.', ',')}`);
-    // Aqui seria implementada a impressão do recibo
-    printReceipt();
-    setCart([]);
-    setSelectedCustomer(null);
+    
+    setIsSaving(true);
+    try {
+      const saleData = {
+        tenantId: tenantId!,
+        customerId: selectedCustomer.id,
+        items: cart.map(item => ({
+          id: item.id,
+          type: item.type,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        paymentMethod,
+        total: cartTotal
+      };
+      
+      await saveSale(saleData);
+      setCart([]);
+      setSelectedCustomer(null);
+    } catch (error) {
+      // Erro já tratado no store
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const printReceipt = () => {
