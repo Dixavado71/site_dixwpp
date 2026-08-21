@@ -1,110 +1,86 @@
-# DIIX WhatsApp Frontend - Sistema de Gestão para Salões e Barbearias
+# DIIX WhatsApp Frontend - Sistema de Gestão para Tenants
 
-## 📊 Visão Geral do Projeto
+## 📋 Visão Geral do Projeto
+
+Sistema completo de gestão para salões, barbearias e estabelecimentos comerciais, com foco em agendamentos, vendas e controle financeiro. Desenvolvido com React, TypeScript e design cyberpunk moderno.
 
 **Versão Atual:** 1.0.0  
-**Data da Última Atualização:** Janeiro 2025  
-**Status:** ✅ Em Desenvolvimento Ativo
-
-### Descrição
-Sistema frontend completo para gestão de salões de beleza, barbearias e estabelecimentos similares, integrado com WhatsApp para comunicação automatizada com clientes.
+**Última Atualização:** Janeiro 2025
 
 ---
 
-## 🎯 Funcionalidades Implementadas
+## ✨ Funcionalidades Implementadas
 
-### Dashboard do Tenant (Lojista)
-- ✅ **Visão Geral Completa**: Stats em tempo real de clientes, produtos, serviços e agendamentos
-- ✅ **Vendas por Categoria**: Gráfico de pizza interativo mostrando distribuição de receitas por categoria
-- ✅ **Histórico de Vendas (7 dias)**: Gráfico de barras com evolução diária de receita
-- ✅ **Resumo Financeiro**: Total, média diária e quantidade de vendas
-- ✅ **Produtos Mais Vendidos**: Ranking top 5 com status de estoque
-- ✅ **Ações Rápidas**: Atalhos para operações frequentes
-- ✅ **Vendas Recentes**: Tabela com últimas transações e status
+### Para Tenants (Clientes)
 
-### Componentes UI
-- ✅ 15+ componentes reutilizáveis (Button, Input, Card, Modal, DataTable, etc.)
-- ✅ Design System Cyberpunk totalmente implementado
-- ✅ Suporte a temas personalizáveis (Cyberpunk, Corporate, Minimal, Neon)
-- ✅ Dark/Light mode toggle
+#### 🏠 Dashboard
+- Visão geral com estatísticas principais
+- Gráficos de receita mensal (Recharts)
+- Histórico de vendas dos últimos 7 dias
+- Vendas por categoria (gráfico de pizza)
+- Cards de métricas em tempo real
 
-### Sistema de Agendamento
-- ✅ Formulário de agendamento completo
-- ✅ Lista de agendamentos com views diário/semanal/mensal
-- ✅ Cards individuais de agendamento
-- ✅ Integração com calendário FullCalendar
-- ✅ Validação de conflitos de horário
+#### 💰 Vendas e Controle Financeiro
+- **Nova Venda**: Registro rápido de vendas com múltiplos itens
+- **Histórico de Vendas**: Lista completa com filtros e busca
+- **Controle Financeiro**: Receitas, despesas e saldo
+- **Relatórios**: Análise detalhada do desempenho
 
-### Calendário Integrado
-- ✅ Views: mês, semana, dia
-- ✅ Drag & drop de eventos
-- ✅ Resize de eventos
-- ✅ Cores por tipo de evento
-- ✅ Tema cyberpunk customizado
+#### 📅 Agendamentos (Em Implementação)
+- Calendário integrado (FullCalendar)
+- Views: mês, semana, dia
+- Drag & drop de eventos
+- Integração com WhatsApp
 
-### Gráficos Dashboard (Recharts)
-- ✅ RevenueChart - Gráfico de linha para receita mensal
-- ✅ ExpensesChart - Gráfico de barras para despesas
-- ✅ ProfitChart - Gráfico de área para lucro
-- ✅ SalesByCategoryChart - Gráfico de pizza por categoria
-- ✅ DailyAppointmentsChart - Gráfico de barras diário
+#### 👥 Gestão de Clientes
+- Cadastro completo de clientes
+- Histórico de compras por cliente
+- Contatos integrados com WhatsApp
 
-### Notificações In-App
-- ✅ NotificationBell com badge
-- ✅ NotificationPanel dropdown
-- ✅ Tipos: agendamento, cancelamento, lembrete, estoque, mensagem, pagamento
+#### 📦 Produtos e Serviços
+- Catálogo de produtos com categorias
+- Serviços oferecidos pelo estabelecimento
+- Controle de estoque básico
 
-### Error Handling
-- ✅ ErrorBoundary principal
-- ✅ AsyncErrorBoundary para lazy loading
-- ✅ FallbackUI customizável
+#### 📱 Mensagens
+- Integração com WhatsApp
+- Envio de mensagens rápidas
+- Templates personalizáveis
 
-### Acessibilidade (WCAG 2.1 AA)
-- ✅ Skip links para navegação por teclado
-- ✅ Focus trap em modais e dropdowns
-- ✅ Live regions para screen readers
-- ✅ Suporte a prefers-reduced-motion
-- ✅ Contraste de cores ajustado
-- ✅ Touch targets ≥ 48px no mobile
-
-### Responsividade
-- ✅ Mobile-first approach
-- ✅ Breakpoints: Mobile (<640px), Tablet (640-1024px), Desktop (>1024px)
-- ✅ Sidebar drawer no mobile
-- ✅ Bottom sheet para modais mobile
-- ✅ Grid adaptativo de stats cards
-
-### Internacionalização (i18n)
-- ✅ 4 idiomas: pt-BR, en-US, es, fr
-- ✅ i18next configurado
-- ✅ Estrutura de recursos completa
+#### 🎨 Interface
+- Design cyberpunk responsivo
+- Temas personalizáveis (Cyberpunk, Corporate, Minimal, Neon)
+- Dark/Light mode toggle
+- Totalmente responsivo (mobile-first)
 
 ---
 
-## 🔧 Stack Tecnológico
+## 🛠️ Stack Tecnológico
 
-### Frontend Core
-- **React 19** com TypeScript strict mode
-- **Vite** para build e dev server
-- **React Router v7** para navegação
-- **Zustand** para gerenciamento de estado
-- **TanStack Query** para data fetching
+### Frontend
+- **React 19** - Biblioteca UI principal
+- **TypeScript 5** - Tipagem estática strict mode
+- **Vite** - Build tool e dev server
+- **TailwindCSS** - Estilização utilitária
+- **Framer Motion** - Animações
+- **Lucide React** - Ícones
+- **Zustand** - Gerenciamento de estado
+- **React Router DOM** - Roteamento
+- **TanStack Query** - Data fetching
+- **Recharts** - Gráficos e dashboards
+- **FullCalendar** - Calendário integrado
+- **date-fns** - Utilitários de data
+- **Zod** - Validação de schemas
+- **React Hook Form** - Formulários
+- **i18next** - Internacionalização (pt-BR, en-US, es, fr)
+- **Sonner** - Notificações toast
 
-### UI & Estilização
-- **TailwindCSS** para utilitários
-- **Framer Motion** para animações
-- **Design System próprio** (Cyberpunk theme)
-
-### Gráficos & Visualização
-- **Recharts** para gráficos (linha, barra, área, pizza)
-- **FullCalendar** para calendário
-
-### Validação & Forms
-- **React Hook Form** para formulários
-- **Zod** para validação de schemas
-
-### Internacionalização
-- **i18next** para tradução
+### Bibliotecas Adicionais
+- `@fullcalendar/react` - Calendário
+- `recharts` - Gráficos
+- `cmdk` - Search omnibox (Cmd+K)
+- `@dnd-kit/core` - Drag and drop
+- `@tanstack/react-virtual` - Virtualização de listas
 
 ---
 
@@ -113,43 +89,165 @@ Sistema frontend completo para gestão de salões de beleza, barbearias e estabe
 ```
 /src
 ├── components/
-│   ├── ui/                 # Componentes UI base
-│   ├── scheduling/         # Sistema de agendamento
-│   ├── calendar/           # Calendário FullCalendar
-│   ├── dashboard/          # Gráficos e widgets
-│   ├── notifications/      # Notificações in-app
-│   ├── error-handling/     # Error boundaries
-│   ├── layout/             # Layout e navegação
-│   └── categories/         # Categorias de vendas
+│   ├── layout/           # Layouts (Admin, Tenant)
+│   ├── ui/               # Componentes UI reutilizáveis
+│   ├── dashboard/        # Componentes do dashboard
+│   ├── scheduling/       # Sistema de agendamento
+│   ├── calendar/         # Calendário FullCalendar
+│   ├── notifications/    # Notificações in-app
+│   └── error-handling/   # Error boundaries
 ├── pages/
-│   ├── admin/              # Dashboard administrativo
-│   └── tenant/             # Dashboard do lojista
-│       ├── Dashboard.tsx   # Dashboard principal
-│       ├── history/        # Histórico de vendas
-│       ├── sales/          # Nova venda
-│       └── reports/        # Relatórios
-├── stores/                 # Zustand stores
-│   ├── appointmentStore.ts
-│   ├── salesStore.ts
-│   ├── categoryStore.ts
-│   ├── themeStore.ts
-│   └── notificationStore.ts
-├── services/               # API calls
-│   ├── appointmentService.ts
-│   ├── saleService.ts
-│   └── categoryService.ts
-├── types/                  # TypeScript interfaces
-│   ├── appointment.ts
-│   └── index.ts
-├── i18n/                   # Internacionalização
-├── hooks/                  # Custom hooks
-├── utils/                  # Utilitários
-└── styles/                 # CSS global e temas
+│   ├── admin/            # Páginas do administrador
+│   └── tenant/           # Páginas dos tenants
+│       ├── Dashboard.tsx
+│       ├── Clients.tsx
+│       ├── Products.tsx
+│       ├── Services.tsx
+│       ├── Promotions.tsx
+│       ├── Settings.tsx
+│       ├── sales/
+│       │   ├── NewSale.tsx
+│       │   └── Sales.tsx (nova)
+│       ├── history/
+│       │   ├── SalesHistory.tsx
+│       │   ├── FinancialHistory.tsx
+│       │   └── History.tsx (nova)
+│       └── reports/
+├── stores/               # Zustand stores
+├── services/             # API services
+├── types/                # TypeScript interfaces
+├── schemas/              # Zod schemas
+├── i18n/                 # Internacionalização
+└── styles/               # CSS global e temas
 ```
 
 ---
 
-## 🚀 Como Rodar o Projeto
+## 📊 Métricas do Projeto
+
+| Categoria | Status | Progresso | Prioridade |
+|-----------|--------|-----------|------------|
+| Componentes UI | ✅ Completo | 95% | Baixa |
+| Sistema de Agendamento | ⚠️ Em Implementação | 60% | CRÍTICA |
+| Calendário Integrado | ✅ Implementado | 100% | CRÍTICA |
+| Notificações In-App | ✅ Implementado | 80% | Alta |
+| Gráficos no Dashboard | ✅ Implementado | 100% | Alta |
+| Controle Financeiro | ✅ Implementado | 90% | Média |
+| Testes (Coverage) | ❌ Insuficiente | ~3% | CRÍTICA |
+| TypeScript Strict | ✅ Implementado | 100% | Baixa |
+| Error Boundaries | ✅ Implementado | 100% | Alta |
+| Acessibilidade (WCAG 2.1 AA) | ⚠️ Parcial | 85% | Alta |
+| Internacionalização (i18n) | ✅ Implementado | 80% | Baixa |
+| Temas Personalizáveis | ✅ Implementado | 100% | Média |
+| Responsividade Mobile | ✅ Implementado | 95% | Alta |
+
+---
+
+## 🔴 Relatório de Falhas e Erros
+
+### Erros Críticos (🔴)
+
+| ID | Descrição | Impacto | Status |
+|----|-----------|---------|--------|
+| C01 | Ausência de testes automatizados | Risco de regressões em produção | ❌ Pendente |
+| C02 | Bundle size > 500KB (1.17MB) | Performance de carregamento | ⚠️ Atenção |
+| C03 | Security hardening incompleto | Vulnerabilidades potenciais | ❌ Pendente |
+
+### Erros Altos (🟠)
+
+| ID | Descrição | Impacto | Status |
+|----|-----------|---------|--------|
+| A01 | Coverage de testes < 10% | Qualidade do código comprometida | ❌ Pendente |
+| A02 | RBAC não implementado completamente | Controle de acesso limitado | ⚠️ Parcial |
+| A03 | WebSocket para notificações não configurado | Polling ineficiente | ❌ Pendente |
+
+### Erros Médios (🟡)
+
+| ID | Descrição | Impacto | Status |
+|----|-----------|---------|--------|
+| M01 | Fluxo de caixa sem conciliação bancária | Funcionalidade incompleta | ❌ Pendente |
+| M02 | Kanban board não implementado | Gestão de vendas limitada | ❌ Pendente |
+| M03 | Search omnibox (Cmd+K) não implementado | UX reduzida | ❌ Pendente |
+
+### Erros Baixos (🟢)
+
+| ID | Descrição | Impacto | Status |
+|----|-----------|---------|--------|
+| B01 | Traduções incompletas (algumas strings) | i18n parcial | ⚠️ Em progresso |
+| B02 | Storybook não configurado | Documentação de componentes | ❌ Pendente |
+| B03 | PWA não configurado | Sem suporte offline | ❌ Pendente |
+
+---
+
+## 🚀 Melhorias Necessárias
+
+### Sprint 1 (Semana 1-2) - Crítico 🔥
+- [ ] Sistema de Agendamento (MVP completo)
+- [ ] Testes Unitários (Componentes UI básicos)
+- [ ] Correção de warnings TypeScript restantes
+- [ ] Otimização de bundle size
+
+### Sprint 2 (Semana 3-4) - Alto ⬆️
+- [ ] Notificações In-App com WebSocket
+- [ ] Acessibilidade (Skip links, live regions, testes screen reader)
+- [ ] Testes Unitários (Componentes complexos)
+- [ ] RBAC completo com permissões granulares
+
+### Sprint 3 (Semana 5-6) - Médio 📊
+- [ ] Fluxo de Caixa com conciliação bancária
+- [ ] Kanban Board de Vendas
+- [ ] Search Omnibox (Cmd+K)
+- [ ] Relatórios financeiros avançados (DRE)
+
+### Sprint 4 (Semana 7-8) - Polimento ✨
+- [ ] Testes de Integração
+- [ ] Testes E2E (Playwright)
+- [ ] Performance Optimization (lazy loading, virtualização)
+- [ ] Security Hardening completo
+- [ ] Documentação técnica
+
+---
+
+## ✅ Checklist de Qualidade
+
+### Código
+- [x] TypeScript strict mode habilitado
+- [x] ESLint configurado
+- [x] Prettier para formatação
+- [ ] Testes unitários (>80% coverage)
+- [ ] Testes de integração
+- [ ] Testes E2E
+
+### Performance
+- [x] Code splitting básico
+- [x] CSS purgado (Tailwind)
+- [ ] Lazy loading de rotas
+- [ ] Virtualização de listas longas
+- [ ] Image optimization (WebP, lazy loading)
+- [ ] Service Worker (PWA)
+
+### Acessibilidade (WCAG 2.1 AA)
+- [x] Focus visible em inputs e buttons
+- [x] Labels em formulários
+- [x] Keyboard navigation em modais
+- [x] Skip links implementados
+- [x] Live regions para notificações
+- [x] prefers-reduced-motion suportado
+- [ ] Testes com NVDA/JAWS
+- [ ] Contraste de cores verificado
+
+### Segurança
+- [x] Validação de inputs com Zod
+- [ ] CSRF tokens
+- [ ] XSS prevention (DOMPurify)
+- [ ] RBAC completo
+- [ ] Content Security Policy
+- [ ] Secure headers
+- [ ] Session management com timeout
+
+---
+
+## 📦 Instalação e Uso
 
 ### Pré-requisitos
 - Node.js >= 18.x
@@ -177,152 +275,77 @@ npm run preview
 
 ### Testes
 ```bash
-npm test                    # Rodar testes unitários
+npm test                    # Rodar todos testes
 npm test -- --watch         # Watch mode
-npm test -- --coverage      # Coverage report
+npm test -- --coverage      # Com coverage report
+```
+
+### Lint e Format
+```bash
+npm run lint
+npm run format
 ```
 
 ---
 
-## 📈 Métricas do Projeto
+## 🌐 Internacionalização
 
-| Métrica | Status | Progresso |
-|---------|--------|-----------|
-| Componentes UI | ✅ Completo | 100% |
-| Sistema de Agendamento | ✅ Implementado | 90% |
-| Calendário Integrado | ✅ Implementado | 100% |
-| Gráficos Dashboard | ✅ Implementado | 100% |
-| Notificações In-App | ✅ Implementado | 80% |
-| Error Boundaries | ✅ Implementado | 100% |
-| Temas Personalizáveis | ✅ Implementado | 100% |
-| Acessibilidade WCAG | ✅ Implementado | 85% |
-| Responsividade | ✅ Implementado | 90% |
-| Testes Unitários | ⚠️ Pendente | ~3% |
-| Testes E2E | ❌ Pendente | 0% |
+Idiomas suportados:
+- 🇧🇷 Português (pt-BR) - Padrão
+- 🇺🇸 English (en-US)
+- 🇪🇸 Español (es)
+- 🇫🇷 Français (fr)
+
+Para adicionar mais idiomas, edite `/src/i18n/resources/`
 
 ---
 
-## 🐛 Relatório de Falhas e Erros Conhecidos
+## 🎨 Temas Disponíveis
 
-### Críticos (🔴)
-| ID | Descrição | Impacto | Status |
-|----|-----------|---------|--------|
-| ERR001 | Test coverage insuficiente (~3%) | Risco de regressões | ⏳ Em progresso |
-| ERR002 | Ausência de testes E2E | Sem validação de fluxos completos | ❌ Pendente |
-| ERR003 | Security hardening incompleto | Vulnerabilidades potenciais | ⏳ Em progresso |
+O sistema suporta os seguintes temas:
+- **Cyberpunk** (padrão) - Tema escuro com neon verde
+- **Corporate** - Tema profissional azul
+- **Minimal** - Tema claro e limpo
+- **Neon** - Tema colorido vibrante
 
-### Altos (🟠)
-| ID | Descrição | Impacto | Status |
-|----|-----------|---------|--------|
-| ERR011 | Type imports com verbatimModuleSyntax | Erros de build TypeScript | ⚠️ A corrigir |
-| ERR012 | Checkbox value type no AppointmentForm | Type mismatch | ⚠️ A corrigir |
-| ERR013 | CalendarEvent export no index | Import falhando | ⚠️ A corrigir |
-
-### Médios (🟡)
-| ID | Descrição | Impacto | Status |
-|----|-----------|---------|--------|
-| ERR021 | Traduções i18n incompletas | Strings em inglês | ⏳ Em progresso |
-| ERR022 | Bundle size não otimizado | Performance impact | ❌ Pendente |
-| ERR023 | Service Worker não implementado | Sem PWA | ❌ Pendente |
-
-### Baixos (🟢)
-| ID | Descrição | Impacto | Status |
-|----|-----------|---------|--------|
-| ERR031 | Search Omnibox (Cmd+K) não implementado | UX reduzida | ❌ Pendente |
-| ERR032 | Kanban Board de vendas ausente | Feature request | ❌ Pendente |
-| ERR033 | Fluxo de caixa avançado pendente | Feature request | ❌ Pendente |
+Toggle dark/light mode disponível no header.
 
 ---
 
-## 🛠️ Melhorias Necessárias
+## 📱 Responsividade
 
-### Sprint 1 (Prioridade CRÍTICA) 🔥
-- [ ] **Testes Unitários**: Componentes UI básicos (Button, Input, Card)
-- [ ] **Correção TypeScript**: Resolver erros de verbatimModuleSyntax
-- [ ] **Integration Tests**: Configurar estrutura básica
-- [ ] **CI/CD Pipeline**: GitHub Actions com testes automatizados
+Breakpoints suportados:
+- **Mobile**: < 640px (2 colunas, bottom sheets)
+- **Tablet**: 640px - 1024px (3-4 colunas)
+- **Desktop**: > 1024px (4-6 colunas, sidebar fixa)
 
-### Sprint 2 (Prioridade ALTA) ⬆️
-- [ ] **Testes E2E**: Playwright configurado
-- [ ] **Security Hardening**: CSRF tokens, XSS prevention, RBAC completo
-- [ ] **Performance Optimization**: Lazy loading, bundle splitting
-- [ ] **Bundle Analysis**: Rollup visualizer configurado
-
-### Sprint 3 (Prioridade MÉDIA) 📊
-- [ ] **Search Omnibox**: Cmd+K com cmdk
-- [ ] **Kanban Board**: @dnd-kit para drag-and-drop
-- [ ] **Fluxo de Caixa Avançado**: Contas a receber/pagar
-- [ ] **Relatórios Financeiros**: DRE, projeções
-
-### Sprint 4 (Polimento) ✨
-- [ ] **Documentação**: Storybook para componentes
-- [ ] **Traduções Completas**: 100% i18n coverage
-- [ ] **PWA**: Service Worker + manifest
-- [ ] **Analytics**: @analytics/react
+Testado em:
+- iPhone SE, Galaxy S20
+- iPad, Galaxy Tab
+- 1366x768, 1920x1080, 4K
 
 ---
 
-## 📋 Checklist de Qualidade
+## 🔐 Autenticação
 
-### Código
-- [x] TypeScript strict mode habilitado
-- [x] ESLint configurado
-- [x] Prettier para formatação
-- [ ] Test coverage > 80%
-- [ ] Zero TypeScript errors no build
+Sistema de autenticação simulada para desenvolvimento:
+- Admin: qualquer email com domínio admin
+- Tenant: qualquer outro email
 
-### Performance
-- [ ] Lighthouse score > 90
-- [ ] First Contentful Paint < 1.5s
-- [ ] Time to Interactive < 3.5s
-- [ ] Bundle size < 500KB (gzipped)
-
-### Acessibilidade
-- [x] WCAG 2.1 AA compliance básico
-- [ ] Testes com NVDA/JAWS
-- [ ] Keyboard navigation completa
-- [ ] Color contrast verificado
-
-### Segurança
-- [ ] CSRF protection
-- [ ] XSS prevention (DOMPurify)
-- [ ] RBAC implementado
-- [ ] CSP headers configurados
-- [ ] Session timeout automático
+**Produção**: Integrar com backend real via API
 
 ---
 
 ## 📞 Suporte e Contribuição
 
-### Reportar Bugs
-Abra uma issue no GitHub com:
-- Descrição detalhada do problema
-- Passos para reproduzir
-- Comportamento esperado vs atual
-- Screenshots/vídeos (se aplicável)
-
-### Contribuir
-1. Fork o projeto
-2. Crie uma branch feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
+Para bugs, sugestões ou contribuições, abra uma issue no repositório.
 
 ---
 
 ## 📄 Licença
 
-MIT License - veja o arquivo LICENSE para detalhes.
+MIT License - Ver arquivo LICENSE para detalhes.
 
 ---
 
-## 👥 Equipe
-
-Desenvolvido pela equipe DIIX.
-
-**Contato:** suporte@diix.com.br  
-**Website:** https://diix.com.br
-
----
-
-*Última atualização: Janeiro 2025*
+**Desenvolvido com ❤️ usando React + TypeScript + TailwindCSS**
