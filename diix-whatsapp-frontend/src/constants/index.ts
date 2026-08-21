@@ -1,11 +1,6 @@
-// Constants exports
-export * from './status';
+// Constants exports - Fonte única da verdade
 export * from './options';
 export * from './colors';
-
-// Legacy exports for backward compatibility
-import { STATUS_OPTIONS, TRANSACTION_TYPES, PAYMENT_METHODS, PLANS, ROLES, THEMES } from './legacy';
-export { STATUS_OPTIONS, TRANSACTION_TYPES, PAYMENT_METHODS, PLANS, ROLES, THEMES };
 
 // Cores predefinidas para categorias
 export const CATEGORY_COLORS = [
