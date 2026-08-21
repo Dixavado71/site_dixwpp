@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Scissors, Plus, Search, Edit, Trash2, Clock, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { ConfirmModal } from '@/components/modals/ConfirmModal';
+import { useModal } from '@/hooks/useModal';
 import { toast } from 'sonner';
 
 const mockServices = [
@@ -20,6 +22,25 @@ export default function TenantServices() {
   const [services] = useState(mockServices);
   const [searchTerm, setSearchTerm] = useState('');
   const filteredServices = services.filter(service => service.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+  const deleteConfirmModal = useModal();
+  const [selectedService, setSelectedService] = useState<typeof mockServices[0] | null>(null);
+
+  const openDeleteConfirm = (service: typeof mockServices[0]) => {
+    setSelectedService(service);
+    deleteConfirmModal.open();
+  };
+
+  const handleDelete = () => {
+    if (!selectedService) return;
+    toast.success(`${selectedService.name} removido com sucesso!`);
+    deleteConfirmModal.close();
+    setSelectedService(null);
+  };
+
+  const handleEdit = (service: typeof mockServices[0]) => {
+    toast.info(`Editar ${service.name}`);
+  };
 
   return (
     
@@ -29,7 +50,7 @@ export default function TenantServices() {
             <h1 className="text-3xl font-bold text-text-primary">Serviços</h1>
             <p className="text-text-muted mt-1">Gerencie sua grade de serviços</p>
           </div>
-          <Button variant="primary">
+          <Button variant="primary" onClick={() => toast.info('Novo Serviço')} >
             <Plus className="w-4 h-4 mr-2" />
             Novo Serviço
           </Button>
@@ -111,8 +132,8 @@ export default function TenantServices() {
                         <StatusBadge status={service.active ? 'active' : 'inactive'} />
                       </td>
                       <td className="py-3 px-4 text-sm text-right space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => toast.info(`Editar ${service.name}`)}><Edit className="h-4 w-4" /></Button>
-                        <Button variant="danger" size="sm" onClick={() => toast.success(`${service.name} removido`)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(service)} title="Editar"><Edit className="h-4 w-4" /></Button>
+                        <Button variant="danger" size="sm" onClick={() => openDeleteConfirm(service)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>
                       </td>
                     </tr>
                   ))}
@@ -121,6 +142,21 @@ export default function TenantServices() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Modal de Confirmação de Exclusão */}
+        <ConfirmModal
+          isOpen={deleteConfirmModal.isOpen}
+          onClose={() => {
+            deleteConfirmModal.close();
+            setSelectedService(null);
+          }}
+          onConfirm={handleDelete}
+          title="Excluir Serviço"
+          message={`Tem certeza que deseja excluir o serviço "${selectedService?.name}"? Esta ação não pode ser desfeita.`}
+          confirmLabel="Excluir"
+          cancelLabel="Cancelar"
+          variant="danger"
+        />
       </div>
     
   );

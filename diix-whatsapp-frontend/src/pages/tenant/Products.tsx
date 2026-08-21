@@ -113,7 +113,7 @@ export default function TenantProducts() {
             </div>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {loading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
               </div>
@@ -141,9 +141,9 @@ export default function TenantProducts() {
                     {filteredProducts.map((product) => (
                       <tr key={product.id} className="border-b border-border hover:bg-accent-primary/5">
                         <td className="py-3 px-4 text-sm text-text-primary">{product.name}</td>
-                        <td className="py-3 px-4 text-sm"><span className="px-2 py-1 rounded-full text-xs bg-accent-primary/10 text-accent-primary">{product.category || '-'}</span></td>
+                        <td className="py-3 px-4 text-sm"><span className="px-2 py-1 rounded-full text-xs bg-accent-primary/10 text-accent-primary">{typeof product.category === 'object' && product.category ? product.category.name : String(product.category || '-')}</span></td>
                         <td className="py-3 px-4 text-sm text-text-primary">R$ {product.price.toFixed(2).replace('.', ',')}</td>
-                        <td className="py-3 px-4 text-sm"><span className={`px-2 py-1 rounded-full text-xs ${product.stock > 10 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>{product.stock} un</span></td>
+                        <td className="py-3 px-4 text-sm"><span className={`px-2 py-1 rounded-full text-xs ${product.stock && product.stock > 10 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>{product.stock ?? 0} un</span></td>
                         <td className="py-3 px-4 text-sm text-right space-x-2">
                           <Button variant="ghost" size="sm" onClick={() => openEditModal(product)} title="Editar">
                             <Edit className="h-4 w-4" />
