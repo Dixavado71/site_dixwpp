@@ -827,4 +827,171 @@
     color: #ff00ff;
     box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
   }
+  
+  /* ========================================
+     TOAST NOTIFICATIONS - Cyberpunk Premium
+     Alertas e Notificações com Design Futurista
+     ======================================== */
+  .toast-premium {
+    @apply backdrop-blur-xl rounded-xl border p-4 shadow-lg;
+    background: rgba(3, 3, 5, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    animation: toastSlideIn 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    min-width: 320px;
+    max-width: 480px;
+  }
+  
+  .toast-premium:hover {
+    background: rgba(10, 10, 18, 0.98);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 12px 40px 0 rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+      0 0 30px rgba(0, 255, 157, 0.1);
+  }
+  
+  /* Success Toast - Cyber Green */
+  .toast-success {
+    border-left: 4px solid var(--color-success);
+    background: linear-gradient(135deg, rgba(0, 255, 157, 0.05) 0%, rgba(3, 3, 5, 0.95) 100%);
+  }
+  
+  .toast-success .toast-title {
+    color: var(--color-success);
+    text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+  }
+  
+  /* Error Toast - Neon Red */
+  .toast-error {
+    border-left: 4px solid var(--color-error);
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.05) 0%, rgba(3, 3, 5, 0.95) 100%);
+  }
+  
+  .toast-error .toast-title {
+    color: var(--color-error);
+    text-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+  }
+  
+  /* Warning Toast - Neon Yellow */
+  .toast-warning {
+    border-left: 4px solid var(--color-warning);
+    background: linear-gradient(135deg, rgba(255, 204, 0, 0.05) 0%, rgba(3, 3, 5, 0.95) 100%);
+  }
+  
+  .toast-warning .toast-title {
+    color: var(--color-warning);
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  }
+  
+  /* Info Toast - Cyber Cyan */
+  .toast-info {
+    border-left: 4px solid var(--color-info);
+    background: linear-gradient(135deg, rgba(0, 204, 255, 0.05) 0%, rgba(3, 3, 5, 0.95) 100%);
+  }
+  
+  .toast-info .toast-title {
+    color: var(--color-info);
+    text-shadow: 0 0 10px rgba(0, 204, 255, 0.3);
+  }
+  
+  /* Toast Title */
+  .toast-title {
+    @apply font-semibold text-base mb-1;
+    color: #ffffff;
+  }
+  
+  /* Toast Description */
+  .toast-description {
+    @apply text-sm;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  
+  /* Toast Close Button */
+  .toast-close-button {
+    @apply absolute top-3 right-3 p-1 rounded-lg transition-all;
+    color: var(--text-muted);
+  }
+  
+  .toast-close-button:hover {
+    @apply bg-white/10;
+    color: #ffffff;
+  }
+  
+  /* Toast Animation */
+  @keyframes toastSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+    }
+  }
+  
+  /* Toast Exit Animation */
+  .toast-exit {
+    animation: toastSlideOut 0.3s ease-in-out forwards;
+  }
+  
+  @keyframes toastSlideOut {
+    from {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(100%) translateY(-10px);
+    }
+  }
+  
+  /* Toast Progress Bar */
+  .toast-progress {
+    @apply absolute bottom-0 left-0 h-1 rounded-b-xl;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+    animation: toastProgress linear forwards;
+  }
+  
+  @keyframes toastProgress {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+  
+  /* Toast with Icon */
+  .toast-with-icon {
+    @apply flex items-start gap-3;
+  }
+  
+  /* Toast Icon Container */
+  .toast-icon {
+    @apply flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center;
+  }
+  
+  .toast-success .toast-icon {
+    background: rgba(0, 255, 157, 0.15);
+    color: var(--color-success);
+  }
+  
+  .toast-error .toast-icon {
+    background: rgba(255, 51, 102, 0.15);
+    color: var(--color-error);
+  }
+  
+  .toast-warning .toast-icon {
+    background: rgba(255, 204, 0, 0.15);
+    color: var(--color-warning);
+  }
+  
+  .toast-info .toast-icon {
+    background: rgba(0, 204, 255, 0.15);
+    color: var(--color-info);
+  }
 }

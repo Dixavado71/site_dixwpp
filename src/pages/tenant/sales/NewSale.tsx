@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Plus, Minus, Trash2, Search, User, CreditCard, DollarSign, CheckCircle, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import StatusBadge from '../../../components/ui/StatusBadge';
 import ActionButton from '../../../components/ui/ActionButton';
 
@@ -75,11 +76,17 @@ const NewSale = () => {
 
   const handleFinalize = () => {
     if (cart.length === 0) {
-      alert('Adicione produtos ao carrinho!');
+      toast.error('Adicione produtos ao carrinho!', {
+        description: 'Selecione pelo menos um produto para continuar.',
+        duration: 4000,
+      });
       return;
     }
     // Em produção: enviar para API
-    alert(`Venda finalizada com sucesso!\nTotal: R$ ${total.toFixed(2)}`);
+    toast.success('Venda finalizada com sucesso!', {
+      description: `Total: R$ ${total.toFixed(2)}`,
+      duration: 5000,
+    });
     navigate('/tenant/sales');
   };
 
