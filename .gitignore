@@ -5,20 +5,38 @@ node_modules/
 # Build artifacts
 dist/
 build/
-*.tsbuildinfo
+*.js
+*.ts
 
 # Environment variables
 .env
 .env.local
 *.env.*
 
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
 # Logs
 *.log
 
-# Temporary files
-*.tmp
-*.swp
-*~
+# Python artifacts (if any Python files exist in the project)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Local configuration
+.vite/
+.vite-deps/
 
 # OS generated files
 .DS_Store
