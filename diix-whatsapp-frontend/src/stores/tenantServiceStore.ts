@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { toast } from 'sonner';
-import { tenantServiceService } from '@/services/tenantServiceService';
+import { tenantServices } from '@/services/tenantServices';
 import type { Service, CreateServiceDTO, UpdateServiceDTO } from '@/types';
 
 interface ServiceFilters {
@@ -13,7 +13,6 @@ interface TenantServiceStore {
   services: Service[];
   filters: ServiceFilters;
   isLoading: boolean;
-  loading: boolean;
   error: string | null;
   tenantId: string | null;
   
@@ -36,7 +35,6 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
     categoryId: undefined,
   },
   isLoading: false,
-  loading: false,
   error: null,
   tenantId: null,
 
@@ -53,7 +51,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
     
     set({ isLoading: true, error: null });
     try {
-      const services = await tenantServiceService.getAll(tenantId);
+      const services = await tenantServices.getAll(tenantId);
       let filteredServices = services || [];
       
       const { search, status } = get().filters;
@@ -78,7 +76,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
 
   getById: async (id: string) => {
     try {
-      const service = await tenantServiceService.getById(id);
+      const service = await tenantServices.getById(id);
       return service;
     } catch (error) {
       toast.error('Erro ao buscar serviço');
@@ -89,7 +87,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
   create: async (data: CreateServiceDTO) => {
     set({ isLoading: true, error: null });
     try {
-      await tenantServiceService.create(data);
+      await tenantServices.create(data);
       await get().fetch();
       toast.success('Serviço criado com sucesso!');
     } catch (error) {
@@ -102,7 +100,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
   update: async (id: string, data: UpdateServiceDTO) => {
     set({ isLoading: true, error: null });
     try {
-      await tenantServiceService.update(id, data);
+      await tenantServices.update(id, data);
       await get().fetch();
       toast.success('Serviço atualizado com sucesso!');
     } catch (error) {
@@ -115,7 +113,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
   delete: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
-      await tenantServiceService.delete(id);
+      await tenantServices.delete(id);
       await get().fetch();
       toast.success('Serviço excluído com sucesso!');
     } catch (error) {
@@ -127,7 +125,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
 
   toggleStatus: async (id: string) => {
     try {
-      await tenantServiceService.toggleStatus(id);
+      await tenantServices.toggleStatus(id);
       await get().fetch();
       toast.success('Status alterado com sucesso!');
     } catch (error) {

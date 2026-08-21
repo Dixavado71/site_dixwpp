@@ -12,7 +12,7 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { LoadingState } from '@/components/ui/LoadingState';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { Card, CardContent } from '@/components/ui/Card';
-import { TRANSACTION_TYPES, STATUS_OPTIONS } from '@/constants';
+import { TRANSACTION_TYPES, STATUS_CONFIG, FINANCIAL_STATUS_LABELS } from '@/constants';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -204,7 +204,7 @@ export default function FinancialHistory() {
               className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-text-primary"
             >
               <option value="">Todos os Status</option>
-              {Object.entries(STATUS_OPTIONS).map(([key, { label }]) => (
+              {Object.entries(STATUS_CONFIG).map(([key, { label }]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
             </select>

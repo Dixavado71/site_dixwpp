@@ -1,11 +1,7 @@
-// Constants exports
+// Constants exports - Unificados e organizados
 export * from './status';
 export * from './options';
 export * from './colors';
-
-// Legacy exports for backward compatibility
-import { STATUS_OPTIONS, TRANSACTION_TYPES, PAYMENT_METHODS, PLANS, ROLES, THEMES } from './legacy';
-export { STATUS_OPTIONS, TRANSACTION_TYPES, PAYMENT_METHODS, PLANS, ROLES, THEMES };
 
 // Cores predefinidas para categorias
 export const CATEGORY_COLORS = [
@@ -61,4 +57,43 @@ export const CURRENCY_FORMAT = {
   currency: 'BRL',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
+} as const;
+
+// Configuração de status com cores (substitui STATUS_OPTIONS legacy)
+export const STATUS_CONFIG = {
+  pending: { label: 'Pendente', color: 'bg-yellow-500/20 text-yellow-400' },
+  paid: { label: 'Pago', color: 'bg-green-500/20 text-green-400' },
+  completed: { label: 'Concluído', color: 'bg-green-500/20 text-green-400' },
+  cancelled: { label: 'Cancelado', color: 'bg-red-500/20 text-red-400' },
+  active: { label: 'Ativo', color: 'bg-green-500/20 text-green-400' },
+  inactive: { label: 'Inativo', color: 'bg-red-500/20 text-red-400' },
+  overdue: { label: 'Atrasado', color: 'bg-red-500/20 text-red-400' },
+  refunded: { label: 'Reembolsado', color: 'bg-orange-500/20 text-orange-400' },
+  suspended: { label: 'Suspenso', color: 'bg-gray-500/20 text-gray-400' },
+} as const;
+
+// Planos com configurações completas
+export const PLANS_CONFIG = {
+  basic: { name: 'Básico', maxUsers: 5, maxClients: 100, maxProducts: 50 },
+  standard: { name: 'Standard', maxUsers: 15, maxClients: 500, maxProducts: 200 },
+  premium: { name: 'Premium', maxUsers: 50, maxClients: 2000, maxProducts: 1000 },
+  enterprise: { name: 'Enterprise', maxUsers: -1, maxClients: -1, maxProducts: -1 },
+} as const;
+
+// Roles do sistema
+export const ROLES_CONFIG = {
+  'admin-global': 'Administrador Global',
+  'admin-tenant': 'Administrador do Tenant',
+  admin: 'Administrador',
+  tenant: 'Tenant',
+  user: 'Usuário',
+} as const;
+
+// Temas disponíveis
+export const THEMES_CONFIG = {
+  cyberpunk: 'Cyberpunk',
+  light: 'Claro',
+  dark: 'Escuro',
+  corporate: 'Corporativo',
+  minimal: 'Minimalista',
 } as const;
