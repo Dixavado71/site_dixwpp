@@ -20,6 +20,7 @@ import TenantProducts from './pages/tenant/Products'
 import TenantServices from './pages/tenant/Services'
 import TenantPromotion from './pages/tenant/Promotions'
 import TenantSettings from './pages/tenant/Settings'
+import TenantNewSale from './pages/tenant/sales/NewSale'
 
 interface User {
   id: string;

@@ -4,7 +4,9 @@ import { Tag, Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { ConfirmModal } from '@/components/modals/ConfirmModal';
+import { useModal } from '@/hooks/useModal';
 import { toast } from 'sonner';
 
 const mockPromotions = [
@@ -17,6 +19,25 @@ export default function TenantPromotions() {
   const [promotions] = useState(mockPromotions);
   const [searchTerm, setSearchTerm] = useState('');
   const filteredPromotions = promotions.filter(promo => promo.title.toLowerCase().includes(searchTerm.toLowerCase()));
+  
+  const deleteConfirmModal = useModal();
+  const [selectedPromotion, setSelectedPromotion] = useState<typeof mockPromotions[0] | null>(null);
+
+  const openDeleteConfirm = (promo: typeof mockPromotions[0]) => {
+    setSelectedPromotion(promo);
+    deleteConfirmModal.open();
+  };
+
+  const handleDelete = () => {
+    if (!selectedPromotion) return;
+    toast.success(`${selectedPromotion.title} removida com sucesso!`);
+    deleteConfirmModal.close();
+    setSelectedPromotion(null);
+  };
+
+  const handleEdit = (promo: typeof mockPromotions[0]) => {
+    toast.info(`Editar ${promo.title}`);
+  };
 
   return (
     
@@ -26,7 +47,10 @@ export default function TenantPromotions() {
             <h1 className="text-3xl font-bold text-text-primary">Promoções</h1>
             <p className="text-text-muted mt-1">Gerencie suas promoções</p>
           </div>
-          <Button variant="primary">Nova Promoção</Button>
+          <Button variant="primary" onClick={() => toast.info('Nova Promoção')}>
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Promoção
+          </Button>
         </motion.div>
         <Card>
           <CardHeader>
@@ -55,10 +79,12 @@ export default function TenantPromotions() {
                       <td className="py-3 px-4 text-sm text-text-primary">{promo.title}</td>
                       <td className="py-3 px-4 text-sm"><span className="px-2 py-1 rounded-full text-xs bg-accent-primary/10 text-accent-primary">{promo.type === 'percentage' ? `${promo.discount}%` : `R$ ${promo.discount}`}</span></td>
                       <td className="py-3 px-4 text-sm text-text-muted">{new Date(promo.validUntil).toLocaleDateString('pt-BR')}</td>
-                      <td className="py-3 px-4 text-sm"><span className={`px-2 py-1 rounded-full text-xs ${promo.active ? 'bg-green-500/20 text-green-400' : 'bg-gray-500/20 text-gray-400'}`}>{promo.active ? 'Ativo' : 'Inativo'}</span></td>
+                      <td className="py-3 px-4 text-sm">
+                        <StatusBadge status={promo.active ? 'active' : 'inactive'} />
+                      </td>
                       <td className="py-3 px-4 text-sm text-right space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => toast.info(`Editar ${promo.title}`)}><Edit className="h-4 w-4" /></Button>
-                        <Button variant="danger" size="sm" onClick={() => toast.success(`${promo.title} removida`)}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleEdit(promo)} title="Editar"><Edit className="h-4 w-4" /></Button>
+                        <Button variant="danger" size="sm" onClick={() => openDeleteConfirm(promo)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>
                       </td>
                     </tr>
                   ))}
@@ -67,6 +93,21 @@ export default function TenantPromotions() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Modal de Confirmação de Exclusão */}
+        <ConfirmModal
+          isOpen={deleteConfirmModal.isOpen}
+          onClose={() => {
+            deleteConfirmModal.close();
+            setSelectedPromotion(null);
+          }}
+          onConfirm={handleDelete}
+          title="Excluir Promoção"
+          message={`Tem certeza que deseja excluir a promoção "${selectedPromotion?.title}"? Esta ação não pode ser desfeita.`}
+          confirmLabel="Excluir"
+          cancelLabel="Cancelar"
+          variant="danger"
+        />
       </div>
     
   );

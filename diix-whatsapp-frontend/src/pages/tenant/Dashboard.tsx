@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare, DollarSign, ShoppingCart, Star, Clock } from 'lucide-react';
+import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare, DollarSign, ShoppingCart, Star, Clock, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Percent } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 
 const mockStats = {
@@ -35,6 +36,7 @@ const mockTopProducts = [
 ];
 
 export default function TenantDashboard() {
+  const navigate = useNavigate();
   const [stats] = useState(mockStats);
   const [recentSales] = useState(mockRecentSales);
   const [topProducts] = useState(mockTopProducts);
@@ -52,7 +54,10 @@ export default function TenantDashboard() {
             <h1 className="text-3xl font-bold text-text-primary">Dashboard</h1>
             <p className="text-text-muted mt-1">Visão geral do seu negócio</p>
           </div>
-          <Button variant="primary">Nova Venda</Button>
+          <Button variant="primary" onClick={() => navigate('/tenant/sales/new')}>
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Venda
+          </Button>
         </motion.div>
 
         {/* Stats Cards */}
@@ -206,12 +211,12 @@ export default function TenantDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
-                <QuickAction icon={<Users />} label="Novo Cliente" href="/tenant/clients" />
-                <QuickAction icon={<Package />} label="Novo Produto" href="/tenant/products" />
-                <QuickAction icon={<Scissors />} label="Novo Serviço" href="/tenant/services" />
-                <QuickAction icon={<Percent />} label="Nova Promoção" href="/tenant/promotions" />
-                <QuickAction icon={<Calendar />} label="Agendamento" href="/tenant/sales/new" />
-                <QuickAction icon={<DollarSign />} label="Relatório" href="/tenant/settings" />
+                <QuickAction icon={<Users />} label="Novo Cliente" onClick={() => navigate('/tenant/clients')} />
+                <QuickAction icon={<Package />} label="Novo Produto" onClick={() => navigate('/tenant/products')} />
+                <QuickAction icon={<Scissors />} label="Novo Serviço" onClick={() => navigate('/tenant/services')} />
+                <QuickAction icon={<Percent />} label="Nova Promoção" onClick={() => navigate('/tenant/promotions')} />
+                <QuickAction icon={<Calendar />} label="Agendamento" onClick={() => navigate('/tenant/sales/new')} />
+                <QuickAction icon={<DollarSign />} label="Relatório" onClick={() => navigate('/tenant/settings')} />
               </div>
             </CardContent>
           </Card>
@@ -256,16 +261,16 @@ function StatCard({ title, value, icon, trend, color = 'blue' }: { title: string
   );
 }
 
-function QuickAction({ icon, label, href }: { icon: React.ReactNode; label: string; href: string }) {
+function QuickAction({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
   return (
-    <a
-      href={href}
+    <button
+      onClick={onClick}
       className="flex flex-col items-center justify-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 group"
     >
       <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary mb-2 group-hover:scale-110 transition-transform">
         {icon}
       </div>
       <span className="text-xs text-text-secondary text-center">{label}</span>
-    </a>
+    </button>
   );
 }
