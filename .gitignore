@@ -2,50 +2,55 @@
 # Dependencies
 node_modules/
 
-# Environment variables
-.env
-.env.local
-*.env.*
-
 # Build outputs
 dist/
 build/
-target/
+.next/
+out/
 
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Environment variables
+.env
+.env.local
+.env.*
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# IDE specific
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
+*.tmp
 
-# Coverage reports
-coverage/
-htmlcov/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
 .coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.DS_Store
+Thumbs.db
 
-# Distribution / packaging
-*.tar.gz
-*.whl
-*.egg-info/
+# Logs
+*.log
 
-# Local configuration
-.env*
-!.env.example
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 ```
