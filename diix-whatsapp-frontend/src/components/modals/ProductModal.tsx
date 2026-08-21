@@ -8,7 +8,6 @@ import { productCreateSchema, type ProductCreateFormData } from '@/schemas/produ
 import { useTenantProductStore } from '@/stores/tenantProductStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 import type { Product, Category } from '@/types'
 
 interface ProductModalProps {
@@ -75,15 +74,13 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
     try {
       if (mode === 'create') {
         await create('', data)
-        toast.success('Produto criado com sucesso!')
       } else if (mode === 'edit') {
         if (!product?.id) throw new Error('Produto não encontrado')
         await update(product.id, data)
-        toast.success('Produto atualizado com sucesso!')
       }
       onClose()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao salvar produto')
+      // Error toast já é disparado pelo store
     } finally {
       setIsSubmitting(false)
     }

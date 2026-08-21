@@ -5,7 +5,6 @@ import { Form, FormInput, FormSelect } from '@/components/ui/form/Form';
 import { Modal } from '@/components/ui/modal/Modal';
 import { useUsersStore } from '@/stores/usersStore';
 import { useTenantsStore } from '@/stores/tenantsStore';
-import { toast } from 'sonner';
 import { useEffect } from 'react';
 
 interface UserModalProps {
@@ -58,7 +57,6 @@ export function UserModal({ mode, user, open, onClose }: UserModalProps) {
           tenantId: data.role === 'admin' ? data.tenantId : undefined,
           status: data.status,
         });
-        toast.success('Usuário criado com sucesso!');
       } else {
         await updateUser(user!.id, {
           name: data.name,
@@ -67,11 +65,10 @@ export function UserModal({ mode, user, open, onClose }: UserModalProps) {
           tenantId: data.role === 'admin' ? data.tenantId : undefined,
           status: data.status,
         });
-        toast.success('Usuário atualizado com sucesso!');
       }
       onClose();
     } catch (error: any) {
-      toast.error(error.message || 'Erro ao salvar usuário');
+      // Error toast já é disparado pelo store
     }
   };
 

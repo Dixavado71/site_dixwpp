@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/Input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import type { Category } from '@/types';
 
 const categorySchema = z.object({

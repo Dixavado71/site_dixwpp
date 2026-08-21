@@ -7,7 +7,6 @@ import type { CustomerCreateFormData } from '@/schemas/customerSchema'
 import { customerCreateSchema } from '@/schemas/customerSchema'
 import { useTenantCustomerStore } from '@/stores/tenantCustomerStore'
 import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 import type { Client } from '@/types'
 
 interface CustomerModalProps {
@@ -56,15 +55,13 @@ export function CustomerModal({ mode, client, isOpen, onClose }: CustomerModalPr
     try {
       if (mode === 'create') {
         await create(data)
-        toast.success('Cliente criado com sucesso!')
       } else if (mode === 'edit') {
         if (!client?.id) throw new Error('Cliente não encontrado')
         await update(client.id, data)
-        toast.success('Cliente atualizado com sucesso!')
       }
       onClose()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao salvar cliente')
+      // Error toast já é disparado pelo store
     } finally {
       setIsSubmitting(false)
     }
