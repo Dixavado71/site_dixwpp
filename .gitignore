@@ -2,18 +2,16 @@
 # Dependencies
 node_modules/
 
-# Build artifacts
+# Build outputs
 dist/
 build/
-*.js
-*.ts
 
 # Environment variables
 .env
 .env.local
 *.env.*
 
-# IDE files
+# Editor/IDE files
 .vscode/
 .idea/
 *.swp
@@ -23,7 +21,7 @@ build/
 # Logs
 *.log
 
-# Python artifacts (if any Python files exist in the project)
+# Python specific
 __pycache__/
 *.pyc
 *.pyo
@@ -34,22 +32,31 @@ coverage/
 htmlcov/
 .coverage
 
-# Local configuration
-.vite/
-.vite-deps/
+# Testing
+.pytest_cache/
+.mypy_cache/
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage reports
-coverage/
-htmlcov/
-
-# Vite specific
-!.vite/
-vite.config.ts
-
-# TypeScript cache
-*.tsbuildinfo
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
 ```
