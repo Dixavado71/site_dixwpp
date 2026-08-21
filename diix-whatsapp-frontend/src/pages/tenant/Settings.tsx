@@ -1,70 +1,167 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Edit, Trash2 } from 'lucide-react';
+import { Settings, User, Bell, Lock, Building2, Palette, Globe } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-
+import { Textarea } from '@/components/ui/Textarea';
 import { toast } from 'sonner';
 
-const mockData = [
-  { id: '1', name: 'Item 1', email: 'item1@email.com', status: 'active' },
-  { id: '2', name: 'Item 2', email: 'item2@email.com', status: 'active' },
-  { id: '3', name: 'Item 3', email: 'item3@email.com', status: 'pending' },
-];
+export default function TenantSettings() {
+  const [businessName, setBusinessName] = useState('Barbearia Style');
+  const [email, setEmail] = useState('contato@style.com.br');
+  const [phone, setPhone] = useState('(11) 98765-4321');
+  const [address, setAddress] = useState('Rua das Flores, 123 - Centro');
+  const [description, setDescription] = useState('Barbearia tradicional com os melhores profissionais da região.');
 
-export default function Page() {
-  const [data] = useState(mockData);
-  const [searchTerm, setSearchTerm] = useState('');
-  const filteredData = data.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const handleSave = () => {
+    toast.success('Configurações salvas com sucesso!');
+  };
 
   return (
     
       <div className="space-y-6">
-        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-text-primary">Página</h1>
-            <p className="text-text-muted mt-1">Gerencie seus itens</p>
-          </div>
-          <Button variant="primary">Novo Item</Button>
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+          <h1 className="text-3xl font-bold text-text-primary">Configurações</h1>
+          <p className="text-text-muted mt-1">Gerencie as configurações do seu negócio</p>
         </motion.div>
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Lista de Itens</CardTitle>
-              <div className="relative w-64">
-                <Input placeholder="Buscar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Informações do Negócio */}
+          <Card className="glass-card border-white/10">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-accent-primary" />
+                <CardTitle>Informações do Negócio</CardTitle>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Nome</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Email</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Status</th>
-                    <th className="text-right py-3 px-4 text-sm font-medium text-text-muted">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredData.map((item) => (
-                    <tr key={item.id} className="border-b border-border hover:bg-accent-primary/5">
-                      <td className="py-3 px-4 text-sm text-text-primary">{item.name}</td>
-                      <td className="py-3 px-4 text-sm text-text-muted">{item.email}</td>
-                      <td className="py-3 px-4 text-sm"><span className={`px-2 py-1 rounded-full text-xs ${item.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>{item.status}</span></td>
-                      <td className="py-3 px-4 text-sm text-right space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => toast.info(`Editar ${item.name}`)}><Edit className="h-4 w-4" /></Button>
-                        <Button variant="danger" size="sm" onClick={() => toast.success(`${item.name} removido`)}><Trash2 className="h-4 w-4" /></Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+              <p className="text-sm text-text-muted">Dados principais da sua empresa</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Nome do Negócio</label>
+                <Input value={businessName} onChange={(e) => setBusinessName(e.target.value)} placeholder="Nome do negócio" />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Email</label>
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Telefone</label>
+                <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Telefone" />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Endereço</label>
+                <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Endereço" />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Descrição</label>
+                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Descrição do negócio" rows={3} />
+              </div>
+              <Button variant="primary" className="w-full" onClick={handleSave}>Salvar Informações</Button>
+            </CardContent>
+          </Card>
+
+          {/* Preferências */}
+          <Card className="glass-card border-white/10">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Palette className="h-5 w-5 text-accent-primary" />
+                <CardTitle>Preferências</CardTitle>
+              </div>
+              <p className="text-sm text-text-muted">Personalize sua experiência</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">Notificações por Email</p>
+                  <p className="text-xs text-text-muted">Receba atualizações por email</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.info('Notificações ativadas')}>Ativado</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">Notificações Push</p>
+                  <p className="text-xs text-text-muted">Receba notificações no navegador</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.info('Push ativado')}>Ativado</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">Modo Escuro</p>
+                  <p className="text-xs text-text-muted">Tema escuro para melhor visualização</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.info('Modo escuro ativado')}>Ativado</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">Idioma</p>
+                  <p className="text-xs text-text-muted">Selecione o idioma do sistema</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.info('Idioma: Português')}>Português</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Segurança */}
+          <Card className="glass-card border-white/10">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Lock className="h-5 w-5 text-accent-primary" />
+                <CardTitle>Segurança</CardTitle>
+              </div>
+              <p className="text-sm text-text-muted">Gerencie sua senha e acesso</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Senha Atual</label>
+                <Input type="password" placeholder="••••••••" />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Nova Senha</label>
+                <Input type="password" placeholder="••••••••" />
+              </div>
+              <div>
+                <label className="block text-sm text-text-secondary mb-2">Confirmar Nova Senha</label>
+                <Input type="password" placeholder="••••••••" />
+              </div>
+              <Button variant="primary" className="w-full" onClick={() => toast.success('Senha alterada com sucesso!')}>Alterar Senha</Button>
+            </CardContent>
+          </Card>
+
+          {/* Integrações */}
+          <Card className="glass-card border-white/10">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Globe className="h-5 w-5 text-accent-primary" />
+                <CardTitle>Integrações</CardTitle>
+              </div>
+              <p className="text-sm text-text-muted">Conecte com outros serviços</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">WhatsApp Business</p>
+                  <p className="text-xs text-text-muted">Integração com WhatsApp</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.success('WhatsApp conectado')}>Conectado</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">Google Calendar</p>
+                  <p className="text-xs text-text-muted">Sincronize agendamentos</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.info('Google Calendar conectado')}>Conectado</Button>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                <div>
+                  <p className="text-sm font-medium text-text-primary">Instagram</p>
+                  <p className="text-xs text-text-muted">Integração com Instagram</p>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => toast.info('Instagram conectado')}>Conectado</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     
   );
