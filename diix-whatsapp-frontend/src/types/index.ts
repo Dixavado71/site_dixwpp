@@ -262,6 +262,7 @@ export interface SaleItem {
   product?: Product;
   serviceId?: string;
   service?: Service;
+  categoryId?: string;
   quantity: number;
   unitPrice: number;
   subtotal: number;

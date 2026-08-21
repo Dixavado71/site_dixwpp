@@ -113,12 +113,12 @@ export default function TenantNewSale() {
         tenantId: tenantId!,
         customerId: selectedCustomer.id,
         items: cart.map(item => ({
-          id: item.id,
-          type: item.type,
+          productId: item.type === 'product' ? item.id : undefined,
+          serviceId: item.type === 'service' ? item.id : undefined,
           quantity: item.quantity,
-          price: item.price
+          unitPrice: item.price
         })),
-        paymentMethod,
+        paymentMethod: (paymentMethod === 'card' ? 'credit' : paymentMethod) as 'cash' | 'pix' | 'credit' | 'debit' | 'other',
         total: cartTotal
       };
       

@@ -235,7 +235,6 @@ export function AppointmentForm({
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                {...field}
                 checked={!!field.value}
                 onChange={(e) => field.onChange(e.target.checked)}
                 className="w-4 h-4 rounded border-border bg-bg-secondary"

@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare, DollarSign, ShoppingCart, Star, Clock, Plus } from 'lucide-react';
+import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare, DollarSign, ShoppingCart, Star, Clock, Plus, PieChart, History } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Percent } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSalesStore } from '@/stores/salesStore';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
 
 
 const mockStats = {
@@ -18,6 +21,8 @@ const mockStats = {
   growth: 12.5,
   activePromotions: 5,
 };
+
+const COLORS = ['#00ff9d', '#00d4ff', '#ff00ff', '#ffff00', '#ff6600', '#9933ff', '#00ff66', '#ff3366'];
 
 const mockRecentSales = [
   { id: '1', customer: 'Maria Silva', service: 'Corte + Barba', value: 85.00, status: 'completed', date: '2024-01-15' },
@@ -37,9 +42,49 @@ const mockTopProducts = [
 
 export default function TenantDashboard() {
   const navigate = useNavigate();
+  const { sales, fetchSales } = useSalesStore();
+  const { categories, fetchCategories } = useCategoryStore();
   const [stats] = useState(mockStats);
   const [recentSales] = useState(mockRecentSales);
   const [topProducts] = useState(mockTopProducts);
+
+  useEffect(() => {
+    fetchSales({ limit: 50 });
+    fetchCategories();
+  }, []);
+
+  // Calcular vendas por categoria
+  const salesByCategory = categories.map(cat => {
+    const categorySales = sales.filter(sale => 
+      sale.items?.some(item => item.categoryId === cat.id)
+    );
+    const totalRevenue = categorySales.reduce((sum, sale) => sum + sale.total, 0);
+    return {
+      name: cat.name,
+      value: totalRevenue,
+      color: cat.color || '#00ff9d',
+    };
+  }).filter(cat => cat.value > 0);
+
+  // Histórico de vendas dos últimos 7 dias
+  const salesHistory = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const daySales = sales.filter(sale => {
+      const saleDate = new Date(sale.createdAt);
+      return saleDate.toDateString() === date.toDateString() && sale.status === 'completed';
+    });
+    return {
+      date: date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+      revenue: daySales.reduce((sum, sale) => sum + sale.total, 0),
+      count: daySales.length,
+    };
+  }).reverse();
+
+  // Calcular totais para resumo
+  const totalRevenue7Days = salesHistory.reduce((sum, d) => sum + d.revenue, 0);
+  const avgDailyRevenue = totalRevenue7Days / 7;
+  const totalSalesCount = salesHistory.reduce((sum, d) => sum + d.count, 0);
 
   return (
     
@@ -218,6 +263,163 @@ export default function TenantDashboard() {
                 <QuickAction icon={<Calendar />} label="Agendamento" onClick={() => navigate('/tenant/sales/new')} />
                 <QuickAction icon={<DollarSign />} label="Relatório" onClick={() => navigate('/tenant/settings')} />
               </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Vendas por Categoria e Histórico */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2"
+        >
+          {/* Vendas por Categoria - Gráfico de Pizza */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <PieChart className="h-5 w-5 text-accent-primary" />
+                  <CardTitle>Vendas por Categoria</CardTitle>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/tenant/history/sales')}>
+                  <History className="h-4 w-4 mr-2" />
+                  Ver histórico
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {salesByCategory.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <PieChart className="w-12 h-12 text-text-muted mb-4" />
+                  <p className="text-text-secondary">Nenhuma venda por categoria</p>
+                  <p className="text-sm text-text-muted mt-1">Realize vendas para visualizar</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <ResponsiveContainer width="100%" height={250}>
+                    <RechartsPieChart>
+                      <Pie
+                        data={salesByCategory}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={5}
+                        dataKey="value"
+                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                        labelLine={false}
+                      >
+                        {salesByCategory.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value: any) => `R$ ${String(value)}`}
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(5, 5, 5, 0.95)', 
+                          border: '1px solid rgba(0, 255, 157, 0.2)',
+                          borderRadius: '8px',
+                          color: '#e0e0e0'
+                        }}
+                      />
+                    </RechartsPieChart>
+                  </ResponsiveContainer>
+                  {/* Legenda */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {salesByCategory.slice(0, 6).map((cat, index) => (
+                      <div key={cat.name} className="flex items-center gap-2 text-xs">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: cat.color || COLORS[index % COLORS.length] }}
+                        />
+                        <span className="text-text-muted truncate">{cat.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Histórico de Vendas - Gráfico de Barras */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-accent-primary" />
+                  <CardTitle>Histórico de Vendas (7 dias)</CardTitle>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/tenant/reports')}>
+                  Ver relatório
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {salesHistory.length === 0 || salesHistory.every(d => d.revenue === 0) ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <TrendingUp className="w-12 h-12 text-text-muted mb-4" />
+                  <p className="text-text-secondary">Nenhum dado de vendas</p>
+                  <p className="text-sm text-text-muted mt-1">Realize vendas para visualizar o histórico</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <ResponsiveContainer width="100%" height={250}>
+                    <BarChart data={salesHistory}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="#a0a0a0" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis 
+                        stroke="#a0a0a0" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(value) => `R$ ${value}`}
+                      />
+                      <Tooltip 
+                        formatter={(value: any) => `R$ ${String(value)}`}
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(5, 5, 5, 0.95)', 
+                          border: '1px solid rgba(0, 255, 157, 0.2)',
+                          borderRadius: '8px',
+                          color: '#e0e0e0'
+                        }}
+                      />
+                      <Bar 
+                        dataKey="revenue" 
+                        fill="#00ff9d" 
+                        radius={[4, 4, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  {/* Resumo */}
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+                    <div>
+                      <p className="text-xs text-text-muted">Total (7 dias)</p>
+                      <p className="text-lg font-bold text-text-primary">
+                        R$ {totalRevenue7Days.toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Média diária</p>
+                      <p className="text-lg font-bold text-text-primary">
+                        R$ {avgDailyRevenue.toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Vendas</p>
+                      <p className="text-lg font-bold text-accent-primary">
+                        {totalSalesCount}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

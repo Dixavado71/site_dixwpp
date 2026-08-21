@@ -7,56 +7,38 @@ dist/
 build/
 *.js
 *.ts
-*.tsx
-*.jsx
 
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Environment
+# Environment variables
 .env
 .env.local
-.env.*
+*.env.*
 
-# Editors
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Logs
+*.log
 
-# Python
+# Python artifacts (if any Python files exist in the project)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.nox/
-.pytest_cache/
-.mypy_cache/
 
-# Node
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Local configuration
+.vite/
+.vite-deps/
 
 # OS generated files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 ```
