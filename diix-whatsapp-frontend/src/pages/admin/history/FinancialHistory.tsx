@@ -3,7 +3,8 @@ import { TrendingUp, TrendingDown, DollarSign, Wallet, Filter, Download } from '
 import { motion } from 'framer-motion';
 import { useFinancialStore } from '@/stores/financialStore';
 import { useDataTable } from '@/hooks/useDataTable';
-import { DataTable, ColumnDef } from '@/components/ui/table/DataTable';
+import type { ColumnDef } from '@tanstack/react-table';
+import { DataTable } from '@/components/ui/table/DataTable';
 import { KPICard } from '@/components/ui/KPICard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -151,7 +152,7 @@ export default function FinancialHistory() {
                 <YAxis stroke="#a0a0a0" />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                  formatter={(value: number) => [formatCurrency(value), '']}
+                  formatter={(value: any) => [formatCurrency(Number(value)), '']}
                 />
                 <Bar dataKey="value" fill="#00ff9d" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -180,7 +181,7 @@ export default function FinancialHistory() {
                 </Pie>
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px' }}
-                  formatter={(value: number) => [formatCurrency(value), '']}
+                  formatter={(value: any) => [formatCurrency(Number(value)), '']}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -216,13 +217,17 @@ export default function FinancialHistory() {
               label="Filtrar"
               variant="outline"
               onClick={() => {}}
-            />
+            >
+              Filtrar
+            </ActionButton>
             <ActionButton
               icon={<Download className="w-4 h-4" />}
               label="Exportar"
               variant="primary"
               onClick={handleExport}
-            />
+            >
+              Exportar
+            </ActionButton>
           </div>
         </CardContent>
       </Card>
@@ -251,13 +256,17 @@ export default function FinancialHistory() {
                       variant="outline"
                       onClick={previousPage}
                       disabled={page <= 1}
-                    />
+                    >
+                      Anterior
+                    </ActionButton>
                     <ActionButton
                       label="Próxima"
                       variant="outline"
                       onClick={nextPage}
                       disabled={page >= totalPages}
-                    />
+                    >
+                      Próxima
+                    </ActionButton>
                   </div>
                 </div>
               )}

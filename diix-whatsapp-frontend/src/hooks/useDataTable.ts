@@ -43,6 +43,7 @@ export function useDataTable<T extends Record<string, any>>({
 }: UseDataTableOptions<T>): DataTableState<T> & DataTableActions<T> {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(initialPage);
+  const [internalPageSize, setInternalPageSize] = useState(pageSize);
   const [sortField, setSortField] = useState<keyof T | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -94,17 +95,17 @@ export function useDataTable<T extends Record<string, any>>({
   }, [data, searchTerm, searchKeys, filters, sortField, sortDirection]);
 
   // Calcular paginação
-  const totalPages = Math.ceil(filteredData.length / pageSize);
+  const totalPages = Math.ceil(filteredData.length / internalPageSize);
   const paginatedData = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filteredData.slice(start, start + pageSize);
-  }, [filteredData, page, pageSize]);
+    const start = (page - 1) * internalPageSize;
+    return filteredData.slice(start, start + internalPageSize);
+  }, [filteredData, page, internalPageSize]);
 
   return {
     data: paginatedData,
     filteredData,
     page,
-    pageSize,
+    pageSize: internalPageSize,
     totalPages,
     searchTerm,
     sortField,
@@ -117,10 +118,7 @@ export function useDataTable<T extends Record<string, any>>({
       setPage(1);
     },
     setPage,
-    setPageSize: (size: number) => {
-      setPageSize(size);
-      setPage(1);
-    },
+    setPageSize: setInternalPageSize,
     setSort: (field: keyof T, direction: 'asc' | 'desc' = 'asc') => {
       if (sortField === field) {
         setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');

@@ -3,7 +3,8 @@ import { Download, TrendingUp, DollarSign, ShoppingCart, Filter } from 'lucide-r
 import { motion } from 'framer-motion';
 import { useSalesStore } from '@/stores/salesStore';
 import { useDataTable } from '@/hooks/useDataTable';
-import { DataTable, ColumnDef } from '@/components/ui/table/DataTable';
+import type { ColumnDef } from '@tanstack/react-table';
+import { DataTable } from '@/components/ui/table/DataTable';
 import { KPICard } from '@/components/ui/KPICard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -147,13 +148,17 @@ export default function SalesHistory() {
               label="Filtrar"
               variant="outline"
               onClick={() => {}}
-            />
+            >
+              Filtrar
+            </ActionButton>
             <ActionButton
               icon={<Download className="w-4 h-4" />}
               label="Exportar"
               variant="primary"
               onClick={handleExport}
-            />
+            >
+              Exportar
+            </ActionButton>
           </div>
         </CardContent>
       </Card>
@@ -182,13 +187,17 @@ export default function SalesHistory() {
                       variant="outline"
                       onClick={previousPage}
                       disabled={page <= 1}
-                    />
+                    >
+                      Anterior
+                    </ActionButton>
                     <ActionButton
                       label="Próxima"
                       variant="outline"
                       onClick={nextPage}
                       disabled={page >= totalPages}
-                    />
+                    >
+                      Próxima
+                    </ActionButton>
                   </div>
                 </div>
               )}

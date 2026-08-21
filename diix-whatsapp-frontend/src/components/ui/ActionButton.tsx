@@ -8,6 +8,7 @@ export interface ActionButtonProps extends ButtonProps {
   label?: string;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   showLabel?: boolean;
+  children?: React.ReactNode;
 }
 
 export function ActionButton({ 
