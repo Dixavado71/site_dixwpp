@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Package, Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { Package, Plus, Search, Edit, Trash2, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -65,6 +65,11 @@ export default function TenantProducts() {
     }
   };
 
+  // Stats calculations
+  const totalProducts = products.length;
+  const lowStockProducts = products.filter(p => (p.stock ?? 0) < 10).length;
+  const totalStockValue = products.reduce((acc, p) => acc + ((p.stock ?? 0) * p.price), 0);
+
   const openCreateModal = () => {
     setSelectedProduct(null);
     setModalMode('create');
@@ -103,6 +108,49 @@ export default function TenantProducts() {
             Novo Produto
           </Button>
         </motion.div>
+
+        {/* Stats Cards */}
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="glass-card border-white/10">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-text-muted">Total de Produtos</p>
+                  <p className="text-2xl font-bold text-text-primary mt-1">{totalProducts}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary">
+                  <Package className="h-5 w-5" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="glass-card border-white/10">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-text-muted">Estoque Baixo</p>
+                  <p className="text-2xl font-bold text-yellow-400 mt-1">{lowStockProducts}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-yellow-500/10 text-yellow-400">
+                  <Package className="h-5 w-5" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="glass-card border-white/10">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-text-muted">Valor em Estoque</p>
+                  <p className="text-2xl font-bold text-text-primary mt-1">R$ {totalStockValue.toFixed(2)}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-green-500/10 text-green-400">
+                  <DollarSign className="h-5 w-5" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
