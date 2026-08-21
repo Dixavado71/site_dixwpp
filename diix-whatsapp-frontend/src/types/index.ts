@@ -262,6 +262,19 @@ export interface CreateSaleDTO {
   notes?: string;
 }
 
+export interface UpdateSaleDTO {
+  clientId?: string;
+  items?: {
+    productId?: string;
+    serviceId?: string;
+    quantity: number;
+    unitPrice: number;
+  }[];
+  paymentMethod?: 'cash' | 'credit' | 'debit' | 'pix' | 'other';
+  notes?: string;
+  status?: 'pending' | 'completed' | 'cancelled';
+}
+
 // Financial types
 export interface FinancialTransaction {
   id: string;

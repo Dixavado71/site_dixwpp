@@ -104,7 +104,7 @@ export const adminSettingsSchema = z.object({
   integrations: z.object({
     paymentGateway: z.string(),
     crmIntegration: z.string(),
-    apiKeys: z.record(z.string()).optional(),
+    apiKeys: z.record(z.string(), z.string()).optional(),
   }),
   appearance: z.object({
     theme: z.enum(['dark', 'light']),

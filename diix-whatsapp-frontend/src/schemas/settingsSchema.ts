@@ -23,14 +23,14 @@ export const notificationSettingsSchema = z.object({
 
 // Schema para configurações de integrações
 export const integrationSettingsSchema = z.object({
-  paymentGateway: z.enum(['Stripe', 'Pagar.me', 'Mercado Pago', 'PagSeguro'], { required_error: 'Gateway obrigatório' }),
+  paymentGateway: z.enum(['Stripe', 'Pagar.me', 'Mercado Pago', 'PagSeguro'], { message: 'Gateway obrigatório' }),
   crmIntegration: z.string().url('URL inválida').optional().or(z.literal('')),
-  apiKeys: z.record(z.string()).optional(),
+  apiKeys: z.record(z.string(), z.string()).optional(),
 });
 
 // Schema para configurações de aparência
 export const appearanceSettingsSchema = z.object({
-  theme: z.enum(['dark', 'light'], { required_error: 'Tema obrigatório' }),
+  theme: z.enum(['dark', 'light'], { message: 'Tema obrigatório' }),
   primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Cor inválida (use formato hex #RRGGBB)'),
   logoUrl: z.string().url('URL inválida').optional().or(z.literal('')),
 });

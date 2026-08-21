@@ -39,7 +39,7 @@ export const tenantUpdateSchema = z.object({
 
 // Schema para plano do tenant
 export const tenantPlanSchema = z.object({
-  plan: z.enum(['basic', 'standard', 'premium', 'enterprise'], { required_error: 'Plano obrigatório' }),
+  plan: z.enum(['basic', 'standard', 'premium', 'enterprise'], { message: 'Plano obrigatório' }),
   billingCycle: z.enum(['monthly', 'yearly']).default('monthly'),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (use YYYY-MM-DD)'),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (use YYYY-MM-DD)'),
