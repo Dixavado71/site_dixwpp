@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Schema para criação de tenant
+// Schema para criação de tenant (todos os campos obrigatórios exceto onde especificado)
 export const tenantCreateSchema = z.object({
   name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
   businessName: z.string().optional(),
@@ -10,12 +10,12 @@ export const tenantCreateSchema = z.object({
   slug: z.string().optional(),
   password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
   active: z.boolean().default(true),
-  plan: z.enum(['basic', 'standard', 'premium', 'enterprise']).optional(),
+  plan: z.enum(['basic', 'standard', 'premium', 'enterprise']).default('standard'),
   limits: z.object({
-    maxUsers: z.number().int().positive().optional(),
-    maxClients: z.number().int().positive().optional(),
-    maxProducts: z.number().int().positive().optional(),
-    maxMessages: z.number().int().positive().optional(),
+    maxUsers: z.number().int().positive().default(15),
+    maxClients: z.number().int().positive().default(500),
+    maxProducts: z.number().int().positive().default(1000),
+    maxMessages: z.number().int().positive().default(10000),
   }).optional(),
 });
 
