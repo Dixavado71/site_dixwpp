@@ -236,7 +236,8 @@ export function AppointmentForm({
               <input
                 type="checkbox"
                 {...field}
-                checked={field.value}
+                checked={!!field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
                 className="w-4 h-4 rounded border-border bg-bg-secondary"
               />
               <label className="text-sm">Agendamento recorrente</label>

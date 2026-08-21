@@ -3,10 +3,11 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { ptBR } from '@fullcalendar/core/locale';
+import { ptBR } from '@fullcalendar/core';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
+import type { CalendarApi } from '@fullcalendar/core';
 
 interface CalendarEvent {
   id: string;
@@ -40,7 +41,7 @@ export function CalendarView({
   onEventResize
 }: CalendarViewProps) {
   const [viewType, setViewType] = useState<CalendarViewType>('dayGridMonth');
-  const calendarRef = useRef<FullCalendar>(null);
+  const calendarRef = useRef<CalendarApi>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // Event colors by type
@@ -183,7 +184,7 @@ export function CalendarView({
 
         <FullCalendar
           ref={calendarRef}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin] as any}
           initialView={viewType}
           locale="pt-br"
           events={formattedEvents}

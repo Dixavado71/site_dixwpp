@@ -24,7 +24,7 @@ export function useExport(): UseExportReturn {
       return;
     }
 
-    const headers = Object.keys(data[0]);
+    const headers = Object.keys(data[0] ?? {});
     const csvContent = [
       ...(includeHeaders ? [headers.join(',')] : []),
       ...data.map(row => 
