@@ -995,3 +995,211 @@
     color: var(--color-info);
   }
 }
+
+/* ===========================================
+   ACESSIBILIDADE (WCAG 2.1 AA)
+   =========================================== */
+
+/* Skip Link para navegação por teclado */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #00ff9d;
+  color: #000;
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 0 0 4px 0;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reduced Motion - Respeitar preferências do usuário */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --border-opacity: 1;
+  }
+  
+  button, a, input {
+    border-width: 2px;
+  }
+}
+
+/* Focus Visible - Melhorar indicação de foco */
+:focus-visible {
+  outline: 2px solid #00ff9d;
+  outline-offset: 2px;
+}
+
+/* Text Resizing - Suporte a zoom 200% */
+@media (min-resolution: 2dppx) {
+  html {
+    font-size: 110%;
+  }
+}
+
+/* ===========================================
+   RESPONSIVIDADE MOBILE-FIRST
+   =========================================== */
+
+/* Mobile (< 640px) */
+@media (max-width: 640px) {
+  /* Stats grid - 2 columns */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  /* Bottom sheet for modals */
+  .modal-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  /* Larger touch targets - Acessibilidade */
+  button, a, input, [role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Reduce padding */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Hide non-essential elements */
+  .desktop-only {
+    display: none;
+  }
+  
+  /* Font size adjustments */
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Tablet (640px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .tablet-only {
+    display: block;
+  }
+}
+
+/* Desktop (> 1024px) */
+@media (min-width: 1025px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .mobile-only {
+    display: none;
+  }
+}
+
+/* ===========================================
+   TEMAS PERSONALIZÁVEIS
+   =========================================== */
+
+/* Dark Mode (Default - Cyberpunk) */
+[data-mode="dark"] {
+  --bg-primary: #050505;
+  --bg-secondary: #0a0a12;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+}
+
+/* Light Mode */
+[data-mode="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --text-primary: #0a0a12;
+  --text-secondary: #666666;
+}
+
+/* Tema Cyberpunk (Default) */
+[data-theme="cyberpunk"] {
+  --accent-primary: #00ff9d;
+  --accent-secondary: #00ffff;
+  --accent-tertiary: #ff00ff;
+  --border-color: rgba(0, 255, 157, 0.2);
+}
+
+/* Tema Corporate */
+[data-theme="corporate"] {
+  --accent-primary: #1e40af;
+  --accent-secondary: #3b82f6;
+  --accent-tertiary: #60a5fa;
+  --border-color: rgba(30, 64, 175, 0.2);
+}
+
+/* Tema Minimal */
+[data-theme="minimal"] {
+  --accent-primary: #000000;
+  --accent-secondary: #333333;
+  --accent-tertiary: #666666;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Tema Neon */
+[data-theme="neon"] {
+  --accent-primary: #ff00ff;
+  --accent-secondary: #00ffff;
+  --accent-tertiary: #ffff00;
+  --border-color: rgba(255, 0, 255, 0.3);
+}
+
+/* Live Region para notificações (Screen Readers) */
+.live-region {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
