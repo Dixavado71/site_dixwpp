@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, FolderPlus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
@@ -35,7 +35,7 @@ export function CategoryModal({
   categories,
   editingCategory 
 }: CategoryModalProps) {
-  const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<CategoryFormData>({
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors, isSubmitting } } = useForm<CategoryFormData>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: '',
@@ -45,6 +45,10 @@ export function CategoryModal({
       status: 'active',
     },
   });
+
+  // Watch values for UI state
+  const watchedIcon = watch('icon');
+  const watchedColor = watch('color');
 
   useEffect(() => {
     if (editingCategory) {
@@ -148,7 +152,7 @@ export function CategoryModal({
                   type="button"
                   onClick={() => setValue('icon', icon)}
                   className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl transition-all ${
-                    register('icon').value === icon
+                    watchedIcon === icon
                       ? 'bg-accent-primary/20 border-2 border-accent-primary'
                       : 'bg-white/5 border border-white/10 hover:bg-white/10'
                   }`}
@@ -171,7 +175,7 @@ export function CategoryModal({
                   type="button"
                   onClick={() => setValue('color', color)}
                   className={`w-8 h-8 rounded-full transition-all ${
-                    register('color').value === color
+                    watchedColor === color
                       ? 'ring-2 ring-white scale-110'
                       : 'hover:scale-105'
                   }`}
@@ -182,12 +186,12 @@ export function CategoryModal({
             <div className="flex items-center gap-2">
               <input
                 type="color"
-                value={register('color').value}
+                value={watchedColor || '#00ff9d'}
                 onChange={(e) => setValue('color', e.target.value)}
                 className="w-10 h-10 rounded-lg cursor-pointer"
               />
               <Input
-                value={register('color').value}
+                value={watchedColor || ''}
                 onChange={(e) => setValue('color', e.target.value)}
                 placeholder="#00ff9d"
                 className="flex-1"
