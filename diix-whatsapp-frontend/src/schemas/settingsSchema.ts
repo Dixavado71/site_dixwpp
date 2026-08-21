@@ -4,21 +4,21 @@ import { z } from 'zod';
 export const generalSettingsSchema = z.object({
   appName: z.string().min(2, 'Nome da aplicação deve ter pelo menos 2 caracteres'),
   supportEmail: z.string().email('Email de suporte inválido'),
-  maintenanceMode: z.boolean().default(false),
+  maintenanceMode: z.boolean(),
 });
 
 // Schema para configurações de segurança
 export const securitySettingsSchema = z.object({
   sessionTimeout: z.number().int().positive('Timeout deve ser positivo').min(5, 'Mínimo de 5 minutos').max(1440, 'Máximo de 24 horas'),
-  requireTwoFactor: z.boolean().default(false),
+  requireTwoFactor: z.boolean(),
   passwordMinLength: z.number().int().min(6, 'Mínimo de 6 caracteres').max(20, 'Máximo de 20 caracteres'),
 });
 
 // Schema para configurações de notificações
 export const notificationSettingsSchema = z.object({
-  emailEnabled: z.boolean().default(true),
-  smsEnabled: z.boolean().default(false),
-  pushEnabled: z.boolean().default(true),
+  emailEnabled: z.boolean(),
+  smsEnabled: z.boolean(),
+  pushEnabled: z.boolean(),
 });
 
 // Schema para configurações de integrações

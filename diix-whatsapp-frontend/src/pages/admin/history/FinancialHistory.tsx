@@ -3,7 +3,8 @@ import { TrendingUp, TrendingDown, DollarSign, Wallet, Filter, Download } from '
 import { motion } from 'framer-motion';
 import { useFinancialStore } from '@/stores/financialStore';
 import { useDataTable } from '@/hooks/useDataTable';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { FinancialTransaction } from '@/types';
+import type { ColumnDef as CustomColumnDef } from '@/components/ui/table/DataTable';
 import { DataTable } from '@/components/ui/table/DataTable';
 import { KPICard } from '@/components/ui/KPICard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -58,8 +59,12 @@ export default function FinancialHistory() {
     { name: 'Despesa', value: stats?.totalExpenses || 0 },
   ];
 
-  const columns: ColumnDef<typeof transactions[0]>[] = [
-    { key: 'description', header: 'Descrição', cell: (item) => item.description },
+  const columns: CustomColumnDef<FinancialTransaction>[] = [
+    { 
+      key: 'description', 
+      header: 'Descrição', 
+      cell: (item) => item.description 
+    },
     { 
       key: 'category', 
       header: 'Categoria', 
@@ -170,7 +175,7 @@ export default function FinancialHistory() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"

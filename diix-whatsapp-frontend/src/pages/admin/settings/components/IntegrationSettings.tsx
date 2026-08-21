@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { integrationSettingsSchema } from '@/schemas/settingsSchema';
-import type { IntegrationSettingsFormData } from '@/schemas/settingsSchema';
+import { integrationSettingsSchema, type IntegrationSettingsFormData } from '@/schemas/settingsSchema';
 import { Form, FormInput, FormSelect } from '@/components/ui/form/Form';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { PAYMENT_GATEWAYS } from '@/constants';
@@ -18,7 +17,7 @@ export function IntegrationSettings({ onSave }: IntegrationSettingsProps) {
   const form = useForm<IntegrationSettingsFormData>({
     resolver: zodResolver(integrationSettingsSchema),
     defaultValues: {
-      paymentGateway: settings?.integrations.paymentGateway || 'Stripe',
+      paymentGateway: (settings?.integrations.paymentGateway as any) || 'Stripe',
       crmIntegration: settings?.integrations.crmIntegration || '',
     },
   });
