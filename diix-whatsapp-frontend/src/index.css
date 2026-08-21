@@ -195,6 +195,36 @@
       );
     }
   }
+
+  /* Glass Animated Background */
+  .glass-animated {
+    @apply backdrop-blur-xl;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--glass-shadow);
+    animation: glassShimmer 8s ease-in-out infinite;
+  }
+
+  @keyframes glassShimmer {
+    0%, 100% {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.02) 100%
+      );
+    }
+    50% {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+    }
+  }
   
   /* ========================================
      NEON GLOW EFFECTS - Cyberpunk Colors
@@ -335,6 +365,34 @@
         0 0 45px rgba(0, 255, 157, 0.3);
     }
   }
+
+  .text-gradient-animated {
+    background: linear-gradient(
+      -45deg,
+      #84cc16,
+      #06b6d4,
+      #7c3aed,
+      #ec4899,
+      #84cc16
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 8s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
   
   .bg-animated-gradient {
     background: linear-gradient(-45deg, #030305, #0a0a12, #0f0f1a, #08080c);
@@ -377,6 +435,30 @@
     background-image: var(--cyber-grid-pattern);
     background-size: 40px 40px;
     background-color: #030305;
+  }
+
+  /* Animated Mesh Gradient */
+  .mesh-gradient-animated {
+    background: 
+      radial-gradient(at 0% 0%, rgba(132, 204, 22, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(132, 204, 22, 0.1) 0px, transparent 50%);
+    background-color: #050505;
+    background-size: 150% 150%;
+    animation: meshMove 20s ease-in-out infinite;
+  }
+
+  @keyframes meshMove {
+    0%, 100% {
+      background-position: 0% 0%;
+    }
+    33% {
+      background-position: 100% 0%;
+    }
+    66% {
+      background-position: 100% 100%;
+    }
   }
 }
 

@@ -33,14 +33,23 @@ coverage/
 .env.*
 !.env.example
 
-# IDE
-.vscode/
-.idea/
+# Cache directories
+.cache/
+.node_cache/
+.npm/
+.yarn/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
 *.swp
 *.swo
 *~
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
 
