@@ -41,4 +41,15 @@ htmlcov/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Coverage reports
+coverage/
+htmlcov/
+
+# Vite specific
+!.vite/
+vite.config.ts
+
+# TypeScript cache
+*.tsbuildinfo
 ```
