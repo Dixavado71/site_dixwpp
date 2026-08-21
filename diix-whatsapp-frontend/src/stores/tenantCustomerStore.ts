@@ -12,6 +12,7 @@ interface CustomerStore {
   customers: Client[]
   filters: CustomerFilters
   isLoading: boolean
+  loading: boolean
   error: string | null
   
   fetch: () => Promise<void>
