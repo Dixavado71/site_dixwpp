@@ -5,50 +5,95 @@ node_modules/
 # Build outputs
 dist/
 build/
-target/
-
-# TypeScript/JavaScript specific
-*.tsbuildinfo
 .next/
 .nuxt/
-
-# Environment variables
-.env
-.env.local
-*.env.*
+out/
 
 # Logs
 *.log
 
-# IDE specific
+# Environment variables
+.env.local
+.env.*
+!.env.example
+
+# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS generated files
+# OS files
 .DS_Store
 Thumbs.db
 
-# Python (if present in project)
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
+env/
 venv/
 .venv/
-.env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.gitattributes
 
-# Coverage reports
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+jspm_packages/
+web_modules/
+*.tsbuildinfo
+*.rpt2_cache/
+*.rts2_cache_cjs/
+*.rts2_cache_es/
+*.rts2_cache_umd/
+
+# TypeScript
+*.tsbuildinfo
+.next/
+.nuxt/
+dist/
+build/
+
+# React/Next.js specific
+.next/
+out/
+.next/**
+!next.config.js
+
+# General build artifacts
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
+# Coverage
 coverage/
 htmlcov/
-.coverage
+*.gcda
+*.gcno
 
 # Temporary files
 *.tmp
 *.temp
 *.bak
+*.backup
 
 # Compressed files
 *.zip
@@ -73,4 +118,13 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
+
+# Cache directories
+.cache/
+.cargo/
+.hypothesis/
+.mypy_cache/
+.pytest_cache/
+.gradle/
+target/
 ```
