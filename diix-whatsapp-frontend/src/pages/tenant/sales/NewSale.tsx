@@ -179,13 +179,13 @@ export default function TenantNewSale() {
                   <div className="flex flex-col gap-3">
                     <div>
                       <h3 className="font-semibold text-text-primary">{item.name}</h3>
-                      {'category' in item && (
-                        <p className="text-xs text-text-muted">{item.category}</p>
+                      {'category' in item && item.category && typeof item.category === 'object' && 'name' in item.category && (
+                        <p className="text-xs text-text-muted">{item.category.name}</p>
                       )}
                       {'duration' in item && (
                         <p className="text-xs text-text-muted">{item.duration} min</p>
                       )}
-                      {'stock' in item && (
+                      {'stock' in item && item.stock !== undefined && (
                         <span className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs ${item.stock > 10 ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
                           {item.stock} em estoque
                         </span>

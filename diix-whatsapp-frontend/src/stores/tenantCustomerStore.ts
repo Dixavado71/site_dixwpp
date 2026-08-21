@@ -31,6 +31,7 @@ export const useTenantCustomerStore = create<CustomerStore>((set, get) => ({
     status: 'all',
   },
   isLoading: false,
+  loading: false,
   error: null,
 
   fetch: async () => {
