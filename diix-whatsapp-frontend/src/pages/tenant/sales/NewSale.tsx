@@ -153,17 +153,17 @@ export default function TenantNewSale() {
   };
 
   return (
-    <div className="space-y-6">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between flex-col sm:flex-row gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-text-primary">Nova Venda</h1>
-          <p className="text-text-muted mt-1">PDV - Ponto de Venda</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">Nova Venda</h1>
+          <p className="text-xs sm:text-sm text-text-muted mt-1">PDV - Ponto de Venda</p>
         </div>
       </motion.div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Coluna da Esquerda - Produtos/Serviços */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           {/* Tabs Mobile */}
           <div className="flex gap-2 md:hidden">
             <Button 
@@ -235,7 +235,7 @@ export default function TenantNewSale() {
         </div>
 
         {/* Coluna da Direita - Carrinho */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <Card className="sticky top-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

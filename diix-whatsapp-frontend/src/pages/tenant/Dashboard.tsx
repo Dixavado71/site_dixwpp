@@ -48,20 +48,20 @@ export default function TenantDashboard() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between"
+          className="flex items-center justify-between flex-col sm:flex-row gap-3 sm:gap-4"
         >
           <div>
-            <h1 className="text-3xl font-bold text-text-primary">Dashboard</h1>
-            <p className="text-text-muted mt-1">Visão geral do seu negócio</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">Dashboard</h1>
+            <p className="text-xs sm:text-sm text-text-muted mt-1">Visão geral do seu negócio</p>
           </div>
-          <Button variant="primary" onClick={() => navigate('/tenant/sales/new')}>
+          <Button variant="primary" onClick={() => navigate('/tenant/sales/new')} className="w-full sm:w-auto">
             <Plus className="w-4 h-4 mr-2" />
             Nova Venda
           </Button>
         </motion.div>
 
         {/* Stats Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Clientes Totais"
             value={stats.totalClients}
@@ -171,7 +171,7 @@ export default function TenantDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="grid gap-6 md:grid-cols-2"
+          className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2"
         >
           <Card>
             <CardHeader>
@@ -210,7 +210,7 @@ export default function TenantDashboard() {
               <CardTitle>Ações Rápidas</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                 <QuickAction icon={<Users />} label="Novo Cliente" onClick={() => navigate('/tenant/clients')} />
                 <QuickAction icon={<Package />} label="Novo Produto" onClick={() => navigate('/tenant/products')} />
                 <QuickAction icon={<Scissors />} label="Novo Serviço" onClick={() => navigate('/tenant/services')} />
@@ -265,12 +265,12 @@ function QuickAction({ icon, label, onClick }: { icon: React.ReactNode; label: s
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center justify-center p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 group"
+      className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-200 group"
     >
-      <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary mb-2 group-hover:scale-110 transition-transform">
+      <div className="p-2.5 sm:p-3 rounded-xl bg-accent-primary/10 text-accent-primary mb-2 group-hover:scale-110 transition-transform">
         {icon}
       </div>
-      <span className="text-xs text-text-secondary text-center">{label}</span>
+      <span className="text-[10px] sm:text-xs text-text-secondary text-center">{label}</span>
     </button>
   );
 }
