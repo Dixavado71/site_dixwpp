@@ -29,6 +29,7 @@ const navigation = [
   { name: 'Produtos', href: '/tenant/products', icon: Package },
   { name: 'Serviços', href: '/tenant/services', icon: Briefcase },
   { name: 'Promoções', href: '/tenant/promotions', icon: Percent },
+  { name: 'Mensagens', href: '/tenant/messages', icon: MessageSquare },
   { name: 'Configurações', href: '/tenant/settings', icon: Settings },
 ]
 
