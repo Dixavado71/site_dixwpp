@@ -9,14 +9,14 @@ export const tenantCreateSchema = z.object({
   phone: z.string().min(10, 'Telefone inválido').regex(/^\d{10,11}$/, 'Telefone inválido'),
   slug: z.string().optional(),
   password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
-  active: z.boolean().default(true),
-  plan: z.enum(['basic', 'standard', 'premium', 'enterprise']).default('standard'),
+  active: z.boolean(),
+  plan: z.enum(['basic', 'standard', 'premium', 'enterprise']),
   limits: z.object({
-    maxUsers: z.number().int().positive().default(15),
-    maxClients: z.number().int().positive().default(500),
-    maxProducts: z.number().int().positive().default(1000),
-    maxMessages: z.number().int().positive().default(10000),
-  }).optional(),
+    maxUsers: z.number().int().positive(),
+    maxClients: z.number().int().positive(),
+    maxProducts: z.number().int().positive(),
+    maxMessages: z.number().int().positive(),
+  }),
 });
 
 // Schema para atualização de tenant

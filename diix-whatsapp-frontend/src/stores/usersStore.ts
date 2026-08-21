@@ -54,8 +54,8 @@ export const useUsersStore = create<UsersState>((set, get) => ({
   getUserById: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await userService.getById(id);
-      set({ selectedUser: user, isLoading: false });
+      const response = await userService.getById(id);
+      set({ selectedUser: response.data, isLoading: false });
     } catch (error: any) {
       set({ isLoading: false, error: error.message });
       toast.error(error.message || 'Erro ao buscar usuário');
