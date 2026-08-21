@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, type ReactNode, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,7 +11,7 @@ export interface ModalProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   closeOnOverlayClick?: boolean;
   showCloseButton?: boolean;
 }
@@ -21,6 +21,7 @@ const sizeClasses = {
   md: 'max-w-md',
   lg: 'max-w-lg',
   xl: 'max-w-xl',
+  full: 'max-w-full',
 };
 
 export const Modal = forwardRef<HTMLDivElement, ModalProps>(
@@ -38,6 +39,19 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
     },
     ref
   ) => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      
+      return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     if (!isOpen) return null;
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -46,32 +60,45 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       }
     };
 
+    // Mobile: fullscreen modal
+    // Desktop: centered modal with max-height
+    const containerClasses = cn(
+      "fixed inset-0 z-50 flex items-center justify-center",
+      "bg-black/60 backdrop-blur-sm",
+      isMobile ? 'p-0' : 'p-4'
+    );
+
+    const contentClasses = cn(
+      'w-full glass-panel rounded-xl border border-white/10 overflow-hidden',
+      isMobile 
+        ? 'h-full max-h-[100vh] rounded-none' 
+        : cn(sizeClasses[size], 'max-h-[90vh]'),
+      'flex flex-col'
+    );
+
     return (
       <AnimatePresence>
         <div
           ref={ref}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className={containerClasses}
           onClick={handleOverlayClick}
           role="dialog"
           aria-modal="true"
           aria-labelledby={title ? 'modal-title' : undefined}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className={cn(
-              'w-full glass-panel rounded-xl border border-white/10 overflow-hidden',
-              sizeClasses[size]
-            )}
+            className={contentClasses}
           >
             {/* Header */}
             {(title || showCloseButton) && (
-              <div className="flex items-center justify-between p-6 border-b border-white/10">
-                <div>
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 flex-shrink-0">
+                <div className="min-w-0 flex-1">
                   {title && (
-                    <h2 id="modal-title" className="text-xl font-bold text-text-primary">
+                    <h2 id="modal-title" className="text-lg sm:text-xl font-bold text-text-primary truncate">
                       {title}
                     </h2>
                   )}
@@ -85,7 +112,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
                     size="sm"
                     onClick={onClose}
                     aria-label="Fechar modal"
-                    className="ml-auto"
+                    className="ml-2 min-h-[44px] min-w-[44px] p-2 flex-shrink-0"
                   >
                     <X className="h-5 w-5" />
                   </Button>
@@ -93,12 +120,14 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
               </div>
             )}
 
-            {/* Body */}
-            <div className="p-6">{children}</div>
+            {/* Body - scrollable */}
+            <div className="p-4 sm:p-6 overflow-y-auto flex-1 scrollbar-thin">
+              {children}
+            </div>
 
-            {/* Footer */}
+            {/* Footer - sticky at bottom */}
             {footer && (
-              <div className="flex gap-3 p-6 border-t border-white/10 bg-white/5">
+              <div className="flex gap-3 p-4 sm:p-6 border-t border-white/10 bg-white/5 flex-shrink-0">
                 {footer}
               </div>
             )}

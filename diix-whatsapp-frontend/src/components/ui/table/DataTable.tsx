@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, type ReactNode, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface DataTableProps<T> {
@@ -19,6 +19,19 @@ export interface ColumnDef<T> {
 
 export const DataTable = forwardRef<HTMLTableElement, DataTableProps<any>>(
   ({ columns, data, className, emptyState, loading }, ref) => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      
+      return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     if (loading) {
       return (
         <div className="flex items-center justify-center py-12">
@@ -35,8 +48,37 @@ export const DataTable = forwardRef<HTMLTableElement, DataTableProps<any>>(
       );
     }
 
+    // Mobile: transform into cards
+    if (isMobile) {
+      return (
+        <div className="space-y-3">
+          {data.map((row, rowIndex) => (
+            <div
+              key={(row as any).id || rowIndex}
+              className="glass-panel rounded-lg border border-white/10 p-4 space-y-3"
+            >
+              {columns.map((column) => (
+                <div 
+                  key={String(column.key)}
+                  className="flex justify-between items-start gap-4"
+                >
+                  <span className="text-sm font-medium text-text-muted min-w-[100px]">
+                    {column.header}:
+                  </span>
+                  <span className="text-sm text-text-primary text-right flex-1">
+                    {column.cell ? column.cell(row) : String(row[column.key] ?? '')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    // Desktop: traditional table
     return (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto scrollbar-thin">
         <table ref={ref} className={cn('w-full', className)}>
           <thead>
             <tr className="border-b border-border">
@@ -44,7 +86,7 @@ export const DataTable = forwardRef<HTMLTableElement, DataTableProps<any>>(
                 <th
                   key={String(column.key)}
                   className={cn(
-                    'text-left py-4 px-6 text-sm font-medium text-text-muted',
+                    'text-left py-4 px-6 text-sm font-medium text-text-muted whitespace-nowrap',
                     column.className
                   )}
                 >
@@ -62,7 +104,7 @@ export const DataTable = forwardRef<HTMLTableElement, DataTableProps<any>>(
                 {columns.map((column) => (
                   <td
                     key={String(column.key)}
-                    className={cn('py-4 px-6 text-sm text-text-primary', column.className)}
+                    className={cn('py-4 px-6 text-sm text-text-primary whitespace-nowrap', column.className)}
                   >
                     {column.cell ? column.cell(row) : String(row[column.key] ?? '')}
                   </td>
