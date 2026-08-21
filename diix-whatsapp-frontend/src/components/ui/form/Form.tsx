@@ -1,5 +1,5 @@
-import { forwardRef, ReactNode } from 'react';
-import { useForm, UseFormReturn, FieldValues, Path } from 'react-hook-form';
+import { forwardRef, type ReactNode } from 'react';
+import { useForm, type UseFormReturn, type FieldValues, type Path } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
