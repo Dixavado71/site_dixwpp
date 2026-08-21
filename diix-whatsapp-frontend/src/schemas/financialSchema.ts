@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // Schema para criação de transação financeira
 export const transactionCreateSchema = z.object({
-  type: z.enum(['income', 'expense'], { required_error: 'Tipo é obrigatório' }),
+  type: z.enum(['income', 'expense'], { message: 'Tipo é obrigatório' }),
   description: z.string().min(3, 'Descrição deve ter pelo menos 3 caracteres'),
   amount: z.number().positive('Valor deve ser maior que zero'),
   dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (use YYYY-MM-DD)'),

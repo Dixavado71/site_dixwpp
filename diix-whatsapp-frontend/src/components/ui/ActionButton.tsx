@@ -1,14 +1,13 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
-import type { ButtonProps } from '@/components/ui/Button';
 import { Button } from '@/components/ui/Button';
 
-export interface ActionButtonProps extends ButtonProps {
+export interface ActionButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   icon?: ReactNode;
   label?: string;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   showLabel?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export function ActionButton({ 
@@ -31,7 +30,7 @@ export function ActionButton({
       {showLabel && label && (
         <span className="ml-2">{label}</span>
       )}
-      {children}
+      {children ?? null}
     </Button>
   );
 }

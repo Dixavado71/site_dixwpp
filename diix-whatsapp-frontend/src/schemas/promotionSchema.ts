@@ -4,9 +4,7 @@ import { z } from 'zod';
 export const promotionSchema = z.object({
   name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
   description: z.string().optional(),
-  type: z.enum(['percentage', 'fixed'], {
-    errorMap: () => ({ message: 'Tipo deve ser "percentage" ou "fixed"' }),
-  }),
+  type: z.enum(['percentage', 'fixed'], { message: 'Tipo deve ser "percentage" ou "fixed"' }),
   value: z.number().positive('Valor deve ser maior que zero'),
   products: z.array(z.string().uuid()).optional(), // IDs dos produtos aplicáveis
   services: z.array(z.string().uuid()).optional(), // IDs dos serviços aplicáveis
