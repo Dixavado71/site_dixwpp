@@ -5,15 +5,19 @@ node_modules/
 # Build outputs
 dist/
 build/
-*.js.map
-*.ts.map
+target/
+
+# TypeScript/JavaScript
+*.tsbuildinfo
+.next/
+.nuxt/
 
 # Environment variables
 .env
 .env.local
-*.env.*
+.env.*
 
-# IDE files
+# Editors
 .vscode/
 .idea/
 *.swp
@@ -25,10 +29,76 @@ build/
 # Coverage
 coverage/
 htmlcov/
-*.coverage
+.coverage
 
-# Temporary files
+# Temp files
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+.env
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
+.nyc_output
+coverage
+.nyc_output/
+coverage/
+
+# Compiled/Binary
+*.exe
+*.dll
+*.so
+*.a
+*.o
+*.obj
+*.out
+*.class
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+
+# Gradle
+.gradle/
+build/
+
+# MyPy
+.mypy_cache/
 ```
