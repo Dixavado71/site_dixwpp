@@ -1,27 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Plus, Minus, Trash2, Search, User, Package, CreditCard, DollarSign } from 'lucide-react';
+import { ShoppingCart, Plus, Minus, Trash2, Search, User, Package, CreditCard, DollarSign, Printer } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { toast } from 'sonner';
-
-const mockProducts = [
-  { id: '1', name: 'Shampoo Premium', price: 45.00, stock: 25, category: 'Cabelo' },
-  { id: '2', name: 'Condicionador Hidratante', price: 38.00, stock: 18, category: 'Cabelo' },
-  { id: '3', name: 'Máscara Capilar', price: 65.00, stock: 12, category: 'Tratamento' },
-  { id: '4', name: 'Óleo Finalizador', price: 52.00, stock: 8, category: 'Finalização' },
-  { id: '5', name: 'Spray Fixador', price: 35.00, stock: 30, category: 'Finalização' },
-];
-
-const mockServices = [
-  { id: '1', name: 'Corte de Cabelo', price: 60.00, duration: 45 },
-  { id: '2', name: 'Barba Completa', price: 35.00, duration: 30 },
-  { id: '3', name: 'Corte + Barba', price: 85.00, duration: 75 },
-  { id: '4', name: 'Hidratação Capilar', price: 120.00, duration: 90 },
-  { id: '5', name: 'Manicure', price: 45.00, duration: 40 },
-];
+import { useTenantProductStore } from '@/stores/tenantProductStore';
+import { useTenantServiceStore } from '@/stores/tenantServiceStore';
+import { useTenantCustomerStore } from '@/stores/tenantCustomerStore';
+import type { Product, Service, Client } from '@/types';
 
 interface CartItem {
   id: string;
@@ -32,13 +20,32 @@ interface CartItem {
 }
 
 export default function TenantNewSale() {
+  const { products, loading: productsLoading, fetch: fetchProducts } = useTenantProductStore();
+  const { services, loading: servicesLoading, fetch: fetchServices } = useTenantServiceStore();
+  const { customers, loading: customersLoading, fetch: fetchCustomers } = useTenantCustomerStore();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'products' | 'services'>('products');
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [customerName, setCustomerName] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState<Client | null>(null);
+  const [customerSearch, setCustomerSearch] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'pix'>('cash');
+  const [showCustomerSelect, setShowCustomerSelect] = useState(false);
 
-  const addToCart = (item: typeof mockProducts[0] | typeof mockServices[0], type: 'product' | 'service') => {
+  const tenantId = 'current-tenant-id';
+
+  useEffect(() => {
+    fetchProducts(tenantId);
+    fetchServices();
+    fetchCustomers();
+  }, []);
+
+  const filteredCustomers = customers.filter(customer =>
+    customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
+    customer.phone.includes(customerSearch)
+  );
+
+  const addToCart = (item: Product | Service, type: 'product' | 'service') => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id);
     if (existingItem) {
       setCart(cart.map(cartItem => 
@@ -59,8 +66,8 @@ export default function TenantNewSale() {
   };
 
   const filteredItems = activeTab === 'products' 
-    ? mockProducts.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    : mockServices.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    ? products.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    : services.filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const removeFromCart = (itemId: string) => {
     setCart(cart.filter(item => item.id !== itemId));
@@ -84,13 +91,35 @@ export default function TenantNewSale() {
       toast.error('Adicione itens ao carrinho!');
       return;
     }
-    if (!customerName) {
-      toast.error('Informe o nome do cliente!');
+    if (!selectedCustomer) {
+      toast.error('Selecione um cliente!');
       return;
     }
     toast.success(`Venda finalizada com sucesso! Total: R$ ${cartTotal.toFixed(2).replace('.', ',')}`);
+    // Aqui seria implementada a impressão do recibo
+    printReceipt();
     setCart([]);
-    setCustomerName('');
+    setSelectedCustomer(null);
+  };
+
+  const printReceipt = () => {
+    // Implementação básica de impressão de recibo
+    const receiptContent = `
+      ====================================
+      RECIBO DE VENDA
+      ====================================
+      Cliente: ${selectedCustomer?.name || 'N/A'}
+      Data: ${new Date().toLocaleDateString('pt-BR')}
+      
+      ITENS:
+      ${cart.map(item => `${item.quantity}x ${item.name} - R$ ${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+      
+      TOTAL: R$ ${cartTotal.toFixed(2)}
+      Pagamento: ${paymentMethod === 'cash' ? 'Dinheiro' : paymentMethod === 'card' ? 'Cartão' : 'PIX'}
+      ====================================
+    `;
+    console.log(receiptContent);
+    // Em produção, usaria window.print() ou uma biblioteca de impressão
   };
 
   return (
@@ -189,14 +218,54 @@ export default function TenantNewSale() {
               <div>
                 <label className="block text-sm text-text-secondary mb-2">Cliente</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
-                  <Input 
-                    placeholder="Nome do cliente" 
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="pl-10"
-                  />
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-between pl-10"
+                    onClick={() => setShowCustomerSelect(!showCustomerSelect)}
+                  >
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-text-muted" />
+                      <span className="truncate">{selectedCustomer ? selectedCustomer.name : 'Selecionar cliente'}</span>
+                    </div>
+                  </Button>
                 </div>
+
+                {/* Modal de Seleção de Cliente */}
+                {showCustomerSelect && (
+                  <Card className="absolute z-10 w-full mt-2 glass-card border-white/10">
+                    <CardContent className="p-4 space-y-3">
+                      <Input
+                        placeholder="Buscar cliente..."
+                        value={customerSearch}
+                        onChange={(e) => setCustomerSearch(e.target.value)}
+                        className="w-full"
+                      />
+                      <div className="max-h-48 overflow-y-auto space-y-2">
+                        {customersLoading ? (
+                          <div className="flex items-center justify-center py-4">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent-primary"></div>
+                          </div>
+                        ) : filteredCustomers.length === 0 ? (
+                          <p className="text-center text-text-muted text-sm">Nenhum cliente encontrado</p>
+                        ) : (
+                          filteredCustomers.map((customer) => (
+                            <button
+                              key={customer.id}
+                              className="w-full text-left p-2 rounded-lg hover:bg-white/5 transition-colors"
+                              onClick={() => {
+                                setSelectedCustomer(customer);
+                                setShowCustomerSelect(false);
+                              }}
+                            >
+                              <p className="text-sm font-medium text-text-primary">{customer.name}</p>
+                              <p className="text-xs text-text-muted">{customer.phone}</p>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
 
               {/* Itens do Carrinho */}

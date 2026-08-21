@@ -8,39 +8,42 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/modals/ConfirmModal';
 import { ServiceModal } from '@/components/modals/ServiceModal';
 import { useModal } from '@/hooks/useModal';
+import { useTenantServiceStore } from '@/stores/tenantServiceStore';
 import { toast } from 'sonner';
-
-const mockServices = [
-  { id: '1', name: 'Corte de Cabelo', price: 60.00, duration: 45, category: 'Cabelo', active: true },
-  { id: '2', name: 'Barba Completa', price: 35.00, duration: 30, category: 'Barba', active: true },
-  { id: '3', name: 'Corte + Barba', price: 85.00, duration: 75, category: 'Combo', active: true },
-  { id: '4', name: 'Hidratação Capilar', price: 120.00, duration: 90, category: 'Tratamento', active: true },
-  { id: '5', name: 'Manicure', price: 45.00, duration: 40, category: 'Unhas', active: false },
-  { id: '6', name: 'Pedicure', price: 50.00, duration: 45, category: 'Unhas', active: true },
-];
+import type { Service } from '@/types';
 
 export default function TenantServices() {
-  const [services, setServices] = useState(mockServices);
+  const { services, loading, fetch, create, update, delete: deleteService } = useTenantServiceStore();
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredServices = services.filter(service => service.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const tenantId = 'current-tenant-id'; // Substituir pelo tenant real
   
   const createModal = useModal();
   const editModal = useModal();
   const deleteConfirmModal = useModal();
-  const [selectedService, setSelectedService] = useState<typeof mockServices[0] | null>(null);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view' | null>(null);
+
+  useEffect(() => {
+    // Configurar tenantId e buscar serviços
+    const store = useTenantServiceStore.getState();
+    store.setTenantId(tenantId);
+  }, []);
+
+  const filteredServices = services.filter(service => 
+    service.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const openCreateModal = () => {
     setSelectedService(null);
     setModalMode('create');
   };
 
-  const openEditModal = (service: typeof mockServices[0]) => {
+  const openEditModal = (service: Service) => {
     setSelectedService(service);
     setModalMode('edit');
   };
 
-  const openDeleteConfirm = (service: typeof mockServices[0]) => {
+  const openDeleteConfirm = (service: Service) => {
     setSelectedService(service);
     deleteConfirmModal.open();
   };
@@ -50,31 +53,44 @@ export default function TenantServices() {
     setSelectedService(null);
   };
 
-  const handleCreate = (data: any) => {
-    const newService = {
-      id: String(Date.now()),
-      ...data,
-      active: true,
-    };
-    setServices([...services, newService]);
-    toast.success('Serviço criado com sucesso!');
-    handleCloseModal();
+  const handleCreate = async (data: any) => {
+    try {
+      await create({
+        ...data,
+        tenantId,
+      });
+      setModalMode(null);
+    } catch (error) {
+      // Erro já tratado no store
+    }
   };
 
-  const handleEdit = (data: any) => {
+  const handleEdit = async (data: any) => {
     if (!selectedService) return;
-    setServices(services.map(s => s.id === selectedService.id ? { ...s, ...data } : s));
-    toast.success('Serviço atualizado com sucesso!');
-    handleCloseModal();
+    try {
+      await update(selectedService.id, data);
+      setModalMode(null);
+      setSelectedService(null);
+    } catch (error) {
+      // Erro já tratado no store
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!selectedService) return;
-    setServices(services.filter(s => s.id !== selectedService.id));
-    toast.success(`${selectedService.name} removido com sucesso!`);
-    deleteConfirmModal.close();
-    setSelectedService(null);
+    try {
+      await deleteService(selectedService.id);
+      deleteConfirmModal.close();
+      setSelectedService(null);
+    } catch (error) {
+      // Erro já tratado no store
+    }
   };
+
+  const activeServices = services.filter(s => s.active).length;
+  const averagePrice = services.length > 0 
+    ? services.reduce((acc, s) => acc + s.price, 0) / services.length 
+    : 0;
 
   return (
     
@@ -110,7 +126,7 @@ export default function TenantServices() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-text-muted">Serviços Ativos</p>
-                  <p className="text-2xl font-bold text-text-primary mt-1">{services.filter(s => s.active).length}</p>
+                  <p className="text-2xl font-bold text-text-primary mt-1">{activeServices}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-green-500/10 text-green-400">
                   <Clock className="h-5 w-5" />
@@ -123,7 +139,7 @@ export default function TenantServices() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-text-muted">Preço Médio</p>
-                  <p className="text-2xl font-bold text-text-primary mt-1">R$ {(services.reduce((acc, s) => acc + s.price, 0) / services.length).toFixed(2)}</p>
+                  <p className="text-2xl font-bold text-text-primary mt-1">R$ {averagePrice.toFixed(2)}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-cyan-500/10 text-cyan-400">
                   <DollarSign className="h-5 w-5" />
@@ -143,37 +159,51 @@ export default function TenantServices() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Nome</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Categoria</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Preço</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Duração</th>
-                    <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Status</th>
-                    <th className="text-right py-3 px-4 text-sm font-medium text-text-muted">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredServices.map((service) => (
-                    <tr key={service.id} className="border-b border-border hover:bg-accent-primary/5">
-                      <td className="py-3 px-4 text-sm text-text-primary">{service.name}</td>
-                      <td className="py-3 px-4 text-sm"><span className="px-2 py-1 rounded-full text-xs bg-accent-primary/10 text-accent-primary">{service.category}</span></td>
-                      <td className="py-3 px-4 text-sm text-text-primary">R$ {service.price.toFixed(2).replace('.', ',')}</td>
-                      <td className="py-3 px-4 text-sm text-text-muted">{service.duration} min</td>
-                      <td className="py-3 px-4 text-sm">
-                        <StatusBadge status={service.active ? 'active' : 'inactive'} />
-                      </td>
-                      <td className="py-3 px-4 text-sm text-right space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => openEditModal(service)} title="Editar"><Edit className="h-4 w-4" /></Button>
-                        <Button variant="danger" size="sm" onClick={() => openDeleteConfirm(service)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>
-                      </td>
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+              </div>
+            ) : filteredServices.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Scissors className="w-12 h-12 text-text-muted mb-4" />
+                <p className="text-text-secondary">Nenhum serviço encontrado</p>
+                <p className="text-sm text-text-muted mt-1">
+                  {searchTerm ? 'Tente buscar por outro termo' : 'Crie o primeiro serviço para começar'}
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Nome</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Categoria</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Preço</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Duração</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Status</th>
+                      <th className="text-right py-3 px-4 text-sm font-medium text-text-muted">Ações</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filteredServices.map((service) => (
+                      <tr key={service.id} className="border-b border-border hover:bg-accent-primary/5">
+                        <td className="py-3 px-4 text-sm text-text-primary">{service.name}</td>
+                        <td className="py-3 px-4 text-sm"><span className="px-2 py-1 rounded-full text-xs bg-accent-primary/10 text-accent-primary">{service.categoryId || '-'}</span></td>
+                        <td className="py-3 px-4 text-sm text-text-primary">R$ {service.price.toFixed(2).replace('.', ',')}</td>
+                        <td className="py-3 px-4 text-sm text-text-muted">{service.duration} min</td>
+                        <td className="py-3 px-4 text-sm">
+                          <StatusBadge status={service.active ? 'active' : 'inactive'} />
+                        </td>
+                        <td className="py-3 px-4 text-sm text-right space-x-2">
+                          <Button variant="ghost" size="sm" onClick={() => openEditModal(service)} title="Editar"><Edit className="h-4 w-4" /></Button>
+                          <Button variant="danger" size="sm" onClick={() => openDeleteConfirm(service)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
 
