@@ -49,8 +49,8 @@ export default function TenantLayout() {
     localStorage.removeItem('mock_user');
     localStorage.removeItem('mock_remembered_identifier');
     localStorage.removeItem('mock_remembered_password');
-    navigate('/login')
     toast.success('Logout realizado com sucesso!')
+    navigate('/login')
   }
 
   return (

@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { toast } from 'sonner';
 
 export default function TenantSettings() {
   const [businessName, setBusinessName] = useState('Barbearia Style');
@@ -15,7 +14,8 @@ export default function TenantSettings() {
   const [description, setDescription] = useState('Barbearia tradicional com os melhores profissionais da região.');
 
   const handleSave = () => {
-    toast.success('Configurações salvas com sucesso!');
+    // Implementação real de salvamento será feita via store
+    console.log('Salvando configurações...', { businessName, email, phone, address, description });
   };
 
   return (
@@ -76,28 +76,28 @@ export default function TenantSettings() {
                   <p className="text-sm font-medium text-text-primary">Notificações por Email</p>
                   <p className="text-xs text-text-muted">Receba atualizações por email</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.info('Notificações ativadas')}>Ativado</Button>
+                <Button variant="ghost" size="sm">Ativado</Button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                 <div>
                   <p className="text-sm font-medium text-text-primary">Notificações Push</p>
                   <p className="text-xs text-text-muted">Receba notificações no navegador</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.info('Push ativado')}>Ativado</Button>
+                <Button variant="ghost" size="sm">Ativado</Button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                 <div>
                   <p className="text-sm font-medium text-text-primary">Modo Escuro</p>
                   <p className="text-xs text-text-muted">Tema escuro para melhor visualização</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.info('Modo escuro ativado')}>Ativado</Button>
+                <Button variant="ghost" size="sm">Ativado</Button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                 <div>
                   <p className="text-sm font-medium text-text-primary">Idioma</p>
                   <p className="text-xs text-text-muted">Selecione o idioma do sistema</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.info('Idioma: Português')}>Português</Button>
+                <Button variant="ghost" size="sm">Português</Button>
               </div>
             </CardContent>
           </Card>
@@ -124,7 +124,7 @@ export default function TenantSettings() {
                 <label className="block text-sm text-text-secondary mb-2">Confirmar Nova Senha</label>
                 <Input type="password" placeholder="••••••••" />
               </div>
-              <Button variant="primary" className="w-full" onClick={() => toast.success('Senha alterada com sucesso!')}>Alterar Senha</Button>
+              <Button variant="primary" className="w-full">Alterar Senha</Button>
             </CardContent>
           </Card>
 
@@ -143,21 +143,21 @@ export default function TenantSettings() {
                   <p className="text-sm font-medium text-text-primary">WhatsApp Business</p>
                   <p className="text-xs text-text-muted">Integração com WhatsApp</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.success('WhatsApp conectado')}>Conectado</Button>
+                <Button variant="ghost" size="sm">Conectado</Button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                 <div>
                   <p className="text-sm font-medium text-text-primary">Google Calendar</p>
                   <p className="text-xs text-text-muted">Sincronize agendamentos</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.info('Google Calendar conectado')}>Conectado</Button>
+                <Button variant="ghost" size="sm">Conectado</Button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
                 <div>
                   <p className="text-sm font-medium text-text-primary">Instagram</p>
                   <p className="text-xs text-text-muted">Integração com Instagram</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => toast.info('Instagram conectado')}>Conectado</Button>
+                <Button variant="ghost" size="sm">Conectado</Button>
               </div>
             </CardContent>
           </Card>
