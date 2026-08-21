@@ -120,6 +120,8 @@ function App() {
         <Route path="services" element={<TenantServices />} />
         <Route path="promotions" element={<TenantPromotion />} />
         <Route path="settings" element={<TenantSettings />} />
+        <Route path="sales" element={<TenantNewSale />} />
+        <Route path="sales/new" element={<TenantNewSale />} />
       </Route>
 
       {/* Default redirect */}
