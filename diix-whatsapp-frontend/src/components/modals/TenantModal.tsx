@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { tenantSchema, type TenantFormData } from '@/schemas/tenantSchema';
-import { Form, FormInput, FormSelect, FormNumber } from '@/components/ui/form/Form';
-import { Modal } from '@/components/ui/Modal';
+import { tenantCreateSchema, type TenantCreateFormData } from '@/schemas/tenantSchema';
+import { Form, FormInput, FormSelect } from '@/components/ui/form/Form';
+import { Modal } from '@/components/ui/modal/Modal';
 import { useTenantsStore } from '@/stores/tenantsStore';
 import { toast } from 'sonner';
 
@@ -23,47 +23,54 @@ const planOptions = [
 export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
   const { createTenant, updateTenant, isLoading } = useTenantsStore();
   
-  const form = useForm<TenantFormData>({
-    resolver: zodResolver(tenantSchema),
+  const form = useForm<TenantCreateFormData>({
+    resolver: zodResolver(tenantCreateSchema),
     defaultValues: {
       name: tenant?.name || '',
+      businessName: tenant?.businessName || '',
+      document: tenant?.document || '',
       email: tenant?.email || '',
       phone: tenant?.phone || '',
-      plan: (tenant?.plan as any) || 'basic',
-      limits: {
-        users: tenant?.limits?.maxUsers || 5,
-        products: tenant?.limits?.maxProducts || 100,
-        salesPerMonth: tenant?.limits?.maxMessages || 1000,
+      slug: tenant?.slug || '',
+      password: '',
+      active: tenant?.active ?? true,
+      plan: (tenant?.plan as any) || 'standard',
+      limits: tenant?.limits || {
+        maxUsers: 15,
+        maxClients: 500,
+        maxProducts: 1000,
+        maxMessages: 10000,
       },
     },
   });
 
-  const handleSubmit = async (data: TenantFormData) => {
+  const handleSubmit = async (data: TenantCreateFormData) => {
     try {
       if (mode === 'create') {
         await createTenant({
           name: data.name,
+          businessName: data.businessName,
+          document: data.document,
           email: data.email,
           phone: data.phone,
+          slug: data.slug,
+          password: data.password,
+          active: data.active,
           plan: data.plan,
-          limits: {
-            maxUsers: data.limits.users,
-            maxProducts: data.limits.products,
-            maxMessages: data.limits.salesPerMonth,
-          },
+          limits: data.limits,
         });
         toast.success('Tenant criado com sucesso!');
       } else {
         await updateTenant(tenant!.id, {
           name: data.name,
+          businessName: data.businessName,
+          document: data.document,
           email: data.email,
           phone: data.phone,
+          slug: data.slug,
+          active: data.active,
           plan: data.plan,
-          limits: {
-            maxUsers: data.limits.users,
-            maxProducts: data.limits.products,
-            maxMessages: data.limits.salesPerMonth,
-          },
+          limits: data.limits,
         });
         toast.success('Tenant atualizado com sucesso!');
       }
@@ -77,7 +84,7 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
 
   return (
     <Modal
-      open={open}
+      isOpen={open}
       onClose={onClose}
       title={mode === 'create' ? 'Novo Tenant' : mode === 'edit' ? 'Editar Tenant' : 'Detalhes do Tenant'}
     >
@@ -89,6 +96,22 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
             label="Nome do Tenant"
             placeholder="Ex: Minha Empresa"
             required
+            disabled={isView}
+          />
+          
+          <FormInput
+            form={form}
+            name="businessName"
+            label="Razão Social"
+            placeholder="Ex: Minha Empresa LTDA"
+            disabled={isView}
+          />
+          
+          <FormInput
+            form={form}
+            name="document"
+            label="CPF/CNPJ"
+            placeholder="000.000.000-00"
             disabled={isView}
           />
           
@@ -110,6 +133,26 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
             disabled={isView}
           />
           
+          <FormInput
+            form={form}
+            name="slug"
+            label="Slug (URL)"
+            placeholder="minha-empresa"
+            disabled={isView}
+          />
+          
+          {mode === 'create' && (
+            <FormInput
+              form={form}
+              name="password"
+              label="Senha"
+              type="password"
+              placeholder="******"
+              required={mode === 'create'}
+              disabled={isView}
+            />
+          )}
+          
           <FormSelect
             form={form}
             name="plan"
@@ -120,26 +163,44 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
             disabled={isView}
           />
           
-          <div className="grid grid-cols-3 gap-4">
-            <FormNumber
+          <FormSelect
+            form={form}
+            name="active"
+            label="Status"
+            options={[
+              { value: 'true', label: 'Ativo' },
+              { value: 'false', label: 'Inativo' },
+            ]}
+            disabled={isView}
+          />
+          
+          <div className="grid grid-cols-2 gap-4">
+            <FormInput
               form={form}
-              name="limits.users"
+              name="limits.maxUsers"
               label="Limite de Usuários"
-              min={1}
+              type="number"
               disabled={isView}
             />
-            <FormNumber
+            <FormInput
               form={form}
-              name="limits.products"
+              name="limits.maxClients"
+              label="Limite de Clientes"
+              type="number"
+              disabled={isView}
+            />
+            <FormInput
+              form={form}
+              name="limits.maxProducts"
               label="Limite de Produtos"
-              min={1}
+              type="number"
               disabled={isView}
             />
-            <FormNumber
+            <FormInput
               form={form}
-              name="limits.salesPerMonth"
-              label="Vendas/Mês"
-              min={1}
+              name="limits.maxMessages"
+              label="Limite de Mensagens"
+              type="number"
               disabled={isView}
             />
           </div>
@@ -157,8 +218,7 @@ export function TenantModal({ mode, tenant, open, onClose }: TenantModalProps) {
                 Cancelar
               </button>
               <button
-                type="button"
-                onClick={form.handleSubmit(handleSubmit)}
+                type="submit"
                 disabled={isLoading}
                 className="px-4 py-2 bg-accent-primary text-text-primary rounded-lg font-medium hover:bg-accent-primary/90 transition-colors disabled:opacity-50"
               >

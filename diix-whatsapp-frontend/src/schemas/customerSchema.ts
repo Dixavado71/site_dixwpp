@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-// Schema para cliente (Customer)
-export const customerSchema = z.object({
-  name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
+// Schema para cliente (Customer) - sem .default() para compatibilidade com useForm
+export const customerCreateSchema = z.object({
+  name: z.string().min(1, 'Nome obrigatório'),
   email: z.string().email('Email inválido').optional().or(z.literal('')),
   phone: z.string().min(10, 'Telefone deve ter pelo menos 10 caracteres'),
   document: z.string().min(11, 'CPF/CNPJ inválido').optional().or(z.literal('')),
@@ -16,20 +16,27 @@ export const customerSchema = z.object({
     zipCode: z.string().min(8, 'CEP inválido').optional(),
   }).optional(),
   notes: z.string().optional(),
-  active: z.boolean().default(true),
 });
 
-export type CustomerFormData = z.infer<typeof customerSchema>;
+export type CustomerCreateFormData = z.infer<typeof customerCreateSchema>;
 
-// Schema para criação (sem ID)
-export const createCustomerSchema = customerSchema;
-
-// Schema para atualização (todos os campos opcionais exceto ID)
-export const updateCustomerSchema = customerSchema.extend({
+// Schema para atualização
+export const customerUpdateSchema = customerCreateSchema.extend({
   id: z.string().uuid('ID inválido'),
 });
 
-export type UpdateCustomerFormData = z.infer<typeof updateCustomerSchema>;
+export type CustomerUpdateFormData = z.infer<typeof customerUpdateSchema>;
+
+// Schema base para cliente completo (com ID e timestamps)
+export const customerSchema = customerCreateSchema.extend({
+  id: z.string().uuid(),
+  tenantId: z.string().uuid(),
+  active: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type Customer = z.infer<typeof customerSchema>;
 
 // Schema para filtro de clientes
 export const customerFilterSchema = z.object({

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema, type UserFormData } from '@/schemas/userSchema';
 import { Form, FormInput, FormSelect } from '@/components/ui/form/Form';
-import { Modal } from '@/components/ui/Modal';
+import { Modal } from '@/components/ui/modal/Modal';
 import { useUsersStore } from '@/stores/usersStore';
 import { useTenantsStore } from '@/stores/tenantsStore';
 import { toast } from 'sonner';
@@ -58,6 +58,7 @@ export function UserModal({ mode, user, open, onClose }: UserModalProps) {
           tenantId: data.role === 'admin' ? data.tenantId : undefined,
           status: data.status,
         });
+        toast.success('Usuário criado com sucesso!');
       } else {
         await updateUser(user!.id, {
           name: data.name,
@@ -66,10 +67,11 @@ export function UserModal({ mode, user, open, onClose }: UserModalProps) {
           tenantId: data.role === 'admin' ? data.tenantId : undefined,
           status: data.status,
         });
+        toast.success('Usuário atualizado com sucesso!');
       }
       onClose();
     } catch (error: any) {
-      // Erro já tratado no store
+      toast.error(error.message || 'Erro ao salvar usuário');
     }
   };
 
@@ -78,7 +80,7 @@ export function UserModal({ mode, user, open, onClose }: UserModalProps) {
 
   return (
     <Modal
-      open={open}
+      isOpen={open}
       onClose={onClose}
       title={mode === 'create' ? 'Novo Usuário' : mode === 'edit' ? 'Editar Usuário' : 'Detalhes do Usuário'}
     >
@@ -147,8 +149,7 @@ export function UserModal({ mode, user, open, onClose }: UserModalProps) {
                 Cancelar
               </button>
               <button
-                type="button"
-                onClick={form.handleSubmit(handleSubmit)}
+                type="submit"
                 disabled={isLoading}
                 className="px-4 py-2 bg-accent-primary text-text-primary rounded-lg font-medium hover:bg-accent-primary/90 transition-colors disabled:opacity-50"
               >
