@@ -11,12 +11,21 @@ createRoot(document.getElementById('root')!).render(
       <App />
       <Toaster 
         position="top-right"
+        expand={false}
+        richColors
+        visibleToasts={5}
+        duration={4000}
         toastOptions={{
-          className: 'glass-card',
-          style: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+          unstyled: true,
+          classNames: {
+            toast: 'toast-premium',
+            success: 'toast-success',
+            error: 'toast-error',
+            warning: 'toast-warning',
+            info: 'toast-info',
+            title: 'toast-title',
+            description: 'toast-description',
+            closeButton: 'toast-close-button',
           },
         }}
       />
