@@ -5,8 +5,10 @@ node_modules/
 # Build outputs
 dist/
 build/
-*.js.map
-*.ts.map
+*.js
+*.ts
+*.tsx
+*.jsx
 
 # Environment variables
 .env
@@ -19,24 +21,29 @@ build/
 *.swp
 *.swo
 
-# Python artifacts (if any Python in project)
+# Logs
+*.log
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Logs
-*.log
+# Temporary files
+*.tmp
+*.temp
 
 # OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage reports
-coverage/
-htmlcov/
-*.coverage
-
-# Temporary files
-*.tmp
+# Local configuration
+.env.local
+*.local
 ```
