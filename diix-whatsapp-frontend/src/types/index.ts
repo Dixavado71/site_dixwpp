@@ -3,8 +3,25 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'tenant' | 'admin-global' | 'admin-tenant';
+  role: 'admin' | 'tenant' | 'admin-global' | 'admin-tenant' | 'super_admin' | 'admin';
   tenantId?: string;
+  status?: 'active' | 'inactive';
+}
+
+export interface CreateUserDTO {
+  name: string;
+  email: string;
+  role: 'super_admin' | 'admin';
+  tenantId?: string;
+  status?: 'active' | 'inactive';
+}
+
+export interface UpdateUserDTO {
+  name?: string;
+  email?: string;
+  role?: 'super_admin' | 'admin';
+  tenantId?: string;
+  status?: 'active' | 'inactive';
 }
 
 export interface LoginCredentials {

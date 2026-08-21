@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/modals/ConfirmModal';
+import { TenantModal } from '@/components/modals/TenantModal';
 import { useTenantsStore } from '@/stores/tenantsStore';
 import { useModal } from '@/hooks/useModal';
 import type { Tenant, CreateTenantDTO, UpdateTenantDTO } from '@/types';
@@ -21,6 +22,7 @@ export default function TenantsPage() {
   const deleteConfirmModal = useModal();
   
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view' | null>(null);
 
   useEffect(() => {
     fetchTenants();
@@ -34,7 +36,7 @@ export default function TenantsPage() {
   const handleCreate = async (data: any) => {
     try {
       await createTenant(data as CreateTenantDTO);
-      createModal.close();
+      setModalMode(null);
     } catch (error) {
       // Erro já tratado no store
     }
@@ -44,7 +46,7 @@ export default function TenantsPage() {
     if (!selectedTenant) return;
     try {
       await updateTenant(selectedTenant.id, data as UpdateTenantDTO);
-      editModal.close();
+      setModalMode(null);
       setSelectedTenant(null);
     } catch (error) {
       // Erro já tratado no store
@@ -70,19 +72,29 @@ export default function TenantsPage() {
     }
   };
 
+  const openCreateModal = () => {
+    setSelectedTenant(null);
+    setModalMode('create');
+  };
+
   const openViewModal = (tenant: Tenant) => {
     setSelectedTenant(tenant);
-    viewModal.open();
+    setModalMode('view');
   };
 
   const openEditModal = (tenant: Tenant) => {
     setSelectedTenant(tenant);
-    editModal.open();
+    setModalMode('edit');
   };
 
   const openDeleteConfirm = (tenant: Tenant) => {
     setSelectedTenant(tenant);
     deleteConfirmModal.open();
+  };
+
+  const handleCloseModal = () => {
+    setModalMode(null);
+    setSelectedTenant(null);
   };
 
   return (
@@ -96,7 +108,7 @@ export default function TenantsPage() {
           <h1 className="text-3xl font-bold text-text-primary">Tenants</h1>
           <p className="text-text-muted mt-1">Gerencie os tenants do sistema</p>
         </div>
-        <Button variant="primary" onClick={createModal.open}>
+        <Button variant="primary" onClick={openCreateModal}>
           <Plus className="w-4 h-4 mr-2" />
           Novo Tenant
         </Button>
@@ -221,6 +233,16 @@ export default function TenantsPage() {
         cancelLabel="Cancelar"
         variant="danger"
       />
+
+      {/* Modal de Criar/Editar/Visualizar Tenant */}
+      {modalMode && (
+        <TenantModal
+          mode={modalMode}
+          tenant={selectedTenant ?? undefined}
+          open={!!modalMode}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

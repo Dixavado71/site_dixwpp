@@ -3,7 +3,8 @@ import { Download, TrendingUp, DollarSign, ShoppingCart, Filter } from 'lucide-r
 import { motion } from 'framer-motion';
 import { useSalesStore } from '@/stores/salesStore';
 import { useDataTable } from '@/hooks/useDataTable';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { Sale } from '@/types';
+import type { ColumnDef as CustomColumnDef } from '@/components/ui/table/DataTable';
 import { DataTable } from '@/components/ui/table/DataTable';
 import { KPICard } from '@/components/ui/KPICard';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -53,8 +54,12 @@ export default function SalesHistory() {
     exportCSV();
   };
 
-  const columns: ColumnDef<typeof sales[0]>[] = [
-    { key: 'id', header: 'ID', cell: (item) => `#${item.id}` },
+  const columns: CustomColumnDef<Sale>[] = [
+    { 
+      key: 'id', 
+      header: 'ID', 
+      cell: (item) => `#${item.id}` 
+    },
     { 
       key: 'createdAt', 
       header: 'Data', 
@@ -68,11 +73,14 @@ export default function SalesHistory() {
     { 
       key: 'paymentMethod', 
       header: 'Pagamento', 
-      cell: (item) => (
-        <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-text-secondary capitalize">
-          {item.paymentMethod ? PAYMENT_METHODS[item.paymentMethod] : 'N/A'}
-        </span>
-      ) 
+      cell: (item) => {
+        const method = item.paymentMethod;
+        return (
+          <span className="px-2 py-1 rounded-full text-xs bg-white/10 text-text-secondary capitalize">
+            {method ? PAYMENT_METHODS[method] : 'N/A'}
+          </span>
+        );
+      } 
     },
     { 
       key: 'status', 
