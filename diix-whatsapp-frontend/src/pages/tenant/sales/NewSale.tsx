@@ -24,9 +24,9 @@ interface CartItem {
 
 export default function TenantNewSale() {
   const { tenantId } = useAuth();
-  const { products, loading: productsLoading, fetch: fetchProducts } = useTenantProductStore();
-  const { services, loading: servicesLoading, fetch: fetchServices } = useTenantServiceStore();
-  const { customers, loading: customersLoading, fetch: fetchCustomers } = useTenantCustomerStore();
+  const { products, isLoading: productsLoading, fetch: fetchProducts } = useTenantProductStore();
+  const { services, isLoading: servicesLoading, fetch: fetchServices } = useTenantServiceStore();
+  const { customers, isLoading: customersLoading, fetch: fetchCustomers } = useTenantCustomerStore();
   const { promotions, fetch: fetchPromotions } = useTenantPromotionStore();
   const { createSale: saveSale } = useSalesStore();
   
