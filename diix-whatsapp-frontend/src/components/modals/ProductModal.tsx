@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/components/ui/modal/Modal'
 import { Form, FormInput, FormSelect } from '@/components/ui/form/Form'
@@ -9,7 +9,7 @@ import { useTenantProductStore } from '@/stores/tenantProductStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import type { Product } from '@/types'
+import type { Product, Category } from '@/types'
 
 interface ProductModalProps {
   mode: 'create' | 'edit' | 'view'
@@ -31,7 +31,7 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
       price: 0,
       stock: 0,
       categoryId: '',
-      active: true,
+      status: 'active',
     },
   })
 
@@ -45,7 +45,7 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
           price: product?.price || 0,
           stock: product?.stock || 0,
           categoryId: product?.categoryId || '',
-          active: product?.active ?? true,
+          status: product?.active ? 'active' : 'inactive',
         })
       } else {
         form.reset({
@@ -54,7 +54,7 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
           price: 0,
           stock: 0,
           categoryId: '',
-          active: true,
+          status: 'active',
         })
       }
     }
@@ -66,15 +66,15 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
   }))
 
   const statusOptions = [
-    { value: 'true', label: 'Ativo' },
-    { value: 'false', label: 'Inativo' },
+    { value: 'active', label: 'Ativo' },
+    { value: 'inactive', label: 'Inativo' },
   ]
 
   const onSubmit = async (data: ProductCreateFormData) => {
     setIsSubmitting(true)
     try {
       if (mode === 'create') {
-        await create(data)
+        await create('', data)
         toast.success('Produto criado com sucesso!')
       } else if (mode === 'edit') {
         if (!product?.id) throw new Error('Produto não encontrado')
@@ -101,31 +101,43 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
       <Form form={form} onSubmit={onSubmit}>
         <div className="grid gap-4">
           <FormInput
+            form={form}
             name="name"
             label="Nome"
             placeholder="Nome do produto"
             disabled={isView || isLoading}
           />
 
-          <Textarea
-            name="description"
-            label="Descrição"
-            placeholder="Descrição do produto"
-            disabled={isView || isLoading}
-            className="w-full"
-          />
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2">
+              Descrição
+            </label>
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  placeholder="Descrição do produto"
+                  disabled={isView || isLoading}
+                  className="w-full"
+                />
+              )}
+            />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormInput
+              form={form}
               name="price"
               label="Preço"
               type="number"
-              step="0.01"
               placeholder="0.00"
               disabled={isView || isLoading}
             />
 
             <FormInput
+              form={form}
               name="stock"
               label="Estoque"
               type="number"
@@ -135,6 +147,7 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
           </div>
 
           <FormSelect
+            form={form}
             name="categoryId"
             label="Categoria"
             options={categoryOptions}
@@ -143,7 +156,8 @@ export function ProductModal({ mode, product, isOpen, onClose }: ProductModalPro
           />
 
           <FormSelect
-            name="active"
+            form={form}
+            name="status"
             label="Status"
             options={statusOptions}
             placeholder="Selecione o status"

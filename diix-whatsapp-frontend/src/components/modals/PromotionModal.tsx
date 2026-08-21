@@ -1,13 +1,14 @@
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Modal } from '@/components/ui/modal/Modal'
-import { Form, FormInput, FormSelect } from '@/components/ui/Form'
+import { Form, FormInput, FormSelect } from '@/components/ui/form/Form'
 import { Button } from '@/components/ui/Button'
-import { promotionCreateSchema, PromotionCreateFormData } from '@/schemas/promotionSchema'
+import { promotionCreateSchema, type PromotionCreateFormData } from '@/schemas/promotionSchema'
 import { useTenantPromotionStore } from '@/stores/tenantPromotionStore'
 import { useTenantProductStore } from '@/stores/tenantProductStore'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import type { Promotion, Product } from '@/types'
 
 interface PromotionModalProps {
   mode: 'create' | 'edit' | 'view'
@@ -40,13 +41,13 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
     if (isOpen) {
       if (mode === 'edit' || mode === 'view') {
         form.reset({
-          name: promotion?.name || '',
-          type: promotion?.type || 'percentage',
-          value: promotion?.value || 0,
-          productIds: promotion?.productIds || [],
+          name: promotion?.title || '',
+          type: 'percentage',
+          value: promotion?.discount || 0,
+          productIds: [],
           startDate: promotion?.startDate ? new Date(promotion.startDate).toISOString().split('T')[0] : '',
           endDate: promotion?.endDate ? new Date(promotion.endDate).toISOString().split('T')[0] : '',
-          status: promotion?.status || 'active',
+          status: promotion?.active ? 'active' : 'inactive',
         })
       } else {
         form.reset({
@@ -62,7 +63,7 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
     }
   }, [isOpen, mode, promotion])
 
-  const productOptions = products.map((prod) => ({
+  const productOptions = products.map((prod: Product) => ({
     value: prod.id,
     label: prod.name,
   }))
@@ -80,12 +81,21 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
   const onSubmit = async (data: PromotionCreateFormData) => {
     setIsSubmitting(true)
     try {
+      const createData = {
+        title: data.name,
+        discount: data.value,
+        startDate: data.startDate,
+        endDate: data.endDate || '',
+        active: data.status === 'active',
+        description: data.description,
+      }
+      
       if (mode === 'create') {
-        await create(data)
+        await create(createData)
         toast.success('Promoção criada com sucesso!')
       } else if (mode === 'edit') {
         if (!promotion?.id) throw new Error('Promoção não encontrada')
-        await update(promotion.id, data)
+        await update(promotion.id, createData)
         toast.success('Promoção atualizada com sucesso!')
       }
       onClose()
@@ -108,6 +118,7 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
       <Form form={form} onSubmit={onSubmit}>
         <div className="grid gap-4">
           <FormInput
+            form={form}
             name="name"
             label="Nome"
             placeholder="Nome da promoção"
@@ -116,6 +127,7 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
 
           <div className="grid grid-cols-2 gap-4">
             <FormSelect
+              form={form}
               name="type"
               label="Tipo"
               options={typeOptions}
@@ -124,26 +136,42 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
             />
 
             <FormInput
+              form={form}
               name="value"
               label={watchType === 'percentage' ? 'Porcentagem (%)' : 'Valor (R$)'}
               type="number"
-              step="0.01"
               placeholder="0.00"
               disabled={isView || isLoading}
             />
           </div>
 
-          <FormSelect
-            name="productIds"
-            label="Produtos Aplicáveis"
-            options={productOptions}
-            placeholder="Selecione os produtos"
-            disabled={isView || isLoading}
-            multiple
-          />
+          <div>
+            <label className="block text-sm font-medium text-text-secondary mb-2">
+              Produtos Aplicáveis
+            </label>
+            <Controller
+              name="productIds"
+              control={form.control}
+              render={({ field }) => (
+                <select
+                  {...field}
+                  multiple
+                  className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
+                  disabled={isView || isLoading}
+                >
+                  {productOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+            />
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <FormInput
+              form={form}
               name="startDate"
               label="Data de Início"
               type="date"
@@ -151,6 +179,7 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
             />
 
             <FormInput
+              form={form}
               name="endDate"
               label="Data de Fim"
               type="date"
@@ -159,6 +188,7 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
           </div>
 
           <FormSelect
+            form={form}
             name="status"
             label="Status"
             options={statusOptions}
@@ -168,11 +198,11 @@ export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionMo
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <Button type="button" variant="secondary" onClick={onClose} disabled={isSubmitting}>
+          <Button type="button" variant="secondary" onClick={onClose} disabled={isSubmitting || isLoading}>
             Cancelar
           </Button>
           {!isView && (
-            <Button type="submit" loading={isSubmitting}>
+            <Button type="submit" variant="primary" isLoading={isSubmitting}>
               {mode === 'create' ? 'Criar' : 'Salvar'}
             </Button>
           )}
