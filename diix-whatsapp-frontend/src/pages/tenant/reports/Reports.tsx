@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/Button';
 export default function TenantReports() {
   const [selectedReport, setSelectedReport] = useState<'sales' | 'financial' | 'customers' | 'products'>('sales');
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
-    start: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
-    end: new Date().toISOString().split('T')[0],
+    start: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0] || '',
+    end: new Date().toISOString().split('T')[0] || '',
   });
 
   const reports = [
