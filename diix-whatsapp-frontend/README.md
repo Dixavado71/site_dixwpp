@@ -74,6 +74,8 @@ Sistema completo de gestão para salões, barbearias e estabelecimentos comercia
 - **React Hook Form** - Formulários
 - **i18next** - Internacionalização (pt-BR, en-US, es, fr)
 - **Sonner** - Notificações toast
+- **jsPDF + jspdf-autotable** - Exportação PDF
+- **Skeleton Loaders** - Loading states otimizados
 
 ### Bibliotecas Adicionais
 - `@fullcalendar/react` - Calendário
@@ -81,6 +83,8 @@ Sistema completo de gestão para salões, barbearias e estabelecimentos comercia
 - `cmdk` - Search omnibox (Cmd+K)
 - `@dnd-kit/core` - Drag and drop
 - `@tanstack/react-virtual` - Virtualização de listas
+- `jspdf` - Geração de PDFs
+- `jspdf-autotable` - Tabelas em PDF
 
 ---
 
@@ -221,10 +225,12 @@ Sistema completo de gestão para salões, barbearias e estabelecimentos comercia
 ### Performance
 - [x] Code splitting básico
 - [x] CSS purgado (Tailwind)
+- [x] Skeleton loaders implementados
 - [ ] Lazy loading de rotas
 - [ ] Virtualização de listas longas
 - [ ] Image optimization (WebP, lazy loading)
 - [ ] Service Worker (PWA)
+- [⚠️] Bundle size > 500KB (requer code splitting avançado)
 
 ### Acessibilidade (WCAG 2.1 AA)
 - [x] Focus visible em inputs e buttons
