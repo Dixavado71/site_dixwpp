@@ -1,49 +1,57 @@
-```gitignore
+```
 # Dependencies
 node_modules/
 
 # Build outputs
 dist/
 build/
-.next/
-out/
+target/
+
+# Logs and temporary files
+*.log
+*.tmp
 
 # Environment variables
 .env
 .env.local
-.env.*
+*.env.*
 
-# IDE files
+# Editors and IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-
-# Python
+# Python specific
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-env/
 venv/
 .venv/
+.venv.bak/
 pip-log.txt
 pip-delete-this-directory.txt
-.tox/
+
+# Coverage reports
+coverage/
+htmlcov/
 .coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
+*.coverage
+
+# Testing
+.mypy_cache/
+.pytest_cache/
+.nyc_output/
+coverage-final.json
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 ```
