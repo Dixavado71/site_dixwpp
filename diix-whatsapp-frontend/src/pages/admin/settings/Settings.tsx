@@ -18,25 +18,25 @@ const tabs: { id: SettingsTab; name: string; icon: any }[] = [
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('general');
-  const { updateGeneralSettings, updateSecuritySettings, updateNotificationSettings, updateIntegrationSettings, updateAppearanceSettings } = useSettingsStore();
+  const { updateGeneral, updateSecurity, updateNotifications, updateIntegrations, updateAppearance } = useSettingsStore();
   
   const handleSave = async () => {
     try {
       switch (activeTab) {
         case 'general':
-          await updateGeneralSettings({});
+          await updateGeneral({});
           break;
         case 'security':
-          await updateSecuritySettings({});
+          await updateSecurity({});
           break;
         case 'notifications':
-          await updateNotificationSettings({});
+          await updateNotifications({});
           break;
         case 'integrations':
-          await updateIntegrationSettings({});
+          await updateIntegrations({});
           break;
         case 'appearance':
-          await updateAppearanceSettings({});
+          await updateAppearance({});
           break;
       }
     } catch (error) {

@@ -53,6 +53,7 @@ export function useDragAndDrop<T extends { id: string; order?: number }>({
     // Reordenar localmente
     const newItems = [...localItems];
     const [removed] = newItems.splice(fromIndex, 1);
+    if (!removed) return;
     newItems.splice(toIndex, 0, removed);
 
     // Atualizar ordem
@@ -87,6 +88,7 @@ export function useDragAndDrop<T extends { id: string; order?: number }>({
 
     const newItems = [...localItems];
     const [removed] = newItems.splice(fromIndex, 1);
+    if (!removed) return;
     newItems.splice(toIndex, 0, removed);
 
     const reorderedItems = newItems.map((item, index) => ({

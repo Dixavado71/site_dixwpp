@@ -3,13 +3,12 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { ptBR } from '@fullcalendar/core';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import type { CalendarApi } from '@fullcalendar/core';
 
-interface CalendarEvent {
+export interface CalendarEvent {
   id: string;
   title: string;
   start: string;
@@ -23,7 +22,7 @@ interface CalendarEvent {
   };
 }
 
-interface CalendarViewProps {
+export interface CalendarViewProps {
   events?: CalendarEvent[];
   onEventClick?: (event: CalendarEvent) => void;
   onDateClick?: (date: Date) => void;
@@ -41,7 +40,7 @@ export function CalendarView({
   onEventResize
 }: CalendarViewProps) {
   const [viewType, setViewType] = useState<CalendarViewType>('dayGridMonth');
-  const calendarRef = useRef<CalendarApi>(null);
+  const calendarRef = useRef<any>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // Event colors by type
@@ -57,25 +56,22 @@ export function CalendarView({
 
   const handleToday = () => {
     if (calendarRef.current) {
-      const api = calendarRef.current.getApi();
-      api.today();
+      calendarRef.current.today();
       setCurrentDate(new Date());
     }
   };
 
   const handlePrev = () => {
     if (calendarRef.current) {
-      const api = calendarRef.current.getApi();
-      api.prev();
-      setCurrentDate(api.getDate().toDate());
+      calendarRef.current.prev();
+      setCurrentDate(calendarRef.current.getDate());
     }
   };
 
   const handleNext = () => {
     if (calendarRef.current) {
-      const api = calendarRef.current.getApi();
-      api.next();
-      setCurrentDate(api.getDate().toDate());
+      calendarRef.current.next();
+      setCurrentDate(calendarRef.current.getDate());
     }
   };
 
