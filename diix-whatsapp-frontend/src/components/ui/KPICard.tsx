@@ -36,16 +36,16 @@ export function KPICard({
   return (
     <div 
       className={cn(
-        'glass-panel rounded-xl border border-white/10 p-6 transition-all',
+        'glass-panel rounded-xl border border-white/10 p-4 sm:p-6 transition-all',
         onClick && 'cursor-pointer hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10',
         className
       )}
       onClick={onClick}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <p className="text-sm text-text-muted">{title}</p>
-          <p className="text-2xl font-bold text-text-primary mt-1">{value}</p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs sm:text-sm text-text-muted">{title}</p>
+          <p className="text-xl sm:text-2xl font-bold text-text-primary mt-1 truncate">{value}</p>
           {trend && (
             <div className="flex items-center gap-1 mt-2">
               <span className={`text-xs font-medium ${trend.isPositive ? 'text-green-400' : 'text-red-400'}`}>
@@ -56,7 +56,7 @@ export function KPICard({
           )}
         </div>
         {icon && (
-          <div className={cn('p-3 rounded-xl', colorClasses[color])}>
+          <div className={cn('p-3 rounded-xl flex-shrink-0', colorClasses[color])}>
             {icon}
           </div>
         )}

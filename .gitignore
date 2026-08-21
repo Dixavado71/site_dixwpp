@@ -2,32 +2,37 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build artifacts
 dist/
 build/
-.next/
-.nuxt/
-out/
+*.js.map
+*.ts.map
 
-# Logs
+# Logs and temp files
 *.log
+*.tmp
 
 # Environment variables
+.env
 .env.local
-.env.*
-!.env.example
+*.env.*
 
-# IDE files
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS files
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Python
+# Coverage reports
+coverage/
+htmlcov/
+*.coverage
+
+# Python specific
 __pycache__/
 *.pyc
 *.pyo
@@ -40,41 +45,28 @@ pip-log.txt
 pip-delete-this-directory.txt
 .tox/
 .coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.gitattributes
+.nox/
+*.so
 
-# Node.js
+# Node.js specific
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 node_modules/
-jspm_packages/
-web_modules/
-*.tsbuildinfo
-*.rpt2_cache/
-*.rts2_cache_cjs/
-*.rts2_cache_es/
-*.rts2_cache_umd/
+dist/
+build/
+*.min.js
+*.min.css
 
-# TypeScript
+# TypeScript specific
 *.tsbuildinfo
 .next/
 .nuxt/
-dist/
-build/
 
-# React/Next.js specific
-.next/
-out/
-.next/**
-!next.config.js
-
-# General build artifacts
+# General build outputs
+target/
+.gradle/
+*.class
 *.o
 *.obj
 *.exe
@@ -82,18 +74,6 @@ out/
 *.so
 *.a
 *.out
-
-# Coverage
-coverage/
-htmlcov/
-*.gcda
-*.gcno
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
 
 # Compressed files
 *.zip
@@ -118,13 +98,4 @@ htmlcov/
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-
-# Cache directories
-.cache/
-.cargo/
-.hypothesis/
-.mypy_cache/
-.pytest_cache/
-.gradle/
-target/
 ```
