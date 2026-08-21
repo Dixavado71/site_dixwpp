@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Search, Calendar, DollarSign, CreditCard, Eye, TrendingUp, PieChart, Filter, Download } from 'lucide-react';
+import { ShoppingCart, Search, Calendar, DollarSign, CreditCard, Eye, TrendingUp, PieChart, Filter, Download, FileDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -9,8 +9,19 @@ import { useSalesStore } from '@/stores/salesStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import type { Sale } from '@/types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
+import { exportSalesToPDF, exportSalesToCSV } from '@/utils/exportUtils';
+import { SkeletonTable } from '@/components/ui/Skeleton';
 
 const COLORS = ['#00ff9d', '#00d4ff', '#ff00ff', '#ffff00', '#ff6600', '#9933ff'];
+
+// Date presets
+const DATE_PRESETS = {
+  last7days: { label: 'Últimos 7 dias' },
+  thisMonth: { label: 'Este mês' },
+  lastMonth: { label: 'Mês passado' },
+  last3Months: { label: 'Últimos 3 meses' },
+  all: { label: 'Todo período' },
+};
 
 export default function TenantSalesHistory() {
   const { sales, isLoading, fetchSales, filters, setFilters } = useSalesStore();
@@ -18,9 +29,10 @@ export default function TenantSalesHistory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({
-    start: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0] || '',
-    end: new Date().toISOString().split('T')[0] || '',
+    start: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0]!,
+    end: new Date().toISOString().split('T')[0]!,
   });
+  const [showExportMenu, setShowExportMenu] = useState(false);
   const tenantId = 'current-tenant-id';
 
   useEffect(() => {
@@ -28,6 +40,37 @@ export default function TenantSalesHistory() {
     fetchSales({ limit: 100 });
     fetchCategories();
   }, []);
+
+  // Aplicar preset de data
+  const applyDatePreset = (preset: keyof typeof DATE_PRESETS) => {
+    const today = new Date();
+    let start = new Date();
+    let end = today;
+
+    switch (preset) {
+      case 'last7days':
+        start.setDate(today.getDate() - 7);
+        break;
+      case 'thisMonth':
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        break;
+      case 'lastMonth':
+        start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        end = new Date(today.getFullYear(), today.getMonth(), 0);
+        break;
+      case 'last3Months':
+        start.setMonth(today.getMonth() - 3);
+        break;
+      case 'all':
+        start = new Date(2020, 0, 1);
+        break;
+    }
+
+    setDateRange({
+      start: start.toISOString().split('T')[0]!,
+      end: end.toISOString().split('T')[0]!,
+    });
+  };
 
   // Filtrar vendas por termo de busca, categoria e data
   const filteredSales = sales.filter(sale => {
@@ -83,54 +126,93 @@ export default function TenantSalesHistory() {
           <h1 className="text-3xl font-bold text-text-primary">Histórico de Vendas</h1>
           <p className="text-text-muted mt-1">Consulte e analise todas as vendas realizadas</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+        <div className="relative flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowExportMenu(!showExportMenu)}
+          >
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
+          {showExportMenu && (
+            <div className="absolute right-0 top-full mt-2 z-50 min-w-[200px] p-2 bg-[#0a0a0a] border border-white/10 rounded-lg shadow-xl">
+              <button
+                onClick={() => { exportSalesToPDF(filteredSales); setShowExportMenu(false); }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary hover:bg-white/5 rounded transition-colors"
+              >
+                <FileDown className="w-4 h-4 text-accent-primary" />
+                Exportar PDF
+              </button>
+              <button
+                onClick={() => { exportSalesToCSV(filteredSales); setShowExportMenu(false); }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-primary hover:bg-white/5 rounded transition-colors"
+              >
+                <FileDown className="w-4 h-4 text-accent-primary" />
+                Exportar CSV
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
 
       {/* Filtros */}
       <Card className="glass-card border-white/10">
         <CardContent className="pt-6">
-          <div className="grid gap-4 md:grid-cols-4">
-            <div className="md:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
+          <div className="space-y-4">
+            {/* Date Presets */}
+            <div className="flex flex-wrap gap-2">
+              {(Object.keys(DATE_PRESETS) as Array<keyof typeof DATE_PRESETS>).map((preset) => (
+                <Button
+                  key={preset}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => applyDatePreset(preset)}
+                  className="text-xs"
+                >
+                  {DATE_PRESETS[preset].label}
+                </Button>
+              ))}
+            </div>
+            
+            <div className="grid gap-4 md:grid-cols-4">
+              <div className="md:col-span-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
+                  <Input 
+                    placeholder="Buscar por cliente ou ID..." 
+                    value={searchTerm} 
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
+                >
+                  <option value="all">Todas Categorias</option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-2">
                 <Input 
-                  placeholder="Buscar por cliente ou ID..." 
-                  value={searchTerm} 
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  type="date" 
+                  value={dateRange.start}
+                  onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                  className="flex-1"
+                />
+                <Input 
+                  type="date" 
+                  value={dateRange.end}
+                  onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                  className="flex-1"
                 />
               </div>
-            </div>
-            <div>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary"
-              >
-                <option value="all">Todas Categorias</option>
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex gap-2">
-              <Input 
-                type="date" 
-                value={dateRange.start}
-                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                className="flex-1"
-              />
-              <Input 
-                type="date" 
-                value={dateRange.end}
-                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                className="flex-1"
-              />
             </div>
           </div>
         </CardContent>

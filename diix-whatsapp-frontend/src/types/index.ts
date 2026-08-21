@@ -263,6 +263,7 @@ export interface SaleItem {
   serviceId?: string;
   service?: Service;
   categoryId?: string;
+  name: string;
   quantity: number;
   unitPrice: number;
   subtotal: number;
