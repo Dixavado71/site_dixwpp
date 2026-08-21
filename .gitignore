@@ -1,4 +1,4 @@
-```gitignore
+```
 # Dependencies
 node_modules/
 
@@ -6,7 +6,8 @@ node_modules/
 dist/
 build/
 .next/
-out/
+.nuxt/
+public/build/
 
 # Environment variables
 .env
@@ -22,7 +23,7 @@ out/
 # Logs
 *.log
 
-# Temporary files
+# Temp files
 *.tmp
 
 # Python
@@ -44,6 +45,124 @@ nosetests.xml
 coverage.xml
 *.cover
 *.log
+.git/modules/
+*.sublime-workspace
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+jspm_packages/
+web_modules/
+*.un~
+libpeerconnection.log
+electron-store/
+.nyc_output
+coverage/
+.nyc_output/
+istanbul.yml
+.nyc_output
+coverage/
+coverage/lcov-report
+.tap
+.tap.*
+.testcoverage
+.testcoverage.*
+.testcafe
+.testcafe.*
+.testem.json
+.testem.js
+.testem.yml
+.testem.yaml
+.testcafe
+.testcafe.*
+.tape
+.tape.*
+.istanbul.yml
+.istanbul.js
+.istanbul.json
+.nycrc
+.nycrc.json
+.nyc-output
+.nyc-output/
+nyc_output/
+.nyc
+.nyc.*
+nyc/
+nyc/
+.nyc_output/
+nyc/
+.tap-nyc-report
+.tap-nyc-report.*
+.tap-coverage-report
+.tap-coverage-report.*
+.tap-junit-report
+.tap-junit-report.*
+.tap-html-report
+.tap-html-report.*
+.tap-text-report
+.tap-text-report.*
+.tap-json-report
+.tap-json-report.*
+.tap-cobertura-report
+.tap-cobertura-report.*
+.tap-lcov-report
+.tap-lcov-report.*
+.tap-teamcity-report
+.tap-teamcity-report.*
+.tap-xunit-report
+.tap-xunit-report.*
+.tap-teamcity-report
+.tap-teamcity-report.*
+.tap-clover-report
+.tap-clover-report.*
+.tap-verbose-report
+.tap-verbose-report.*
+.tap-summary-report
+.tap-summary-report.*
+.tap-min-report
+.tap-min-report.*
+.tap-spec-report
+.tap-spec-report.*
+.tap-list-report
+.tap-list-report.*
+.tap-dot-report
+.tap-dot-report.*
+.tap-tap-report
+.tap-tap-report.*
+.tap-nyan-report
+.tap-nyan-report.*
+.tap-progress-report
+.tap-progress-report.*
+.tap-lazy-report
+.tap-lazy-report.*
+.tap-bail-report
+.tap-bail-report.*
+.tap-tap-spec-report
+.tap-tap-spec-report.*
+.tap-tap-list-report
+.tap-tap-list-report.*
+.tap-tap-dot-report
+.tap-tap-dot-report.*
+.tap-tap-tap-report
+.tap-tap-tap-report.*
+.tap-tap-nyan-report
+.tap-tap-nyan-report.*
+.tap-tap-progress-report
+.tap-tap-progress-report.*
+.tap-tap-lazy-report
+.tap-tap-lazy-report.*
+.tap-tap-bail-report
+.tap-tap-bail-report.*
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+Icon?
 ```
