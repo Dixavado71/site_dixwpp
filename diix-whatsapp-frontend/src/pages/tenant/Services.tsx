@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import type { Service } from '@/types';
 
 export default function TenantServices() {
-  const { services, loading, fetch, create, update, delete: deleteService } = useTenantServiceStore();
+  const { services, isLoading, fetch, create, update, delete: deleteService } = useTenantServiceStore();
   const [searchTerm, setSearchTerm] = useState('');
   const tenantId = 'current-tenant-id'; // Substituir pelo tenant real
   
