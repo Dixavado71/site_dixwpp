@@ -116,10 +116,8 @@ export function ServiceModal({ mode, service, isOpen, onClose, onSave }: Service
               name="price"
               label="Preço (R$)"
               type="number"
-              step="0.01"
               placeholder="0.00"
               disabled={isView}
-              onChange={(e) => form.setValue('price', parseFloat(e.target.value) || 0)}
             />
 
             <FormInput
@@ -129,7 +127,6 @@ export function ServiceModal({ mode, service, isOpen, onClose, onSave }: Service
               type="number"
               placeholder="30"
               disabled={isView}
-              onChange={(e) => form.setValue('duration', parseInt(e.target.value) || 0)}
             />
           </div>
 

@@ -12,12 +12,13 @@ import type { Promotion, Product } from '@/types'
 
 interface PromotionModalProps {
   mode: 'create' | 'edit' | 'view'
-  promotion?: Promotion
+  promotion?: any
   isOpen: boolean
   onClose: () => void
+  onSave?: (data: any) => void
 }
 
-export function PromotionModal({ mode, promotion, isOpen, onClose }: PromotionModalProps) {
+export function PromotionModal({ mode, promotion, isOpen, onClose, onSave }: PromotionModalProps) {
   const { create, update } = useTenantPromotionStore()
   const { products } = useTenantProductStore()
   const [isSubmitting, setIsSubmitting] = useState(false)

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/modals/ConfirmModal';
+import { ServiceModal } from '@/components/modals/ServiceModal';
 import { useModal } from '@/hooks/useModal';
 import { toast } from 'sonner';
 
@@ -19,27 +20,60 @@ const mockServices = [
 ];
 
 export default function TenantServices() {
-  const [services] = useState(mockServices);
+  const [services, setServices] = useState(mockServices);
   const [searchTerm, setSearchTerm] = useState('');
   const filteredServices = services.filter(service => service.name.toLowerCase().includes(searchTerm.toLowerCase()));
   
+  const createModal = useModal();
+  const editModal = useModal();
   const deleteConfirmModal = useModal();
   const [selectedService, setSelectedService] = useState<typeof mockServices[0] | null>(null);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view' | null>(null);
+
+  const openCreateModal = () => {
+    setSelectedService(null);
+    setModalMode('create');
+  };
+
+  const openEditModal = (service: typeof mockServices[0]) => {
+    setSelectedService(service);
+    setModalMode('edit');
+  };
 
   const openDeleteConfirm = (service: typeof mockServices[0]) => {
     setSelectedService(service);
     deleteConfirmModal.open();
   };
 
-  const handleDelete = () => {
-    if (!selectedService) return;
-    toast.success(`${selectedService.name} removido com sucesso!`);
-    deleteConfirmModal.close();
+  const handleCloseModal = () => {
+    setModalMode(null);
     setSelectedService(null);
   };
 
-  const handleEdit = (service: typeof mockServices[0]) => {
-    toast.info(`Editar ${service.name}`);
+  const handleCreate = (data: any) => {
+    const newService = {
+      id: String(Date.now()),
+      ...data,
+      active: true,
+    };
+    setServices([...services, newService]);
+    toast.success('Serviço criado com sucesso!');
+    handleCloseModal();
+  };
+
+  const handleEdit = (data: any) => {
+    if (!selectedService) return;
+    setServices(services.map(s => s.id === selectedService.id ? { ...s, ...data } : s));
+    toast.success('Serviço atualizado com sucesso!');
+    handleCloseModal();
+  };
+
+  const handleDelete = () => {
+    if (!selectedService) return;
+    setServices(services.filter(s => s.id !== selectedService.id));
+    toast.success(`${selectedService.name} removido com sucesso!`);
+    deleteConfirmModal.close();
+    setSelectedService(null);
   };
 
   return (
@@ -50,7 +84,7 @@ export default function TenantServices() {
             <h1 className="text-3xl font-bold text-text-primary">Serviços</h1>
             <p className="text-text-muted mt-1">Gerencie sua grade de serviços</p>
           </div>
-          <Button variant="primary" onClick={() => toast.info('Novo Serviço')} >
+          <Button variant="primary" onClick={openCreateModal}>
             <Plus className="w-4 h-4 mr-2" />
             Novo Serviço
           </Button>
@@ -132,7 +166,7 @@ export default function TenantServices() {
                         <StatusBadge status={service.active ? 'active' : 'inactive'} />
                       </td>
                       <td className="py-3 px-4 text-sm text-right space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(service)} title="Editar"><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => openEditModal(service)} title="Editar"><Edit className="h-4 w-4" /></Button>
                         <Button variant="danger" size="sm" onClick={() => openDeleteConfirm(service)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>
                       </td>
                     </tr>
@@ -157,6 +191,17 @@ export default function TenantServices() {
           cancelLabel="Cancelar"
           variant="danger"
         />
+
+        {/* Modal de Criar/Editar/Visualizar Serviço */}
+        {modalMode && (
+          <ServiceModal
+            mode={modalMode}
+            service={selectedService ?? undefined}
+            isOpen={!!modalMode}
+            onClose={handleCloseModal}
+            onSave={modalMode === 'create' ? handleCreate : modalMode === 'edit' ? handleEdit : undefined}
+          />
+        )}
       </div>
     
   );
