@@ -14,7 +14,9 @@ interface CustomerStore {
   isLoading: boolean
   loading: boolean
   error: string | null
+  tenantId: string | null
   
+  setTenantId: (id: string) => void
   fetch: () => Promise<void>
   getById: (id: string) => Promise<Client | undefined>
   create: (data: CreateClientDTO) => Promise<void>
@@ -33,11 +35,22 @@ export const useTenantCustomerStore = create<CustomerStore>((set, get) => ({
   isLoading: false,
   loading: false,
   error: null,
+  tenantId: null,
+
+  setTenantId: (id: string) => {
+    set({ tenantId: id })
+  },
 
   fetch: async () => {
+    const tenantId = get().tenantId
+    if (!tenantId) {
+      set({ error: 'Tenant ID não definido', isLoading: false })
+      return
+    }
+    
     set({ isLoading: true, error: null })
     try {
-      let customers = await customerService.getAll('current-tenant-id')
+      let customers = await customerService.getAll(tenantId)
       
       const { search, status } = get().filters
       

@@ -21,6 +21,9 @@ import TenantServices from './pages/tenant/Services'
 import TenantPromotion from './pages/tenant/Promotions'
 import TenantSettings from './pages/tenant/Settings'
 import TenantNewSale from './pages/tenant/sales/NewSale'
+import TenantSalesHistory from './pages/tenant/history/SalesHistory'
+import TenantFinancialHistory from './pages/tenant/history/FinancialHistory'
+import TenantReports from './pages/tenant/reports/Reports'
 
 interface User {
   id: string;
@@ -122,6 +125,9 @@ function App() {
         <Route path="settings" element={<TenantSettings />} />
         <Route path="sales" element={<TenantNewSale />} />
         <Route path="sales/new" element={<TenantNewSale />} />
+        <Route path="history/sales" element={<TenantSalesHistory />} />
+        <Route path="history/financial" element={<TenantFinancialHistory />} />
+        <Route path="reports" element={<TenantReports />} />
       </Route>
 
       {/* Default redirect */}

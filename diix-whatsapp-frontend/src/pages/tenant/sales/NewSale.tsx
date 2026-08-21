@@ -9,7 +9,10 @@ import { toast } from 'sonner';
 import { useTenantProductStore } from '@/stores/tenantProductStore';
 import { useTenantServiceStore } from '@/stores/tenantServiceStore';
 import { useTenantCustomerStore } from '@/stores/tenantCustomerStore';
-import type { Product, Service, Client } from '@/types';
+import { useSalesStore } from '@/stores/salesStore';
+import { useTenantPromotionStore } from '@/stores/tenantPromotionStore';
+import { useAuth } from '@/hooks/useAuth';
+import type { Product, Service, Client, Promotion } from '@/types';
 
 interface CartItem {
   id: string;
@@ -20,9 +23,12 @@ interface CartItem {
 }
 
 export default function TenantNewSale() {
+  const { tenantId } = useAuth();
   const { products, loading: productsLoading, fetch: fetchProducts } = useTenantProductStore();
   const { services, loading: servicesLoading, fetch: fetchServices } = useTenantServiceStore();
   const { customers, loading: customersLoading, fetch: fetchCustomers } = useTenantCustomerStore();
+  const { promotions, fetch: fetchPromotions } = useTenantPromotionStore();
+  const { createSale: saveSale } = useSalesStore();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'products' | 'services'>('products');
@@ -31,14 +37,19 @@ export default function TenantNewSale() {
   const [customerSearch, setCustomerSearch] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'pix'>('cash');
   const [showCustomerSelect, setShowCustomerSelect] = useState(false);
-
-  const tenantId = 'current-tenant-id';
+  const [appliedPromotions, setAppliedPromotions] = useState<Promotion[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetchProducts(tenantId);
-    fetchServices();
-    fetchCustomers();
-  }, []);
+    if (tenantId) {
+      fetchProducts(tenantId);
+      useTenantServiceStore.getState().setTenantId(tenantId);
+      fetchServices();
+      useTenantCustomerStore.getState().setTenantId(tenantId);
+      fetchCustomers();
+      fetchPromotions();
+    }
+  }, [tenantId]);
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
