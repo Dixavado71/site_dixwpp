@@ -91,7 +91,6 @@ CardContent.displayName = 'CardContent';
 export { Card, CardHeader, CardTitle, CardContent };
 
 // KPICard component
-import { ReactNode } from 'react';
 
 export interface KPICardProps {
   title: string;
