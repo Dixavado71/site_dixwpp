@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare, DollarSign, ShoppingCart, Star, Clock, Plus, PieChart, History } from 'lucide-react';
+import { Users, Package, Scissors, Calendar, TrendingUp, MessageSquare, DollarSign, ShoppingCart, Star, Clock, Plus, PieChart, History, FileText, BarChart3 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -8,7 +8,7 @@ import { Percent } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSalesStore } from '@/stores/salesStore';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 
 const mockStats = {
@@ -99,49 +99,20 @@ export default function TenantDashboard() {
             <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">Dashboard</h1>
             <p className="text-xs sm:text-sm text-text-muted mt-1">Visão geral do seu negócio</p>
           </div>
-          <Button variant="primary" onClick={() => navigate('/tenant/sales/new')} className="w-full sm:w-auto">
-            <Plus className="w-4 h-4 mr-2" />
-            Nova Venda
-          </Button>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" size="sm" onClick={() => navigate('/tenant/history/sales')} className="flex-1 sm:flex-none">
+              <History className="w-4 h-4 mr-2" />
+              Vendas
+            </Button>
+            <Button variant="primary" onClick={() => navigate('/tenant/sales/new')} className="flex-1 sm:flex-none">
+              <Plus className="w-4 h-4 mr-2" />
+              Nova Venda
+            </Button>
+          </div>
         </motion.div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Principais KPIs */}
         <div className="grid gap-4 sm:gap-6 grid-cols-2 lg:grid-cols-4">
-          <StatCard
-            title="Clientes Totais"
-            value={stats.totalClients}
-            icon={<Users className="h-5 w-5" />}
-            trend="+12"
-            color="blue"
-          />
-          <StatCard
-            title="Produtos"
-            value={stats.totalProducts}
-            icon={<Package className="h-5 w-5" />}
-            trend="+5"
-            color="green"
-          />
-          <StatCard
-            title="Serviços"
-            value={stats.totalServices}
-            icon={<Scissors className="h-5 w-5" />}
-            trend="Estável"
-            color="purple"
-          />
-          <StatCard
-            title="Agendamentos Hoje"
-            value={stats.appointmentsToday}
-            icon={<Calendar className="h-5 w-5" />}
-            trend="+2"
-            color="orange"
-          />
-          <StatCard
-            title="Mensagens Hoje"
-            value={stats.messagesToday}
-            icon={<MessageSquare className="h-5 w-5" />}
-            trend="+18"
-            color="cyan"
-          />
           <StatCard
             title="Receita Mensal"
             value={`R$ ${stats.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
@@ -157,125 +128,110 @@ export default function TenantDashboard() {
             color="blue"
           />
           <StatCard
-            title="Promoções Ativas"
-            value={stats.activePromotions}
-            icon={<Star className="h-5 w-5" />}
-            trend="Estável"
-            color="yellow"
+            title="Clientes Totais"
+            value={stats.totalClients}
+            icon={<Users className="h-5 w-5" />}
+            trend="+12"
+            color="cyan"
+          />
+          <StatCard
+            title="Agendamentos Hoje"
+            value={stats.appointmentsToday}
+            icon={<Calendar className="h-5 w-5" />}
+            trend="+2"
+            color="orange"
           />
         </div>
 
-        {/* Recent Sales Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card>
+        {/* Gráficos Principais */}
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
+          {/* Histórico de Vendas - Gráfico de Linha */}
+          <Card className="glass-card border-white/10">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle>Vendas Recentes</CardTitle>
-                <Button variant="ghost" size="sm">Ver todas</Button>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-accent-primary" />
+                  <CardTitle>Evolução de Vendas (7 dias)</CardTitle>
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/tenant/reports')}>
+                  <FileText className="h-4 w-4 mr-2" />
+                  Relatório
+                </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Cliente</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Serviço</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Valor</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Data</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentSales.map((sale) => (
-                      <tr key={sale.id} className="border-b border-border hover:bg-accent-primary/5">
-                        <td className="py-3 px-4 text-sm text-text-primary">{sale.customer}</td>
-                        <td className="py-3 px-4 text-sm text-text-muted">{sale.service}</td>
-                        <td className="py-3 px-4 text-sm text-text-primary">R$ {sale.value.toFixed(2).replace('.', ',')}</td>
-                        <td className="py-3 px-4 text-sm text-text-muted">{new Date(sale.date).toLocaleDateString('pt-BR')}</td>
-                        <td className="py-3 px-4 text-sm">
-                          <StatusBadge
-                            status={sale.status === 'completed' ? 'completed' : sale.status === 'pending' ? 'pending' : 'cancelled'}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Top Products */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2"
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Produtos Mais Vendidos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {topProducts.map((product, index) => (
-                  <div key={product.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                        index === 0 ? 'bg-yellow-500/20 text-yellow-400' :
-                        index === 1 ? 'bg-gray-500/20 text-gray-400' :
-                        index === 2 ? 'bg-orange-500/20 text-orange-400' :
-                        'bg-accent-primary/10 text-accent-primary'
-                      }`}>
-                        {index + 1}º
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-text-primary">{product.name}</p>
-                        <p className="text-xs text-text-muted">{product.stock} em estoque</p>
-                      </div>
+              {salesHistory.length === 0 || salesHistory.every(d => d.revenue === 0) ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <TrendingUp className="w-12 h-12 text-text-muted mb-4" />
+                  <p className="text-text-secondary">Nenhum dado de vendas</p>
+                  <p className="text-sm text-text-muted mt-1">Realize vendas para visualizar o histórico</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <ResponsiveContainer width="100%" height={220}>
+                    <LineChart data={salesHistory}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                      <XAxis 
+                        dataKey="date" 
+                        stroke="#a0a0a0" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis 
+                        stroke="#a0a0a0" 
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(value) => `R$ ${value}`}
+                      />
+                      <Tooltip 
+                        formatter={(value: any) => `R$ ${String(value)}`}
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(5, 5, 5, 0.95)', 
+                          border: '1px solid rgba(0, 255, 157, 0.2)',
+                          borderRadius: '8px',
+                          color: '#e0e0e0'
+                        }}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="revenue" 
+                        stroke="#00ff9d" 
+                        strokeWidth={2}
+                        dot={{ fill: '#00ff9d', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                  {/* Resumo */}
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+                    <div>
+                      <p className="text-xs text-text-muted">Total (7 dias)</p>
+                      <p className="text-lg font-bold text-text-primary">
+                        R$ {totalRevenue7Days.toFixed(2)}
+                      </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-text-primary">{product.sales} vendas</p>
+                    <div>
+                      <p className="text-xs text-text-muted">Média diária</p>
+                      <p className="text-lg font-bold text-text-primary">
+                        R$ {avgDailyRevenue.toFixed(2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Vendas</p>
+                      <p className="text-lg font-bold text-accent-primary">
+                        {totalSalesCount}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Ações Rápidas</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                <QuickAction icon={<Users />} label="Novo Cliente" onClick={() => navigate('/tenant/clients')} />
-                <QuickAction icon={<Package />} label="Novo Produto" onClick={() => navigate('/tenant/products')} />
-                <QuickAction icon={<Scissors />} label="Novo Serviço" onClick={() => navigate('/tenant/services')} />
-                <QuickAction icon={<Percent />} label="Nova Promoção" onClick={() => navigate('/tenant/promotions')} />
-                <QuickAction icon={<Calendar />} label="Agendamento" onClick={() => navigate('/tenant/sales/new')} />
-                <QuickAction icon={<DollarSign />} label="Relatório" onClick={() => navigate('/tenant/settings')} />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Vendas por Categoria e Histórico */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2"
-        >
           {/* Vendas por Categoria - Gráfico de Pizza */}
-          <Card>
+          <Card className="glass-card border-white/10">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -297,14 +253,14 @@ export default function TenantDashboard() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <ResponsiveContainer width="100%" height={250}>
+                  <ResponsiveContainer width="100%" height={220}>
                     <RechartsPieChart>
                       <Pie
                         data={salesByCategory}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={100}
+                        innerRadius={50}
+                        outerRadius={90}
                         paddingAngle={5}
                         dataKey="value"
                         label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
@@ -341,85 +297,130 @@ export default function TenantDashboard() {
               )}
             </CardContent>
           </Card>
+        </div>
 
-          {/* Histórico de Vendas - Gráfico de Barras */}
-          <Card>
+        {/* Ações Rápidas e Stats Secundários */}
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
+          {/* Ações Rápidas */}
+          <Card className="glass-card border-white/10">
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-accent-primary" />
-                  <CardTitle>Histórico de Vendas (7 dias)</CardTitle>
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => navigate('/tenant/reports')}>
-                  Ver relatório
-                </Button>
-              </div>
+              <CardTitle>Ações Rápidas</CardTitle>
             </CardHeader>
             <CardContent>
-              {salesHistory.length === 0 || salesHistory.every(d => d.revenue === 0) ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <TrendingUp className="w-12 h-12 text-text-muted mb-4" />
-                  <p className="text-text-secondary">Nenhum dado de vendas</p>
-                  <p className="text-sm text-text-muted mt-1">Realize vendas para visualizar o histórico</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <ResponsiveContainer width="100%" height={250}>
-                    <BarChart data={salesHistory}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                      <XAxis 
-                        dataKey="date" 
-                        stroke="#a0a0a0" 
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis 
-                        stroke="#a0a0a0" 
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) => `R$ ${value}`}
-                      />
-                      <Tooltip 
-                        formatter={(value: any) => `R$ ${String(value)}`}
-                        contentStyle={{ 
-                          backgroundColor: 'rgba(5, 5, 5, 0.95)', 
-                          border: '1px solid rgba(0, 255, 157, 0.2)',
-                          borderRadius: '8px',
-                          color: '#e0e0e0'
-                        }}
-                      />
-                      <Bar 
-                        dataKey="revenue" 
-                        fill="#00ff9d" 
-                        radius={[4, 4, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                  {/* Resumo */}
-                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
-                    <div>
-                      <p className="text-xs text-text-muted">Total (7 dias)</p>
-                      <p className="text-lg font-bold text-text-primary">
-                        R$ {totalRevenue7Days.toFixed(2)}
-                      </p>
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                <QuickAction icon={<Users />} label="Cliente" onClick={() => navigate('/tenant/clients')} />
+                <QuickAction icon={<Package />} label="Produto" onClick={() => navigate('/tenant/products')} />
+                <QuickAction icon={<Scissors />} label="Serviço" onClick={() => navigate('/tenant/services')} />
+                <QuickAction icon={<Percent />} label="Promoção" onClick={() => navigate('/tenant/promotions')} />
+                <QuickAction icon={<Calendar />} label="Agendar" onClick={() => navigate('/tenant/sales/new')} />
+                <QuickAction icon={<BarChart3 />} label="Relatórios" onClick={() => navigate('/tenant/reports')} />
+                <QuickAction icon={<MessageSquare />} label="Mensagens" onClick={() => navigate('/tenant/messages')} />
+                <QuickAction icon={<Star />} label="Config" onClick={() => navigate('/tenant/settings')} />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Stats Secundários */}
+          <Card className="glass-card border-white/10">
+            <CardHeader>
+              <CardTitle>Resumo do Negócio</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-lg bg-white/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-green-500/10 text-green-400">
+                      <Package className="h-4 w-4" />
                     </div>
                     <div>
-                      <p className="text-xs text-text-muted">Média diária</p>
-                      <p className="text-lg font-bold text-text-primary">
-                        R$ {avgDailyRevenue.toFixed(2)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-text-muted">Vendas</p>
-                      <p className="text-lg font-bold text-accent-primary">
-                        {totalSalesCount}
-                      </p>
+                      <p className="text-xs text-text-muted">Produtos</p>
+                      <p className="text-lg font-bold text-text-primary">{stats.totalProducts}</p>
                     </div>
                   </div>
                 </div>
-              )}
+                <div className="p-4 rounded-lg bg-white/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+                      <Scissors className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Serviços</p>
+                      <p className="text-lg font-bold text-text-primary">{stats.totalServices}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 rounded-lg bg-white/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
+                      <MessageSquare className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Mensagens</p>
+                      <p className="text-lg font-bold text-text-primary">{stats.messagesToday}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 rounded-lg bg-white/5">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-yellow-500/10 text-yellow-400">
+                      <Star className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Promoções</p>
+                      <p className="text-lg font-bold text-text-primary">{stats.activePromotions}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Vendas Recentes */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="glass-card border-white/10">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5 text-accent-primary" />
+                  Vendas Recentes
+                </CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => navigate('/tenant/history/sales')}>Ver todas</Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Cliente</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Serviço</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Data</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Valor</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-text-muted">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentSales.map((sale) => (
+                      <tr key={sale.id} className="border-b border-border hover:bg-accent-primary/5">
+                        <td className="py-3 px-4 text-sm text-text-primary">{sale.customer}</td>
+                        <td className="py-3 px-4 text-sm text-text-muted">{sale.service}</td>
+                        <td className="py-3 px-4 text-sm text-text-muted">{new Date(sale.date).toLocaleDateString('pt-BR')}</td>
+                        <td className="py-3 px-4 text-sm text-text-primary">R$ {sale.value.toFixed(2).replace('.', ',')}</td>
+                        <td className="py-3 px-4 text-sm">
+                          <StatusBadge
+                            status={sale.status === 'completed' ? 'completed' : sale.status === 'pending' ? 'pending' : 'cancelled'}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
