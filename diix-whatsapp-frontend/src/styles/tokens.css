@@ -1,27 +1,51 @@
 /* ==========================================
    DESIGN TOKENS - DIIX WHATSAPP FRONTEND
    Sistema de Design Responsivo Mobile-First
+   Tema Premium Dark com Efeitos Avançados
    ========================================== */
 
 :root {
   /* ========================================
-     CORE COLORS - Cores Base
+     CORE COLORS - Cores Base Aprimoradas
+     Deep Space Black Collection
      ======================================== */
-  --color-black: #050505;
+  --color-black-deep: #000000;
+  --color-black-rich: #050505;
+  --color-black-soft: #0a0a0a;
   --color-dark-gray: #121212;
   --color-mid-gray: #1a1a1a;
   --color-light-gray: #2a2a2a;
+  --color-charcoal: #161618;
+  --color-slate: #1e1e22;
   
-  /* Accent Colors */
-  --accent-primary: #84cc16;      /* Lime green */
+  /* Accent Colors - Electric Collection */
+  --accent-primary: #84cc16;      /* Lime green - assinatura da marca */
+  --accent-lime-glow: #a3d936;    /* Variação glow */
   --accent-secondary: #7c3aed;    /* Violet */
+  --accent-violet-glow: #9262ff;  /* Variação glow */
   --accent-cyan: #06b6d4;         /* Cyan */
+  --accent-cyan-glow: #22d3ee;    /* Variação glow */
+  --accent-purple-pink: #ec4899;  /* Pink para destaques */
   
-  /* Semantic Colors */
+  /* Gradient Stops Premium */
+  --gradient-start: #050505;
+  --gradient-mid: #0f0f1a;
+  --gradient-end: #0a1a1a;
+  --gradient-dark: #000000;
+  
+  /* Semantic Colors Refinadas */
   --color-success: #22c55e;
+  --success-emerald: #10b981;
+  --success-bright: #34d399;
   --color-warning: #eab308;
+  --warning-amber: #f59e0b;
+  --warning-bright: #fbbf24;
   --color-error: #ef4444;
+  --error-rose: #f43f5e;
+  --error-bright: #fb7185;
   --color-info: #3b82f6;
+  --info-blue: #3b82f6;
+  --info-bright: #60a5fa;
   
   /* ========================================
      TEXT COLORS
@@ -131,16 +155,36 @@
   --radius-full: 9999px;
   
   /* ========================================
-     SHADOWS
+     SHADOWS - Premium Collection
      ======================================== */
   --shadow-none: none;
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* Neon Shadows - Variações de Intensidade */
+  --shadow-neon-green-soft: 0 0 15px rgba(132, 204, 22, 0.3);
   --shadow-neon-green: 0 0 20px rgba(132, 204, 22, 0.5);
+  --shadow-neon-green-intense: 0 0 40px rgba(132, 204, 22, 0.7);
+  
+  --shadow-neon-purple-soft: 0 0 15px rgba(124, 58, 237, 0.3);
   --shadow-neon-purple: 0 0 20px rgba(124, 58, 237, 0.5);
+  --shadow-neon-purple-intense: 0 0 40px rgba(124, 58, 237, 0.7);
+  
+  --shadow-neon-cyan-soft: 0 0 15px rgba(6, 182, 212, 0.3);
   --shadow-neon-cyan: 0 0 20px rgba(6, 182, 212, 0.5);
+  --shadow-neon-cyan-intense: 0 0 40px rgba(6, 182, 212, 0.7);
+  
+  /* Glow Effects Premium */
+  --glow-soft: 0 0 20px rgba(132, 204, 22, 0.15);
+  --glow-medium: 0 0 30px rgba(132, 204, 22, 0.3);
+  --glow-intense: 0 0 40px rgba(132, 204, 22, 0.5), 0 0 80px rgba(132, 204, 22, 0.2);
+  
+  /* Glass Shadow with Depth */
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  --glass-shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   
   /* ========================================
      TRANSITIONS
@@ -171,12 +215,25 @@
   --z-toast: 800;
   
   /* ========================================
-     GLASS EFFECT
+     GLASS EFFECT - Premium Collection
      ======================================== */
   --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-blur: 16px;
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glass-bg-light: rgba(255, 255, 255, 0.03);
+  --glass-bg-medium: rgba(255, 255, 255, 0.08);
+  --glass-bg-strong: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-light: rgba(255, 255, 255, 0.05);
+  --glass-border-strong: rgba(255, 255, 255, 0.15);
+  --glass-blur: 24px;
+  --glass-blur-strong: 32px;
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  
+  /* Mesh Gradient Background */
+  --mesh-gradient: 
+    radial-gradient(at 0% 0%, rgba(132, 204, 22, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(132, 204, 22, 0.1) 0px, transparent 50%);
 }
 
 /* ==========================================
