@@ -61,7 +61,7 @@ export function NotificationBell({
         
         {unreadCount > 0 && (
           <Badge 
-            variant="error" 
+            variant="danger" 
             className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 flex items-center justify-center text-xs"
           >
             {unreadCount > 9 ? '9+' : unreadCount}

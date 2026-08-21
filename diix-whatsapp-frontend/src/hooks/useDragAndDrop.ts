@@ -48,7 +48,7 @@ export function useDragAndDrop<T extends { id: string; order?: number }>({
     const fromIndex = localItems.findIndex(item => item.id === draggedItem.id);
     const toIndex = localItems.findIndex(item => item.id === targetItem.id);
 
-    if (fromIndex === -1 || toIndex === -1) return;
+    if (fromIndex === -1 || toIndex === -1 || !draggedItem) return;
 
     // Reordenar localmente
     const newItems = [...localItems];

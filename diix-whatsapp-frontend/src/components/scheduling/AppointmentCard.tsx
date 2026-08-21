@@ -14,9 +14,9 @@ interface AppointmentCardProps {
 const statusConfig = {
   pending: { label: 'Pendente', variant: 'warning' as const },
   confirmed: { label: 'Confirmado', variant: 'success' as const },
-  cancelled: { label: 'Cancelado', variant: 'error' as const },
+  cancelled: { label: 'Cancelado', variant: 'danger' as const },
   completed: { label: 'Concluído', variant: 'success' as const },
-  'no-show': { label: 'Não Compareceu', variant: 'error' as const },
+  'no-show': { label: 'Não Compareceu', variant: 'danger' as const },
 };
 
 export function AppointmentCard({ 

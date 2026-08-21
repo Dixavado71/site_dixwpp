@@ -13,12 +13,13 @@ export const mockAuth = {
     await new Promise(resolve => setTimeout(resolve, 800));
     
     // Aceita qualquer login para demonstração
+    const username = identifier.includes('@') ? identifier.split('@')[0] : identifier;
     return {
       id: 'mock-user-1',
-      username: identifier.includes('@') ? identifier.split('@')[0] : identifier,
-      email: identifier.includes('@') ? identifier : `${identifier}@demo.com`,
+      username: username || 'user',
+      email: identifier.includes('@') ? identifier : `${identifier || 'user'}@demo.com`,
       role: identifier.toLowerCase() === 'admin' ? 'admin' : 'tenant',
-      name: identifier.includes('@') ? identifier.split('@')[0] : identifier,
+      name: username || 'User',
     };
   },
 
