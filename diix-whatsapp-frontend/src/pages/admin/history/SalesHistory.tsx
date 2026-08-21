@@ -13,7 +13,7 @@ import { LoadingState } from '@/components/ui/LoadingState';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
-import { PAYMENT_METHODS, STATUS_OPTIONS } from '@/constants';
+import { PAYMENT_METHODS, STATUS_CONFIG } from '@/constants';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 export default function SalesHistory() {
@@ -147,7 +147,7 @@ export default function SalesHistory() {
               className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-text-primary"
             >
               <option value="">Todos os Status</option>
-              {Object.entries(STATUS_OPTIONS).map(([key, { label }]) => (
+              {Object.entries(STATUS_CONFIG).map(([key, { label }]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
             </select>

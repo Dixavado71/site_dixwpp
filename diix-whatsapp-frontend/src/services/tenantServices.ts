@@ -2,7 +2,7 @@ import api from '@/lib/api';
 import type { Service, CreateServiceDTO, UpdateServiceDTO } from '@/types';
 import type { ApiResponse } from '@/types';
 
-export const tenantServiceService = {
+export const tenantServices = {
   async getAll(tenantId: string): Promise<Service[]> {
     const response = await api.get<ApiResponse<Service[]>>(`/services?tenantId=${tenantId}`);
     return response.data.data;
