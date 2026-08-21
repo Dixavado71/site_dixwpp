@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/modals/ConfirmModal';
+import { PromotionModal } from '@/components/modals/PromotionModal';
 import { useModal } from '@/hooks/useModal';
 import { toast } from 'sonner';
 
@@ -16,27 +17,59 @@ const mockPromotions = [
 ];
 
 export default function TenantPromotions() {
-  const [promotions] = useState(mockPromotions);
+  const [promotions, setPromotions] = useState<typeof mockPromotions>([...mockPromotions]);
   const [searchTerm, setSearchTerm] = useState('');
   const filteredPromotions = promotions.filter(promo => promo.title.toLowerCase().includes(searchTerm.toLowerCase()));
   
+  const createModal = useModal();
+  const editModal = useModal();
   const deleteConfirmModal = useModal();
-  const [selectedPromotion, setSelectedPromotion] = useState<typeof mockPromotions[0] | null>(null);
+  const [selectedPromotion, setSelectedPromotion] = useState<typeof mockPromotions[number] | null>(null);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view' | null>(null);
 
-  const openDeleteConfirm = (promo: typeof mockPromotions[0]) => {
+  const openCreateModal = () => {
+    setSelectedPromotion(null);
+    setModalMode('create');
+  };
+
+  const openEditModal = (promo: typeof mockPromotions[number]) => {
+    setSelectedPromotion(promo);
+    setModalMode('edit');
+  };
+
+  const openDeleteConfirm = (promo: typeof mockPromotions[number]) => {
     setSelectedPromotion(promo);
     deleteConfirmModal.open();
   };
 
-  const handleDelete = () => {
-    if (!selectedPromotion) return;
-    toast.success(`${selectedPromotion.title} removida com sucesso!`);
-    deleteConfirmModal.close();
+  const handleCloseModal = () => {
+    setModalMode(null);
     setSelectedPromotion(null);
   };
 
-  const handleEdit = (promo: typeof mockPromotions[0]) => {
-    toast.info(`Editar ${promo.title}`);
+  const handleCreate = (data: any) => {
+    const newPromo = {
+      id: String(Date.now()),
+      ...data,
+    };
+    setPromotions((prev) => [...prev, newPromo]);
+    toast.success('Promoção criada com sucesso!');
+    handleCloseModal();
+  };
+
+  const handleEdit = (data: any) => {
+    if (!selectedPromotion) return;
+    setPromotions((prev) => prev.map(p => p.id === selectedPromotion.id ? { ...p, ...data } : p));
+    toast.success('Promoção atualizada com sucesso!');
+    handleCloseModal();
+  };
+
+  const handleDelete = () => {
+    if (!selectedPromotion) return;
+    setPromotions((prev) => prev.filter(p => p.id !== selectedPromotion.id));
+    toast.success(`${selectedPromotion.title} removida com sucesso!`);
+    deleteConfirmModal.close();
+    setSelectedPromotion(null);
   };
 
   return (
@@ -47,7 +80,7 @@ export default function TenantPromotions() {
             <h1 className="text-3xl font-bold text-text-primary">Promoções</h1>
             <p className="text-text-muted mt-1">Gerencie suas promoções</p>
           </div>
-          <Button variant="primary" onClick={() => toast.info('Nova Promoção')}>
+          <Button variant="primary" onClick={openCreateModal}>
             <Plus className="w-4 h-4 mr-2" />
             Nova Promoção
           </Button>
@@ -83,7 +116,7 @@ export default function TenantPromotions() {
                         <StatusBadge status={promo.active ? 'active' : 'inactive'} />
                       </td>
                       <td className="py-3 px-4 text-sm text-right space-x-2">
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(promo)} title="Editar"><Edit className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="sm" onClick={() => openEditModal(promo)} title="Editar"><Edit className="h-4 w-4" /></Button>
                         <Button variant="danger" size="sm" onClick={() => openDeleteConfirm(promo)} title="Excluir"><Trash2 className="h-4 w-4" /></Button>
                       </td>
                     </tr>
@@ -108,6 +141,17 @@ export default function TenantPromotions() {
           cancelLabel="Cancelar"
           variant="danger"
         />
+
+        {/* Modal de Criar/Editar/Visualizar Promoção */}
+        {modalMode && (
+          <PromotionModal
+            mode={modalMode}
+            promotion={selectedPromotion ?? undefined}
+            isOpen={!!modalMode}
+            onClose={handleCloseModal}
+            onSave={modalMode === 'create' ? handleCreate : modalMode === 'edit' ? handleEdit : undefined}
+          />
+        )}
       </div>
     
   );
