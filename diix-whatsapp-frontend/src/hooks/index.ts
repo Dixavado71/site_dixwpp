@@ -13,3 +13,11 @@ export {
   type KeyboardShortcut,
   type UseKeyboardShortcutsOptions,
 } from './useKeyboardShortcuts';
+export { 
+  useResponsive, 
+  useResponsiveSidebar, 
+  useIsTouchDevice,
+  type Breakpoints,
+  type ScreenSize,
+  type UseResponsiveReturn,
+} from './useResponsive';

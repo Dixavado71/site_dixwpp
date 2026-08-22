@@ -1,0 +1,11 @@
+export { CategoryModal } from './CategoryModal';
+export { ConfirmModal } from './ConfirmModal';
+export { CustomerModal } from './CustomerModal';
+export { DetailModal } from './DetailModal';
+export { ExportModal } from './ExportModal';
+export { FiltersModal } from './FiltersModal';
+export { ProductModal } from './ProductModal';
+export { PromotionModal } from './PromotionModal';
+export { ServiceModal } from './ServiceModal';
+export { TenantModal } from './TenantModal';
+export { UserModal } from './UserModal';
