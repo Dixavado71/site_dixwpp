@@ -2,44 +2,76 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build artifacts
 dist/
 build/
-coverage/
-htmlcov/
+*.js
+*.ts
+*.jsx
+*.tsx
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
 # Environment
 .env
 .env.local
 .env.*
 
-# Cache directories
-.cache/
-.node_modules/
-.npm/
-.yarn/
-
-# Logs
-*.log
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# IDE files
+# Editors
 .vscode/
 .idea/
-*.swp
-*.swo
-*.tmp
 
-# Python specific (if applicable)
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/modules/
+.DS_Store
+*.swp
+*~
 .pytest_cache/
 .mypy_cache/
-.venv/
-venv/
+.hypothesis/
+
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+dist/
+build/
+.nyc_output
+coverage/
+.nyc-output
+.npm
+.npx
+package-lock.json
+yarn.lock
+.pnp.*
+.pnp-loader.*
+
+# Frontend build artifacts
+public/build/
+build/
+dist/
+*.min.js
+*.min.css
 ```
