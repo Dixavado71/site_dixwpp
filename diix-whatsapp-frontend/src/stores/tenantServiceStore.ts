@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { toast } from 'sonner';
-import { tenantServices } from '@/services/tenantServices';
+import { serviceService } from '@/services/serviceService';
 import type { Service, CreateServiceDTO, UpdateServiceDTO } from '@/types';
 
 interface ServiceFilters {
@@ -51,7 +51,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
     
     set({ isLoading: true, error: null });
     try {
-      const services = await tenantServices.getAll(tenantId);
+      const services = await serviceService.getAll(tenantId);
       let filteredServices = services || [];
       
       const { search, status } = get().filters;
@@ -76,7 +76,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
 
   getById: async (id: string) => {
     try {
-      const service = await tenantServices.getById(id);
+      const service = await serviceService.getById(id);
       return service;
     } catch (error) {
       toast.error('Erro ao buscar serviço');
@@ -87,7 +87,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
   create: async (data: CreateServiceDTO) => {
     set({ isLoading: true, error: null });
     try {
-      await tenantServices.create(data);
+      await serviceService.create(data);
       await get().fetch();
       toast.success('Serviço criado com sucesso!');
     } catch (error) {
@@ -100,7 +100,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
   update: async (id: string, data: UpdateServiceDTO) => {
     set({ isLoading: true, error: null });
     try {
-      await tenantServices.update(id, data);
+      await serviceService.update(id, data);
       await get().fetch();
       toast.success('Serviço atualizado com sucesso!');
     } catch (error) {
@@ -113,7 +113,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
   delete: async (id: string) => {
     set({ isLoading: true, error: null });
     try {
-      await tenantServices.delete(id);
+      await serviceService.delete(id);
       await get().fetch();
       toast.success('Serviço excluído com sucesso!');
     } catch (error) {
@@ -125,7 +125,7 @@ export const useTenantServiceStore = create<TenantServiceStore>((set, get) => ({
 
   toggleStatus: async (id: string) => {
     try {
-      await tenantServices.toggleStatus(id);
+      await serviceService.toggleStatus(id);
       await get().fetch();
       toast.success('Status alterado com sucesso!');
     } catch (error) {

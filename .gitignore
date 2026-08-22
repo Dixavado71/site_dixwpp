@@ -1,5 +1,35 @@
-Since the only file change is the addition of `.gitignore` itself and there are no other file changes provided in the list, I cannot determine what types of files need to be ignored. Without actual file changes showing compiled files, dependencies, or temporary files, I cannot generate appropriate ignore rules.
+```
+# Dependencies
+node_modules/
 
-Based on rule #6, if the change list contains only source or config files and no build artifacts, dependencies, or temp files, then output nothing.
+# Build artifacts
+dist/
+build/
+target/
 
-(empty)
+# Package lock files (already in repo but can be regenerated)
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+.env.local
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+
+# Test coverage
+coverage/
+htmlcov/
+.nyc_output/
+```
