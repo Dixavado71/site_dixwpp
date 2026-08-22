@@ -6,10 +6,10 @@
  */
 
 // Buttons & Actions
-export { Button, buttonVariants, type ButtonProps } from './Button/Button';
+export { Button, buttonVariants, type ButtonProps } from './Button';
 
 // Form Inputs
-export { Input, inputVariants, type InputProps } from './Input/Input';
+export { Input, inputVariants, type InputProps } from './Input';
 export { Textarea, type TextareaProps } from './Textarea';
 
 // Layout & Containers
@@ -22,7 +22,7 @@ export {
   CardFooter,
   cardVariants,
   type CardProps,
-} from './Card/Card';
+} from './Card';
 
 // Dialogs & Modals
 export {
@@ -36,7 +36,7 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from './Dialog/Dialog';
+} from './Dialog';
 
 // Selection Controls
 export {
@@ -89,7 +89,7 @@ export {
 } from './dropdown-menu/dropdown-menu';
 
 // Feedback & Loading
-export { Skeleton, type SkeletonProps } from './Skeleton/Skeleton';
+export { Skeleton, type SkeletonProps, SkeletonCard, SkeletonTable, SkeletonChart, SkeletonDashboard } from './Skeleton';
 
 // Legacy exports for backward compatibility
 export { StatusBadge, type StatusBadgeProps } from './StatusBadge';
