@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Select } from '../ui/Select';
+import * as SelectPrimitive from '../ui/Select';
 import type { CalendarApi } from '@fullcalendar/core';
 
 export interface CalendarEvent {
@@ -102,15 +102,16 @@ export function CalendarView({
         </h2>
 
         <div className="flex items-center gap-2">
-          <Select
-            value={viewType}
-            onChange={(e) => handleViewChange(e.target.value as CalendarViewType)}
-            options={[
-              { value: 'dayGridMonth', label: 'Mês' },
-              { value: 'timeGridWeek', label: 'Semana' },
-              { value: 'timeGridDay', label: 'Dia' },
-            ]}
-          />
+          <SelectPrimitive.Root value={viewType} onValueChange={(value) => handleViewChange(value as CalendarViewType)}>
+            <SelectPrimitive.Trigger className="w-[140px]">
+              <SelectPrimitive.Value placeholder="Selecione a visão" />
+            </SelectPrimitive.Trigger>
+            <SelectPrimitive.Content>
+              <SelectPrimitive.Item value="dayGridMonth">Mês</SelectPrimitive.Item>
+              <SelectPrimitive.Item value="timeGridWeek">Semana</SelectPrimitive.Item>
+              <SelectPrimitive.Item value="timeGridDay">Dia</SelectPrimitive.Item>
+            </SelectPrimitive.Content>
+          </SelectPrimitive.Root>
         </div>
       </div>
 

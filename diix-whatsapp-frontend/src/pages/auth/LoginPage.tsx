@@ -99,9 +99,9 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <Input label="Usuário ou E-mail" type="text" placeholder="admin (para Admin) ou usuario (para Tenant)" icon={<Mail className="h-4 w-4" />} error={errors.identifier?.message} {...register('identifier')} />
+              <Input label="Usuário ou E-mail" type="text" placeholder="admin (para Admin) ou usuario (para Tenant)" icon={Mail} error={errors.identifier?.message} {...register('identifier')} />
               <div className="relative">
-                <Input label="Senha" type={showPassword ? 'text' : 'password'} placeholder="••••••••" icon={<Lock className="h-4 w-4" />} error={errors.password?.message} {...register('password')} />
+                <Input label="Senha" type={showPassword ? 'text' : 'password'} placeholder="••••••••" icon={Lock} error={errors.password?.message} {...register('password')} />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-[34px] text-text-muted hover:text-text-primary transition-colors" tabIndex={-1}>
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>

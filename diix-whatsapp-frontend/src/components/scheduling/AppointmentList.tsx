@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Button } from '../ui/Button';
-import { Select } from '../ui/Select';
+import * as SelectPrimitive from '../ui/Select';
 import { AppointmentCard } from './AppointmentCard';
 import { useAppointmentStore } from '../../stores/appointmentStore';
 import type { Appointment, AppointmentFilters } from '../../types/appointment';
@@ -125,15 +125,16 @@ export function AppointmentList({ onViewChange, onEditAppointment }: Appointment
         </div>
 
         <div className="flex items-center gap-2">
-          <Select
-            value={viewMode}
-            onChange={(e) => setViewMode(e.target.value as ViewMode)}
-            options={[
-              { value: 'day', label: 'Dia' },
-              { value: 'week', label: 'Semana' },
-              { value: 'month', label: 'Mês' },
-            ]}
-          />
+          <SelectPrimitive.Root value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
+            <SelectPrimitive.Trigger className="w-[140px]">
+              <SelectPrimitive.Value placeholder="Visão" />
+            </SelectPrimitive.Trigger>
+            <SelectPrimitive.Content>
+              <SelectPrimitive.Item value="day">Dia</SelectPrimitive.Item>
+              <SelectPrimitive.Item value="week">Semana</SelectPrimitive.Item>
+              <SelectPrimitive.Item value="month">Mês</SelectPrimitive.Item>
+            </SelectPrimitive.Content>
+          </SelectPrimitive.Root>
         </div>
       </div>
 

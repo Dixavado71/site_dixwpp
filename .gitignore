@@ -2,37 +2,45 @@
 # Dependencies
 node_modules/
 
-# Environment
+# Build outputs
+dist/
+build/
+*.js.map
+*.ts.map
+*.jsx.map
+*.tsx.map
+
+# Environment variables
 .env
 .env.local
-.env.*
+*.env.*
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
 
-# Editors
+# Coverage reports
+coverage/
+.nyc_output/
+*.lcov
+
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# Python
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python cache (if any Python files exist in the project)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-venv/
-.venv/
-env/
-ENV/
 
-# Build outputs
-dist/
-build/
-*.min.js
-*.min.css
-
-# OS generated files
-.DS_Store
-Thumbs.db
+# Temporary files
+*.tmp
+*.temp
 ```

@@ -136,7 +136,7 @@ export function FiltersModal({
                     name={field.key}
                     defaultValue={initialFilters[field.key] || ''}
                     placeholder={field.placeholder}
-                    icon={<Search className="w-4 h-4" />}
+                    icon={Search}
                   />
                 )}
               </div>
