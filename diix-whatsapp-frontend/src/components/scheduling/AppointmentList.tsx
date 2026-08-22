@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Button } from '../ui/Button';
-import Select from '../ui/Select';
+import { Button } from '@/components/ui/Button';
+import Select from '@/components/ui/Select';
 import { AppointmentCard } from './AppointmentCard';
 import { useAppointmentStore } from '../../stores/appointmentStore';
 import type { Appointment, AppointmentFilters } from '../../types/appointment';

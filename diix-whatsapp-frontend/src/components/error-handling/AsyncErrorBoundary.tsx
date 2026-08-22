@@ -1,5 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode, Suspense } from 'react';
-import { LoadingState } from '../ui/LoadingState';
+import { LoadingState } from '@/components/ui/LoadingState';
 
 interface Props {
   children: ReactNode;

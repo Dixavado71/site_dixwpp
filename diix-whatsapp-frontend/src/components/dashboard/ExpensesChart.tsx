@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Card } from '../ui/Card';
+import { Card } from '@/components/ui/Card';
 
 interface ChartData {
   category: string;

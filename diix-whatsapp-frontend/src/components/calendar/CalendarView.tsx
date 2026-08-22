@@ -3,9 +3,9 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import Select from '../ui/Select';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import Select from '@/components/ui/Select';
 
 export interface CalendarEvent {
   id: string;

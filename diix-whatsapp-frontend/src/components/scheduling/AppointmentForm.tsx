@@ -4,10 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format, addDays, setHours, setMinutes } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import Select from '../ui/Select';
-import { Card } from '../ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import Select from '@/components/ui/Select';
+import { Card } from '@/components/ui/Card';
 import { useAppointmentStore } from '../../stores/appointmentStore';
 import type { CreateAppointmentDTO } from '../../types/appointment';
 
