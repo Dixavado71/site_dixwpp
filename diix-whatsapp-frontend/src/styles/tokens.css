@@ -1,0 +1,366 @@
+/* ==========================================
+   DESIGN TOKENS - DIIX WHATSAPP FRONTEND
+   Cyberpunk Futurista Premium Theme
+   Sistema de Design Responsivo Mobile-First
+   Cores Neon, Efeitos Holográficos e Animações Avançadas
+   ========================================== */
+
+:root {
+  /* ========================================
+     CORE COLORS - Cyberpunk Dark Collection
+     Deep Space Black com tons azulados
+     ======================================== */
+  --color-black-deep: #000000;
+  --color-black-rich: #030305;
+  --color-black-soft: #08080a;
+  --color-dark-gray: #0f0f12;
+  --color-mid-gray: #16161a;
+  --color-light-gray: #1e1e24;
+  --color-charcoal: #121216;
+  --color-slate: #1a1a22;
+  --color-navy-dark: #0d0d14;
+  --color-space-blue: #12121f;
+  
+  /* ========================================
+     CYBERPUNK NEON ACCENTS - Electric Collection
+     Cores vibrantes estilo cyberpunk
+     ======================================== */
+  --accent-primary: #00ff9d;      /* Cyber Green - assinatura da marca */
+  --accent-lime-glow: #00ffbd;    /* Variação glow */
+  --accent-secondary: #ff00ff;    /* Magenta neon */
+  --accent-violet-glow: #ff33ff;  /* Variação glow */
+  --accent-cyan: #00ffff;         /* Cyan elétrico */
+  --accent-cyan-glow: #33ffff;    /* Variação glow */
+  --accent-electric-blue: #0066ff;/* Blue elétrico */
+  --accent-purple-pink: #ff00aa;  /* Pink neon para destaques */
+  --accent-orange-neon: #ff6600;  /* Orange cyberpunk */
+  --accent-yellow-neon: #ffff00;  /* Yellow neon */
+  
+  /* Gradient Stops Premium - Cyberpunk Style */
+  --gradient-start: #030305;
+  --gradient-mid: #0a0a12;
+  --gradient-end: #0f0f1a;
+  --gradient-dark: #000000;
+  --gradient-cyber: linear-gradient(135deg, #030305 0%, #0a0a12 50%, #0f0f1a 100%);
+  
+  /* Semantic Colors Refinadas - Neon Versions */
+  --color-success: #00ff9d;
+  --success-emerald: #00dd88;
+  --success-bright: #33ffbb;
+  --color-warning: #ffcc00;
+  --warning-amber: #ffaa00;
+  --warning-bright: #ffdd33;
+  --color-error: #ff3366;
+  --error-rose: #ff5577;
+  --error-bright: #ff6688;
+  --color-info: #00ccff;
+  --info-blue: #0099ff;
+  --info-bright: #33ddff;
+  
+  /* ========================================
+     TEXT COLORS - Cyberpunk Style
+     Branco puro com tons azulados
+     ======================================== */
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0ff;
+  --text-muted: #8888aa;
+  --text-disabled: #555566;
+  --text-neon: #00ff9d;
+  
+  /* ========================================
+     BACKGROUND COLORS - Deep Space
+     ======================================== */
+  --bg-primary: #030305;
+  --bg-secondary: #0f0f12;
+  --bg-tertiary: #16161a;
+  --bg-elevated: rgba(255, 255, 255, 0.03);
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+  --bg-cyber-grid: radial-gradient(circle at 1px 1px, rgba(0, 255, 157, 0.05) 1px, transparent 0);
+  
+  /* ========================================
+     BORDER COLORS - Neon Borders
+     ======================================== */
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --border-focus: rgba(0, 255, 157, 0.5);
+  --border-neon: rgba(0, 255, 157, 0.3);
+  --border-neon-cyan: rgba(0, 255, 255, 0.3);
+  --border-neon-magenta: rgba(255, 0, 255, 0.3);
+  
+  /* ========================================
+     SPACING SYSTEM - Múltiplos de 4px
+     ======================================== */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  
+  /* ========================================
+     TYPOGRAPHY - Tipografia Fluida
+     ======================================== */
+  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* Font sizes com clamp para fluidez */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);     /* 12px */
+  --text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);       /* 14px */
+  --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);       /* 16px */
+  --text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);      /* 18px */
+  --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);       /* 20px */
+  --text-2xl: clamp(1.5rem, 1.25rem + 1.25vw, 1.875rem);    /* 24px */
+  --text-3xl: clamp(1.875rem, 1.5rem + 1.875vw, 2.25rem);   /* 30px */
+  --text-4xl: clamp(2.25rem, 1.75rem + 2.5vw, 3rem);        /* 36px */
+  
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Line heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Letter spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  
+  /* ========================================
+     BREAKPOINTS - Padronizados
+     ======================================== */
+  --breakpoint-xs: 320px;   /* iPhone SE */
+  --breakpoint-sm: 375px;   /* iPhone 12 */
+  --breakpoint-md: 425px;   /* Mobile grande */
+  --breakpoint-lg: 768px;   /* iPad */
+  --breakpoint-xl: 1024px;  /* Laptop */
+  --breakpoint-2xl: 1440px; /* Desktop */
+  --breakpoint-full: 1920px;/* Full HD */
+  
+  /* ========================================
+     LAYOUT
+     ======================================== */
+  --sidebar-width: 18rem;    /* 288px */
+  --sidebar-width-collapsed: 5rem;  /* 80px */
+  --header-height: 4rem;     /* 64px */
+  --container-max-width: 1280px;
+  --container-padding-mobile: 1rem;
+  --container-padding-desktop: 1.5rem;
+  
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;     /* 4px */
+  --radius-md: 0.5rem;      /* 8px */
+  --radius-lg: 0.75rem;     /* 12px */
+  --radius-xl: 1rem;        /* 16px */
+  --radius-2xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+  
+  /* ========================================
+     SHADOWS - Cyberpunk Neon Collection
+     Sombras com efeitos neon vibrantes
+     ======================================== */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  
+  /* Neon Shadows - Cyberpunk Colors */
+  --shadow-neon-green-soft: 0 0 15px rgba(0, 255, 157, 0.3);
+  --shadow-neon-green: 0 0 20px rgba(0, 255, 157, 0.5);
+  --shadow-neon-green-intense: 0 0 40px rgba(0, 255, 157, 0.7), 0 0 80px rgba(0, 255, 157, 0.3);
+  
+  --shadow-neon-purple-soft: 0 0 15px rgba(255, 0, 255, 0.3);
+  --shadow-neon-purple: 0 0 20px rgba(255, 0, 255, 0.5);
+  --shadow-neon-purple-intense: 0 0 40px rgba(255, 0, 255, 0.7), 0 0 80px rgba(255, 0, 255, 0.3);
+  
+  --shadow-neon-cyan-soft: 0 0 15px rgba(0, 255, 255, 0.3);
+  --shadow-neon-cyan: 0 0 20px rgba(0, 255, 255, 0.5);
+  --shadow-neon-cyan-intense: 0 0 40px rgba(0, 255, 255, 0.7), 0 0 80px rgba(0, 255, 255, 0.3);
+  
+  --shadow-neon-blue-soft: 0 0 15px rgba(0, 102, 255, 0.3);
+  --shadow-neon-blue: 0 0 20px rgba(0, 102, 255, 0.5);
+  --shadow-neon-blue-intense: 0 0 40px rgba(0, 102, 255, 0.7), 0 0 80px rgba(0, 102, 255, 0.3);
+  
+  --shadow-neon-pink-soft: 0 0 15px rgba(255, 0, 170, 0.3);
+  --shadow-neon-pink: 0 0 20px rgba(255, 0, 170, 0.5);
+  --shadow-neon-pink-intense: 0 0 40px rgba(255, 0, 170, 0.7), 0 0 80px rgba(255, 0, 170, 0.3);
+  
+  /* Glow Effects Premium - Cyberpunk Style */
+  --glow-soft: 0 0 20px rgba(0, 255, 157, 0.15);
+  --glow-medium: 0 0 30px rgba(0, 255, 157, 0.3);
+  --glow-intense: 0 0 40px rgba(0, 255, 157, 0.5), 0 0 80px rgba(0, 255, 157, 0.2);
+  --glow-cyber: 0 0 20px rgba(0, 255, 157, 0.4), 0 0 40px rgba(0, 255, 255, 0.2), 0 0 60px rgba(255, 0, 255, 0.1);
+  
+  /* Glass Shadow with Depth - Cyberpunk */
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 0 20px rgba(0, 255, 157, 0.05);
+  --glass-shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(0, 255, 157, 0.1);
+  
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+  --transition-fast: 150ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+  --transition-slower: 500ms;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  /* ========================================
+     TOUCH TARGETS - Acessibilidade Mobile
+     ======================================== */
+  --touch-target-min: 44px;   /* Mínimo para acessibilidade */
+  --touch-target-comfortable: 48px;
+  
+  /* ========================================
+     Z-INDEX SCALE
+     ======================================== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+  
+  /* ========================================
+     GLASS EFFECT - Cyberpunk Holographic Collection
+     Efeitos de vidro com estilo futurista
+     ======================================== */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-light: rgba(255, 255, 255, 0.02);
+  --glass-bg-medium: rgba(255, 255, 255, 0.05);
+  --glass-bg-strong: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-border-light: rgba(255, 255, 255, 0.04);
+  --glass-border-strong: rgba(255, 255, 255, 0.12);
+  --glass-border-neon: rgba(0, 255, 157, 0.2);
+  --glass-blur: 24px;
+  --glass-blur-strong: 40px;
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 0 20px rgba(0, 255, 157, 0.05);
+  
+  /* Mesh Gradient Background - Cyberpunk Style */
+  --mesh-gradient: 
+    radial-gradient(at 0% 0%, rgba(0, 255, 157, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(255, 0, 255, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(0, 255, 255, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(0, 102, 255, 0.1) 0px, transparent 50%);
+    
+  /* Cyber Grid Pattern */
+  --cyber-grid-pattern: 
+    linear-gradient(rgba(0, 255, 157, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 157, 0.03) 1px, transparent 1px);
+}
+
+/* ==========================================
+   MEDIA QUERIES HELPERS
+   ========================================== */
+
+/* Mobile First Approach */
+@media (min-width: 320px) {
+  :root {
+    --container-padding: var(--container-padding-mobile);
+  }
+}
+
+@media (min-width: 375px) {
+  :root {
+    --container-padding: calc(var(--container-padding-mobile) + 0.25rem);
+  }
+}
+
+@media (min-width: 425px) {
+  :root {
+    --container-padding: calc(var(--container-padding-mobile) + 0.5rem);
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-padding: var(--container-padding-desktop);
+    --sidebar-width: 18rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --container-max-width: 1400px;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --container-max-width: 1600px;
+  }
+}
+
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-normal: 0ms;
+    --transition-slow: 0ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================
+   HIGH CONTRAST MODE
+   ========================================== */
+@media (prefers-contrast: high) {
+  :root {
+    --border-default: rgba(255, 255, 255, 0.3);
+    --text-muted: #d1d5db;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ==========================================
+   DARK MODE (default)
+   ========================================== */
+:root {
+  color-scheme: dark;
+}
+
+/* ==========================================
+   PRINT STYLES
+   ========================================== */
+@media print {
+  :root {
+    --glass-bg: transparent;
+    --glass-border: #ccc;
+    --shadow-lg: none;
+  }
+}

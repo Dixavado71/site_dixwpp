@@ -1,0 +1,18 @@
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+  NativeSelect,
+  type SelectProps,
+  type SelectOption,
+} from './Select';
+
+import SelectComponent from './Select';
+export default SelectComponent;
