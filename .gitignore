@@ -2,10 +2,16 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Build artifacts
 dist/
 build/
 target/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
 # Environment variables
 .env
@@ -17,50 +23,24 @@ target/
 .idea/
 *.swp
 *.swo
-*.tmp
-
-# Python specific
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.py~
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-*.pot
-*.pyc
-*.pyo
-*.pyd
-.MF
-tags
-TAGS
-*.sublime-workspace
-.project
-.pydevproject
-.DS_Store
-Thumbs.db
 
 # Logs
 *.log
 
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.temp
+
 # OS generated files
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+
+# Testing
+.mypy_cache/
+.pytest_cache/
 ```
