@@ -6,7 +6,7 @@ import { format, addDays, setHours, setMinutes } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import * as SelectPrimitive from '../ui/Select';
+import Select from '../ui/Select';
 import { Card } from '../ui/Card';
 import { useAppointmentStore } from '../../stores/appointmentStore';
 import type { CreateAppointmentDTO } from '../../types/appointment';
@@ -108,17 +108,17 @@ export function AppointmentForm({
           render={({ field }) => (
             <div>
               <label className="block text-sm font-medium mb-2">Cliente *</label>
-              <SelectPrimitive.Root value={field.value} onValueChange={field.onChange}>
-                <SelectPrimitive.Trigger className="w-full">
-                  <SelectPrimitive.Value placeholder="Selecione um cliente" />
-                </SelectPrimitive.Trigger>
-                <SelectPrimitive.Content>
-                  <SelectPrimitive.Item value="">Selecione um cliente</SelectPrimitive.Item>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger className="w-full">
+                  <Select.Value placeholder="Selecione um cliente" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="">Selecione um cliente</Select.Item>
                   {clients.map(c => (
-                    <SelectPrimitive.Item key={c.id} value={c.id}>{c.name}</SelectPrimitive.Item>
+                    <Select.Item key={c.id} value={c.id}>{c.name}</Select.Item>
                   ))}
-                </SelectPrimitive.Content>
-              </SelectPrimitive.Root>
+                </Select.Content>
+              </Select>
               {errors.clientId?.message && (
                 <p className="mt-1 text-xs text-error">{errors.clientId.message}</p>
               )}
@@ -133,17 +133,17 @@ export function AppointmentForm({
           render={({ field }) => (
             <div>
               <label className="block text-sm font-medium mb-2">Profissional *</label>
-              <SelectPrimitive.Root value={field.value} onValueChange={field.onChange}>
-                <SelectPrimitive.Trigger className="w-full">
-                  <SelectPrimitive.Value placeholder="Selecione um profissional" />
-                </SelectPrimitive.Trigger>
-                <SelectPrimitive.Content>
-                  <SelectPrimitive.Item value="">Selecione um profissional</SelectPrimitive.Item>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger className="w-full">
+                  <Select.Value placeholder="Selecione um profissional" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="">Selecione um profissional</Select.Item>
                   {professionals.map(p => (
-                    <SelectPrimitive.Item key={p.id} value={p.id}>{p.name}</SelectPrimitive.Item>
+                    <Select.Item key={p.id} value={p.id}>{p.name}</Select.Item>
                   ))}
-                </SelectPrimitive.Content>
-              </SelectPrimitive.Root>
+                </Select.Content>
+              </Select>
               {errors.professionalId?.message && (
                 <p className="mt-1 text-xs text-error">{errors.professionalId.message}</p>
               )}
@@ -158,17 +158,17 @@ export function AppointmentForm({
           render={({ field }) => (
             <div>
               <label className="block text-sm font-medium mb-2">Serviço *</label>
-              <SelectPrimitive.Root value={field.value} onValueChange={field.onChange}>
-                <SelectPrimitive.Trigger className="w-full">
-                  <SelectPrimitive.Value placeholder="Selecione um serviço" />
-                </SelectPrimitive.Trigger>
-                <SelectPrimitive.Content>
-                  <SelectPrimitive.Item value="">Selecione um serviço</SelectPrimitive.Item>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger className="w-full">
+                  <Select.Value placeholder="Selecione um serviço" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="">Selecione um serviço</Select.Item>
                   {services.map(s => (
-                    <SelectPrimitive.Item key={s.id} value={s.id}>{s.name}</SelectPrimitive.Item>
+                    <Select.Item key={s.id} value={s.id}>{s.name}</Select.Item>
                   ))}
-                </SelectPrimitive.Content>
-              </SelectPrimitive.Root>
+                </Select.Content>
+              </Select>
               {errors.serviceId?.message && (
                 <p className="mt-1 text-xs text-error">{errors.serviceId.message}</p>
               )}
@@ -201,16 +201,16 @@ export function AppointmentForm({
             render={({ field }) => (
               <div>
                 <label className="block text-sm font-medium mb-2">Hora Início *</label>
-                <SelectPrimitive.Root value={field.value} onValueChange={field.onChange}>
-                  <SelectPrimitive.Trigger className="w-full">
-                    <SelectPrimitive.Value placeholder="Início" />
-                  </SelectPrimitive.Trigger>
-                  <SelectPrimitive.Content>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <Select.Trigger className="w-full">
+                    <Select.Value placeholder="Início" />
+                  </Select.Trigger>
+                  <Select.Content>
                     {timeSlots.map(t => (
-                      <SelectPrimitive.Item key={t} value={t}>{t}</SelectPrimitive.Item>
+                      <Select.Item key={t} value={t}>{t}</Select.Item>
                     ))}
-                  </SelectPrimitive.Content>
-                </SelectPrimitive.Root>
+                  </Select.Content>
+                </Select>
                 {errors.startTime?.message && (
                   <p className="mt-1 text-xs text-error">{errors.startTime.message}</p>
                 )}
@@ -224,18 +224,18 @@ export function AppointmentForm({
             render={({ field }) => (
               <div>
                 <label className="block text-sm font-medium mb-2">Hora Fim *</label>
-                <SelectPrimitive.Root value={field.value} onValueChange={field.onChange}>
-                  <SelectPrimitive.Trigger className="w-full">
-                    <SelectPrimitive.Value placeholder="Fim" />
-                  </SelectPrimitive.Trigger>
-                  <SelectPrimitive.Content>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <Select.Trigger className="w-full">
+                    <Select.Value placeholder="Fim" />
+                  </Select.Trigger>
+                  <Select.Content>
                     {timeSlots
                       .filter(t => t > startTime)
                       .map(t => (
-                        <SelectPrimitive.Item key={t} value={t}>{t}</SelectPrimitive.Item>
+                        <Select.Item key={t} value={t}>{t}</Select.Item>
                       ))}
-                  </SelectPrimitive.Content>
-                </SelectPrimitive.Root>
+                  </Select.Content>
+                </Select>
                 {errors.endTime?.message && (
                   <p className="mt-1 text-xs text-error">{errors.endTime.message}</p>
                 )}

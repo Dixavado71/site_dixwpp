@@ -13,3 +13,6 @@ export {
   type SelectProps,
   type SelectOption,
 } from './Select';
+
+import SelectComponent from './Select';
+export default SelectComponent;

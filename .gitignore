@@ -5,42 +5,41 @@ node_modules/
 # Build outputs
 dist/
 build/
-*.js.map
-*.ts.map
-*.jsx.map
-*.tsx.map
+coverage/
+htmlcov/
 
-# Environment variables
+# Environment
 .env
 .env.local
-*.env.*
+.env.*
+
+# Cache directories
+.cache/
+.node_modules/
+.npm/
+.yarn/
 
 # Logs
 *.log
 
-# Coverage reports
-coverage/
-.nyc_output/
-*.lcov
+# OS generated files
+.DS_Store
+Thumbs.db
 
 # IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
+*.tmp
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# Python cache (if any Python files exist in the project)
+# Python specific (if applicable)
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# Temporary files
-*.tmp
-*.temp
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
 ```
