@@ -9,7 +9,7 @@ import { ConfirmModal } from '@/components/modals/ConfirmModal';
 import { CustomerModal } from '@/components/modals/CustomerModal';
 import { useTenantCustomerStore } from '@/stores/tenantCustomerStore';
 import { useModal } from '@/hooks/useModal';
-import type { Client } from '@/types';
+import type { Client, ClientFormData } from '@/types';
 
 export default function TenantClients() {
   const { customers, isLoading, fetch, create, update, delete: deleteClient } = useTenantCustomerStore();
@@ -34,7 +34,7 @@ export default function TenantClients() {
     client.document?.includes(searchTerm)
   );
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: ClientFormData) => {
     try {
       await create(data);
       setModalMode(null);
@@ -43,7 +43,7 @@ export default function TenantClients() {
     }
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: ClientFormData) => {
     if (!selectedClient) return;
     try {
       await update(selectedClient.id, data);

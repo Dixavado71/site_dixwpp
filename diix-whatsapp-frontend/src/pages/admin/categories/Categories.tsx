@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { CategoryList } from '@/components/categories/CategoryList';
 import { CategoryModal } from '@/components/modals/CategoryModal';
-import type { Category, CreateCategoryDTO, UpdateCategoryDTO } from '@/types';
+import type { Category, CreateCategoryDTO, UpdateCategoryDTO, CategoryFormData } from '@/types';
 import { KPICard, EmptyState } from '@/components/ui/Card';
 import { useModal } from '@/hooks/useModal';
 
@@ -37,7 +37,7 @@ export default function CategoriesPage() {
     }
   };
 
-  const handleSubmitCategory = async (data: any) => {
+  const handleSubmitCategory = async (data: CategoryFormData) => {
     if (editingCategory) {
       await updateCategory(editingCategory.id, data as UpdateCategoryDTO);
     } else {

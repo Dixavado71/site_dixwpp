@@ -8,7 +8,7 @@ import { ConfirmModal } from '@/components/modals/ConfirmModal';
 import { ProductModal } from '@/components/modals/ProductModal';
 import { useTenantProductStore } from '@/stores/tenantProductStore';
 import { useModal } from '@/hooks/useModal';
-import type { Product } from '@/types';
+import type { Product, ProductFormData } from '@/types';
 
 export default function TenantProducts() {
   const { products, isLoading, fetch, create, update, delete: deleteProduct } = useTenantProductStore();
@@ -34,7 +34,7 @@ export default function TenantProducts() {
      String(product.category.name).toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: ProductFormData) => {
     try {
       await create(tenantId, data);
       setModalMode(null);
@@ -43,7 +43,7 @@ export default function TenantProducts() {
     }
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: ProductFormData) => {
     if (!selectedProduct) return;
     try {
       await update(selectedProduct.id, data);

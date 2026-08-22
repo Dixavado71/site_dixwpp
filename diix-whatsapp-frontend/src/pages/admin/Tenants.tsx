@@ -9,7 +9,7 @@ import { ConfirmModal } from '@/components/modals/ConfirmModal';
 import { TenantModal } from '@/components/modals/TenantModal';
 import { useTenantsStore } from '@/stores/tenantsStore';
 import { useModal } from '@/hooks/useModal';
-import type { Tenant, CreateTenantDTO, UpdateTenantDTO } from '@/types';
+import type { Tenant, CreateTenantDTO, UpdateTenantDTO, TenantFormData } from '@/types';
 
 export default function TenantsPage() {
   const { tenants, isLoading, fetchTenants, createTenant, updateTenant, deleteTenant, toggleTenantStatus } = useTenantsStore();
@@ -47,7 +47,7 @@ export default function TenantsPage() {
     return acc + (planPrices[tenant.plan?.toLowerCase() ?? 'standard'] ?? 149);
   }, 0);
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: TenantFormData) => {
     try {
       await createTenant(data as CreateTenantDTO);
       setModalMode(null);
@@ -56,7 +56,7 @@ export default function TenantsPage() {
     }
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: TenantFormData) => {
     if (!selectedTenant) return;
     try {
       await updateTenant(selectedTenant.id, data as UpdateTenantDTO);
