@@ -10,7 +10,7 @@ import { ServiceModal } from '@/components/modals/ServiceModal';
 import { useModal } from '@/hooks/useModal';
 import { useTenantServiceStore } from '@/stores/tenantServiceStore';
 import { toast } from 'sonner';
-import type { Service } from '@/types';
+import type { Service, ServiceFormData } from '@/types';
 
 export default function TenantServices() {
   const { services, isLoading, fetch, create, update, delete: deleteService } = useTenantServiceStore();
@@ -53,19 +53,16 @@ export default function TenantServices() {
     setSelectedService(null);
   };
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: ServiceFormData) => {
     try {
-      await create({
-        ...data,
-        tenantId,
-      });
+      await create(data);
       setModalMode(null);
     } catch (error) {
       // Erro já tratado no store
     }
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: ServiceFormData) => {
     if (!selectedService) return;
     try {
       await update(selectedService.id, data);

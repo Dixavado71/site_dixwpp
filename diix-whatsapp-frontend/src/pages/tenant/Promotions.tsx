@@ -10,7 +10,7 @@ import { PromotionModal } from '@/components/modals/PromotionModal';
 import { useModal } from '@/hooks/useModal';
 import { useTenantPromotionStore } from '@/stores/tenantPromotionStore';
 import { toast } from 'sonner';
-import type { Promotion } from '@/types';
+import type { Promotion, PromotionFormData } from '@/types';
 
 export default function TenantPromotions() {
   const { promotions, isLoading, fetch, create, update, delete: deletePromotion } = useTenantPromotionStore();
@@ -51,19 +51,16 @@ export default function TenantPromotions() {
     setSelectedPromotion(null);
   };
 
-  const handleCreate = async (data: any) => {
+  const handleCreate = async (data: PromotionFormData) => {
     try {
-      await create({
-        ...data,
-        tenantId,
-      });
+      await create(data);
       setModalMode(null);
     } catch (error) {
       // Erro já tratado no store
     }
   };
 
-  const handleEdit = async (data: any) => {
+  const handleEdit = async (data: PromotionFormData) => {
     if (!selectedPromotion) return;
     try {
       await update(selectedPromotion.id, data);

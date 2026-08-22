@@ -463,3 +463,14 @@ export interface FinancialStats {
   balance: number;
   pendingTransactions: number;
 }
+
+// Form Data types para handlers de formulário
+export interface TenantFormData extends CreateTenantDTO {}
+export interface UserFormData extends CreateUserDTO {}
+export interface CategoryFormData extends CreateCategoryDTO {}
+export interface ClientFormData extends CreateClientDTO {}
+export interface ProductFormData extends CreateProductDTO {}
+export interface ServiceFormData extends CreateServiceDTO {}
+export interface PromotionFormData extends CreatePromotionDTO {}
+export interface SaleFormData extends CreateSaleDTO {}
+export interface FinancialTransactionFormData extends CreateFinancialTransactionDTO {}
