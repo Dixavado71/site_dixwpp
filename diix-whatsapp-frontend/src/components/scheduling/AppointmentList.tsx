@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Button } from '../ui/Button';
-import { Select } from '../ui/Select';
+import Select from '../ui/Select';
 import { AppointmentCard } from './AppointmentCard';
 import { useAppointmentStore } from '../../stores/appointmentStore';
 import type { Appointment, AppointmentFilters } from '../../types/appointment';
@@ -125,15 +125,16 @@ export function AppointmentList({ onViewChange, onEditAppointment }: Appointment
         </div>
 
         <div className="flex items-center gap-2">
-          <Select
-            value={viewMode}
-            onChange={(e) => setViewMode(e.target.value as ViewMode)}
-            options={[
-              { value: 'day', label: 'Dia' },
-              { value: 'week', label: 'Semana' },
-              { value: 'month', label: 'Mês' },
-            ]}
-          />
+          <Select value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
+            <Select.Trigger className="w-[140px]">
+              <Select.Value placeholder="Visão" />
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="day">Dia</Select.Item>
+              <Select.Item value="week">Semana</Select.Item>
+              <Select.Item value="month">Mês</Select.Item>
+            </Select.Content>
+          </Select>
         </div>
       </div>
 

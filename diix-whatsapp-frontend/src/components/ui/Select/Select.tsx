@@ -166,7 +166,7 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 // Legacy native select for backward compatibility
-export const NativeSelect = React.forwardRef<HTMLSelectElement, SelectProps>(
+const NativeSelect = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, options, placeholder, error, ...props }, ref) => {
     return (
       <div className="relative">
@@ -208,6 +208,7 @@ export const NativeSelect = React.forwardRef<HTMLSelectElement, SelectProps>(
 );
 NativeSelect.displayName = 'NativeSelect';
 
+// Named exports for Radix-based Select
 export {
   Select,
   SelectGroup,
@@ -219,5 +220,22 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
+  NativeSelect,
 };
-export default Select;
+
+// Default export with namespace for Select.Root, Select.Trigger, etc.
+const SelectComponent = Object.assign(Select, {
+  Root: Select,
+  Group: SelectGroup,
+  Value: SelectValue,
+  Trigger: SelectTrigger,
+  Content: SelectContent,
+  Label: SelectLabel,
+  Item: SelectItem,
+  Separator: SelectSeparator,
+  ScrollUpButton: SelectScrollUpButton,
+  ScrollDownButton: SelectScrollDownButton,
+  Native: NativeSelect,
+});
+
+export default SelectComponent;

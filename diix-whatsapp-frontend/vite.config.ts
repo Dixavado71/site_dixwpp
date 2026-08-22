@@ -30,13 +30,27 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['framer-motion', 'lucide-react', 'class-variance-authority'],
-          charts: ['recharts'],
-          forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
-          calendar: ['@fullcalendar/react', '@fullcalendar/daygrid', '@fullcalendar/timegrid', '@fullcalendar/interaction'],
-          utils: ['axios', 'date-fns', 'clsx', 'tailwind-merge'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') && (id.includes('react-dom') || id.includes('react-router'))) {
+              return 'vendor';
+            }
+            if (id.includes('framer-motion') || id.includes('lucide-react') || id.includes('class-variance-authority')) {
+              return 'ui';
+            }
+            if (id.includes('recharts')) {
+              return 'charts';
+            }
+            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
+              return 'forms';
+            }
+            if (id.includes('@fullcalendar')) {
+              return 'calendar';
+            }
+            if (id.includes('axios') || id.includes('date-fns') || id.includes('clsx') || id.includes('tailwind-merge')) {
+              return 'utils';
+            }
+          }
         },
       },
     },

@@ -6,7 +6,7 @@ import { format, addDays, setHours, setMinutes } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import { Select } from '../ui/Select';
+import Select from '../ui/Select';
 import { Card } from '../ui/Card';
 import { useAppointmentStore } from '../../stores/appointmentStore';
 import type { CreateAppointmentDTO } from '../../types/appointment';
@@ -108,14 +108,20 @@ export function AppointmentForm({
           render={({ field }) => (
             <div>
               <label className="block text-sm font-medium mb-2">Cliente *</label>
-              <Select
-                {...field}
-                options={[
-                  { value: '', label: 'Selecione um cliente' },
-                  ...clients.map(c => ({ value: c.id, label: c.name }))
-                ]}
-                error={errors.clientId?.message}
-              />
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger className="w-full">
+                  <Select.Value placeholder="Selecione um cliente" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="">Selecione um cliente</Select.Item>
+                  {clients.map(c => (
+                    <Select.Item key={c.id} value={c.id}>{c.name}</Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+              {errors.clientId?.message && (
+                <p className="mt-1 text-xs text-error">{errors.clientId.message}</p>
+              )}
             </div>
           )}
         />
@@ -127,14 +133,20 @@ export function AppointmentForm({
           render={({ field }) => (
             <div>
               <label className="block text-sm font-medium mb-2">Profissional *</label>
-              <Select
-                {...field}
-                options={[
-                  { value: '', label: 'Selecione um profissional' },
-                  ...professionals.map(p => ({ value: p.id, label: p.name }))
-                ]}
-                error={errors.professionalId?.message}
-              />
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger className="w-full">
+                  <Select.Value placeholder="Selecione um profissional" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="">Selecione um profissional</Select.Item>
+                  {professionals.map(p => (
+                    <Select.Item key={p.id} value={p.id}>{p.name}</Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+              {errors.professionalId?.message && (
+                <p className="mt-1 text-xs text-error">{errors.professionalId.message}</p>
+              )}
             </div>
           )}
         />
@@ -146,14 +158,20 @@ export function AppointmentForm({
           render={({ field }) => (
             <div>
               <label className="block text-sm font-medium mb-2">Serviço *</label>
-              <Select
-                {...field}
-                options={[
-                  { value: '', label: 'Selecione um serviço' },
-                  ...services.map(s => ({ value: s.id, label: s.name }))
-                ]}
-                error={errors.serviceId?.message}
-              />
+              <Select value={field.value} onValueChange={field.onChange}>
+                <Select.Trigger className="w-full">
+                  <Select.Value placeholder="Selecione um serviço" />
+                </Select.Trigger>
+                <Select.Content>
+                  <Select.Item value="">Selecione um serviço</Select.Item>
+                  {services.map(s => (
+                    <Select.Item key={s.id} value={s.id}>{s.name}</Select.Item>
+                  ))}
+                </Select.Content>
+              </Select>
+              {errors.serviceId?.message && (
+                <p className="mt-1 text-xs text-error">{errors.serviceId.message}</p>
+              )}
             </div>
           )}
         />
@@ -183,11 +201,19 @@ export function AppointmentForm({
             render={({ field }) => (
               <div>
                 <label className="block text-sm font-medium mb-2">Hora Início *</label>
-                <Select
-                  {...field}
-                  options={timeSlots.map(t => ({ value: t, label: t }))}
-                  error={errors.startTime?.message}
-                />
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <Select.Trigger className="w-full">
+                    <Select.Value placeholder="Início" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    {timeSlots.map(t => (
+                      <Select.Item key={t} value={t}>{t}</Select.Item>
+                    ))}
+                  </Select.Content>
+                </Select>
+                {errors.startTime?.message && (
+                  <p className="mt-1 text-xs text-error">{errors.startTime.message}</p>
+                )}
               </div>
             )}
           />
@@ -198,13 +224,21 @@ export function AppointmentForm({
             render={({ field }) => (
               <div>
                 <label className="block text-sm font-medium mb-2">Hora Fim *</label>
-                <Select
-                  {...field}
-                  options={timeSlots
-                    .filter(t => t > startTime)
-                    .map(t => ({ value: t, label: t }))}
-                  error={errors.endTime?.message}
-                />
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <Select.Trigger className="w-full">
+                    <Select.Value placeholder="Fim" />
+                  </Select.Trigger>
+                  <Select.Content>
+                    {timeSlots
+                      .filter(t => t > startTime)
+                      .map(t => (
+                        <Select.Item key={t} value={t}>{t}</Select.Item>
+                      ))}
+                  </Select.Content>
+                </Select>
+                {errors.endTime?.message && (
+                  <p className="mt-1 text-xs text-error">{errors.endTime.message}</p>
+                )}
               </div>
             )}
           />
