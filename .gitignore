@@ -1,4 +1,3 @@
-```
 # Dependencies
 node_modules/
 
@@ -8,7 +7,7 @@ build/
 *.js.map
 *.ts.map
 
-# Environment
+# Environment variables
 .env
 .env.local
 *.env.*
@@ -18,15 +17,13 @@ build/
 .idea/
 *.swp
 *.swo
-*.tmp
 
 # Logs
 *.log
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Temporary files
+*.tmp
+*.temp
 
 # Python
 __pycache__/
@@ -34,36 +31,116 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
-*.so
-
-# Virtual environments
+env/
 venv/
 .venv/
-env/
-ENV/
-
-# Testing
-.pytest_cache/
-.mypy_cache/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.gitattributes
+.next
+.semaphore/semaphore-cache
 .hypothesis/
-
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Compiled files
-*.class
-*.o
-*.obj
-*.out
-*.exe
-*.dll
-*.so
-*.a
-*.lib
-*.dylib
-*.jar
-*.war
-*.zip
-*.tar.gz
-```
+.checkov/
+.istanbul.yml
+.nyc_output
+.sass-cache/
+.rbenv-vars
+.rultor.yml
+.swift-version
+.autoconf/
+.autotools/
+.cargo/
+.cmake/
+.dotnet/
+.go/
+.gradle/
+.jazzy.yaml
+.maven/
+.nuget/
+.php_cs
+.php_cs.dist
+.scala_dependencies
+.scala_history
+.sonar/
+.sqlmap/
+.stestr/
+.stickler.yml
+.style.yapf
+.swiftlint.yml
+.tflint.hcl
+.travis.yml
+.vagrant/
+.vercel/
+.well-known/
+.yarn-metadata.json
+.yo-rc.json
+0/
+1/
+2/
+3/
+4/
+5/
+6/
+7/
+8/
+9/
+a/
+b/
+c/
+d/
+e/
+f/
+g/
+h/
+i/
+j/
+k/
+l/
+m/
+n/
+o/
+p/
+q/
+r/
+s/
+t/
+u/
+v/
+w/
+x/
+y/
+z/
+A/
+B/
+C/
+D/
+E/
+F/
+G/
+H/
+I/
+J/
+K/
+L/
+M/
+N/
+O/
+P/
+Q/
+R/
+S/
+T/
+U/
+V/
+W/
+X/
+Y/
+Z/
