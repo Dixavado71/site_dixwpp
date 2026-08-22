@@ -18,6 +18,11 @@ interface UseCRUDReturn<T, CreateDTO, UpdateDTO> {
   updateData: (id: string, dto: UpdateDTO) => Promise<T | null>;
   deleteData: (id: string) => Promise<boolean>;
   clearError: () => void;
+  // Métodos adicionais para testes e uso simplificado
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  clear: () => void;
+  getById: (id: string) => T | undefined;
 }
 
 export function useCRUD<T extends { id: string }, CreateDTO, UpdateDTO>({
@@ -120,6 +125,21 @@ export function useCRUD<T extends { id: string }, CreateDTO, UpdateDTO>({
     setError(null);
   }, []);
 
+  // Métodos utilitários para testes e uso simplificado
+  const setLoading = useCallback((loading: boolean) => {
+    setIsLoading(loading);
+  }, []);
+
+  const clear = useCallback(() => {
+    setData([]);
+    setError(null);
+    setIsLoading(false);
+  }, []);
+
+  const getById = useCallback((id: string): T | undefined => {
+    return data.find(item => item.id === id);
+  }, [data]);
+
   return {
     data,
     isLoading,
@@ -129,5 +149,9 @@ export function useCRUD<T extends { id: string }, CreateDTO, UpdateDTO>({
     updateData,
     deleteData,
     clearError,
+    setLoading,
+    setError,
+    clear,
+    getById,
   };
 }

@@ -1,77 +1,85 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
-import { useModal } from '../useModal'
+import { describe, it, expect } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
+import { useModal } from '../useModal';
 
-describe('useModal', () => {
-  beforeEach(() => {
-    localStorage.clear()
-  })
-
-  it('should initialize with closed state', () => {
-    const { result } = renderHook(() => useModal())
+describe('useModal Hook', () => {
+  it('initializes with closed state', () => {
+    const { result } = renderHook(() => useModal());
     
-    expect(result.current.isOpen).toBe(false)
-  })
+    expect(result.current.isOpen).toBe(false);
+    expect(result.current.data).toBeNull();
+  });
 
-  it('should open modal', () => {
-    const { result } = renderHook(() => useModal())
+  it('opens modal with open()', () => {
+    const { result } = renderHook(() => useModal());
     
     act(() => {
-      result.current.open()
-    })
+      result.current.open();
+    });
     
-    expect(result.current.isOpen).toBe(true)
-  })
+    expect(result.current.isOpen).toBe(true);
+  });
 
-  it('should close modal', () => {
-    const { result } = renderHook(() => useModal())
+  it('opens modal with data', () => {
+    const testData = { id: 1, name: 'Test' };
+    const { result } = renderHook(() => useModal());
     
     act(() => {
-      result.current.open()
-      result.current.close()
-    })
+      result.current.open(testData);
+    });
     
-    expect(result.current.isOpen).toBe(false)
-  })
+    expect(result.current.isOpen).toBe(true);
+    expect(result.current.data).toEqual(testData);
+  });
 
-  it('should toggle modal state', () => {
-    const { result } = renderHook(() => useModal())
+  it('closes modal with close()', () => {
+    const { result } = renderHook(() => useModal());
     
     act(() => {
-      result.current.toggle()
-    })
+      result.current.open({ id: 1 });
+    });
     
-    expect(result.current.isOpen).toBe(true)
+    expect(result.current.isOpen).toBe(true);
     
     act(() => {
-      result.current.toggle()
-    })
+      result.current.close();
+    });
     
-    expect(result.current.isOpen).toBe(false)
-  })
+    expect(result.current.isOpen).toBe(false);
+    expect(result.current.data).toBeNull();
+  });
 
-  it('should call onOpen callback when opening', () => {
-    const onOpenMock = vi.fn()
-    const { result } = renderHook(() => useModal({ onOpen: onOpenMock }))
+  it('toggles modal state', () => {
+    const { result } = renderHook(() => useModal());
     
+    // Toggle de fechado para aberto
     act(() => {
-      result.current.open()
-    })
+      result.current.toggle();
+    });
+    expect(result.current.isOpen).toBe(true);
     
-    expect(onOpenMock).toHaveBeenCalledTimes(1)
-  })
+    // Toggle de aberto para fechado
+    act(() => {
+      result.current.toggle();
+    });
+    expect(result.current.isOpen).toBe(false);
+  });
 
-  it('should call onClose callback when closing', () => {
-    const onCloseMock = vi.fn()
-    const { result } = renderHook(() => useModal({ 
-      defaultOpen: true,
-      onClose: onCloseMock 
-    }))
+  it('resets to initial state on reset()', () => {
+    const { result } = renderHook(() => useModal());
     
     act(() => {
-      result.current.close()
-    })
+      result.current.open({ id: 1, name: 'Test' });
+    });
     
-    expect(onCloseMock).toHaveBeenCalledTimes(1)
-  })
-})
+    expect(result.current.isOpen).toBe(true);
+    expect(result.current.data).toEqual({ id: 1, name: 'Test' });
+    
+    act(() => {
+      result.current.reset();
+    });
+    
+    expect(result.current.isOpen).toBe(false);
+    expect(result.current.data).toBeNull();
+  });
+});
