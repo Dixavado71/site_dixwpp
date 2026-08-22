@@ -12,7 +12,6 @@ interface CustomerStore {
   customers: Client[]
   filters: CustomerFilters
   isLoading: boolean
-  loading: boolean
   error: string | null
   tenantId: string | null
   
@@ -33,7 +32,6 @@ export const useTenantCustomerStore = create<CustomerStore>((set, get) => ({
     status: 'all',
   },
   isLoading: false,
-  loading: false,
   error: null,
   tenantId: null,
 

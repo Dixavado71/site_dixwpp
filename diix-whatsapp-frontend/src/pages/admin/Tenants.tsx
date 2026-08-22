@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Edit, Trash2, Eye, Building2, Plus, CreditCard } from 'lucide-react';
+import { Search, Edit, Trash2, Eye, Building2, Plus, CreditCard, Users, TrendingUp, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -32,6 +32,20 @@ export default function TenantsPage() {
     tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     tenant.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Stats calculations
+  const totalTenants = tenants.length;
+  const activeTenants = tenants.filter(t => t.active).length;
+  const inactiveTenants = tenants.filter(t => !t.active).length;
+  const monthlyRevenue = tenants.reduce((acc, tenant) => {
+    const planPrices: Record<string, number> = {
+      basic: 99,
+      standard: 149,
+      premium: 299,
+      enterprise: 599
+    };
+    return acc + (planPrices[tenant.plan?.toLowerCase() ?? 'standard'] ?? 149);
+  }, 0);
 
   const handleCreate = async (data: any) => {
     try {
@@ -113,6 +127,62 @@ export default function TenantsPage() {
           Novo Tenant
         </Button>
       </motion.div>
+
+      {/* Stats Cards */}
+      <div className="grid gap-6 md:grid-cols-4">
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Total Tenants</p>
+                <p className="text-2xl font-bold text-text-primary mt-1">{totalTenants}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary">
+                <Building2 className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Tenants Ativos</p>
+                <p className="text-2xl font-bold text-green-400 mt-1">{activeTenants}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-green-500/10 text-green-400">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Tenants Inativos</p>
+                <p className="text-2xl font-bold text-yellow-400 mt-1">{inactiveTenants}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-yellow-500/10 text-yellow-400">
+                <Users className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Receita Mensal</p>
+                <p className="text-2xl font-bold text-text-primary mt-1">R$ {monthlyRevenue.toFixed(2)}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-blue-500/10 text-blue-400">
+                <DollarSign className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader>

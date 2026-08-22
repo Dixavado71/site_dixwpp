@@ -19,7 +19,7 @@ export function AppointmentList({ onViewChange, onEditAppointment }: Appointment
   const [currentDate, setCurrentDate] = useState(new Date());
   
   const { appointments, fetchAppointments, cancelAppointment, confirmAppointment } = useAppointmentStore();
-  const loading = useAppointmentStore((state) => state.loading);
+  const loading = useAppointmentStore((state) => state.isLoading);
 
   useEffect(() => {
     const filters: AppointmentFilters = {
