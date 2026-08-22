@@ -38,10 +38,39 @@ export default defineConfig({
             if (id.includes('html2canvas')) {
               return 'canvas'
             }
+            if (id.includes('framer-motion')) {
+              return 'animations'
+            }
+            if (id.includes('date-fns')) {
+              return 'dates'
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons'
+            }
+          }
+          
+          // Code splitting para páginas e componentes grandes
+          if (id.includes('/src/pages/')) {
+            const pageName = id.split('/pages/')[1]?.split('/')[0]
+            if (pageName) {
+              return `pages/${pageName}`
+            }
+          }
+          
+          if (id.includes('/src/components/modals/')) {
+            return 'components/modals'
+          }
+          
+          if (id.includes('/src/components/ui/') && !id.includes('/src/components/ui/index.ts')) {
+            return 'components/ui'
           }
         },
       },
     },
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 500,
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+    exclude: ['@fullcalendar/react'],
   },
 })
