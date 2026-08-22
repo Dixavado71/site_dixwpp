@@ -13,6 +13,8 @@ import {
   FolderTree,
   History,
   DollarSign,
+  ChevronDown,
+  ChevronRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Header from './Header'
@@ -28,7 +30,14 @@ interface User {
   isActive: boolean;
 }
 
-const navigation = [
+interface NavItem {
+  name: string;
+  href: string;
+  icon: React.ElementType;
+  children?: { name: string; href: string }[];
+}
+
+const navigation: NavItem[] = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Tenants', href: '/admin/tenants', icon: Building2 },
   { name: 'Usuários', href: '/admin/users', icon: Users },
@@ -48,6 +57,7 @@ const navigation = [
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [user, setUser] = useState<User | null>(null)
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(['Histórico'])
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -57,6 +67,14 @@ export default function AdminLayout() {
       setUser(JSON.parse(mockUserStr));
     }
   }, []);
+
+  const toggleMenu = (menuName: string) => {
+    setExpandedMenus(prev => 
+      prev.includes(menuName) 
+        ? prev.filter(name => name !== menuName)
+        : [...prev, menuName]
+    )
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('mock_user');
@@ -95,39 +113,55 @@ export default function AdminLayout() {
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-thin">
             {navigation.map((item) => {
-              const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
+              const isActive = location.pathname === item.href || (item.children && item.children.some(child => location.pathname === child.href))
+              const isExpanded = expandedMenus.includes(item.name)
               
-              // Item com submenus
               if (item.children) {
                 return (
                   <div key={item.name} className="space-y-1">
-                    <div className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                      isActive
-                        ? 'bg-accent-primary/10 text-accent-primary border border-accent-primary/20'
-                        : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
-                    }`}>
-                      <item.icon className="w-5 h-5" />
-                      <span className="font-medium">{item.name}</span>
-                    </div>
-                    {/* Submenu */}
-                    <div className="ml-6 space-y-1">
-                      {item.children.map((child) => {
-                        const isChildActive = location.pathname === child.href
-                        return (
-                          <Link
-                            key={child.name}
-                            to={child.href}
-                            className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
-                              isChildActive
-                                ? 'bg-accent-primary/10 text-accent-primary'
-                                : 'text-text-muted hover:text-text-primary hover:bg-white/5'
-                            }`}
-                          >
-                            {child.name}
-                          </Link>
-                        )
-                      })}
-                    </div>
+                    <button
+                      onClick={() => toggleMenu(item.name)}
+                      className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${
+                        isActive
+                          ? 'bg-accent-primary/10 text-accent-primary border border-accent-primary/20'
+                          : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <item.icon className="w-5 h-5" />
+                        <span className="font-medium">{item.name}</span>
+                      </div>
+                      {isExpanded ? (
+                        <ChevronDown className="w-4 h-4" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                    </button>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="ml-4 pl-4 border-l border-white/10 space-y-1"
+                      >
+                        {item.children.map((child) => {
+                          const isChildActive = location.pathname === child.href
+                          return (
+                            <Link
+                              key={child.name}
+                              to={child.href}
+                              className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
+                                isChildActive
+                                  ? 'text-accent-primary bg-accent-primary/5'
+                                  : 'text-text-muted hover:text-text-primary hover:bg-white/5'
+                              }`}
+                            >
+                              {child.name}
+                            </Link>
+                          )
+                        })}
+                      </motion.div>
+                    )}
                   </div>
                 )
               }
