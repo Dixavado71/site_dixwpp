@@ -10,9 +10,9 @@ interface AccordionContextType {
 const AccordionContext = React.createContext<AccordionContextType | undefined>(undefined);
 
 export interface AccordionProps {
-  defaultValue?: string[];
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
+  defaultValue?: string | string[];
+  value?: string | string[];
+  onValueChange?: (value: string | string[]) => void;
   type?: 'single' | 'multiple';
   collapsible?: boolean;
   className?: string;
@@ -28,10 +28,18 @@ export const Accordion: React.FC<AccordionProps> = ({
   className,
   children,
 }) => {
-  const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
+  // Normalize value to array
+  const normalizeToArray = (val: string | string[] | undefined): string[] => {
+    if (!val) return [];
+    return Array.isArray(val) ? val : [val];
+  };
+
+  const [uncontrolledValue, setUncontrolledValue] = React.useState<string[]>(
+    Array.isArray(defaultValue) ? defaultValue : defaultValue ? [defaultValue] : []
+  );
   
   const isControlled = controlledValue !== undefined;
-  const expandedItems = isControlled ? controlledValue : uncontrolledValue;
+  const expandedItems = normalizeToArray(isControlled ? controlledValue : uncontrolledValue);
 
   const toggleItem = React.useCallback((itemValue: string) => {
     if (isControlled) {

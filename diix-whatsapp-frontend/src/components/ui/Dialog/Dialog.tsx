@@ -32,6 +32,7 @@ const overlayVariants = cva(
       variant: {
         default: '',
         premium: 'bg-black/70 backdrop-blur-md',
+        destructive: 'bg-black/80 backdrop-blur-md',
       },
     },
     defaultVariants: {
@@ -40,23 +41,13 @@ const overlayVariants = cva(
   }
 );
 
-interface DialogProps extends DialogPrimitive.DialogProps {
-  variant?: 'default' | 'premium' | 'destructive';
-}
-
-const Dialog = ({ variant = 'default', ...props }: DialogProps) => (
-  <DialogPrimitive.Root {...props} />
-);
-
-const DialogTrigger = DialogPrimitive.Trigger;
-
-const DialogPortal = DialogPrimitive.Portal;
-
-const DialogClose = DialogPrimitive.Close;
+interface DialogOverlayProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
+    VariantProps<typeof overlayVariants> {}
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & VariantProps<typeof overlayVariants>
+  DialogOverlayProps
 >(({ className, variant = 'default', ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
@@ -65,6 +56,11 @@ const DialogOverlay = React.forwardRef<
   />
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+
+const Dialog = DialogPrimitive.Root;
+const DialogTrigger = DialogPrimitive.Trigger;
+const DialogPortal = DialogPrimitive.Portal;
+const DialogClose = DialogPrimitive.Close;
 
 interface DialogContentProps
   extends Omit<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>, 'children'>,

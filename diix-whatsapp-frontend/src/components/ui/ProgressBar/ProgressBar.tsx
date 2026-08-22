@@ -40,12 +40,13 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressBarProps>(
     const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
     return (
-      <div className={cn('w-full', className)} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} {...props}>
+      <div className={cn('w-full', className)} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
         <ProgressPrimitive.Root
           ref={ref}
           className={cn('relative overflow-hidden rounded-full bg-white/10', sizeClasses[size])}
           value={percentage}
           max={100}
+          {...props}
         >
           <ProgressPrimitive.Indicator
             className={cn(

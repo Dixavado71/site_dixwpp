@@ -30,7 +30,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion'
+} from '@/components/ui/Accordion/Accordion'
 
 interface User {
   id: string;
@@ -157,7 +157,7 @@ export default function AdminLayout() {
                       key={item.name} 
                       type="single" 
                       collapsible
-                      value={expandedMenus.includes(item.name) ? item.name : undefined}
+                      value={expandedMenus.includes(item.name) ? item.name : ''}
                       onValueChange={(value) => toggleMenu(item.name)}
                       className="group"
                     >
