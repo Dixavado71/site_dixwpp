@@ -6,3 +6,10 @@ export { usePermissions } from './usePermissions';
 export { useExport } from './useExport';
 export { useDragAndDrop } from './useDragAndDrop';
 export { useAuth } from './useAuth';
+export { 
+  useKeyboardShortcuts, 
+  useCommonShortcuts, 
+  useNavigationShortcuts,
+  type KeyboardShortcut,
+  type UseKeyboardShortcutsOptions,
+} from './useKeyboardShortcuts';
