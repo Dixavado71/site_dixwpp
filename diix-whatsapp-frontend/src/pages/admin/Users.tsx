@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Users, Search, Edit2, Trash2, Eye, Plus, CreditCard } from 'lucide-react'
+import { Users, Search, Edit2, Trash2, Eye, Plus, CreditCard, UserCheck, UserX, TrendingUp } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
@@ -29,6 +29,12 @@ export default function AdminUsers() {
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  // Stats calculations
+  const totalUsers = users.length
+  const activeUsers = users.filter(u => u.status === 'active').length
+  const inactiveUsers = users.filter(u => u.status !== 'active').length
+  const adminUsers = users.filter(u => u.role === 'super_admin' || u.role === 'admin-global').length
 
   const handleToggleStatus = async (user: User) => {
     try {
@@ -91,6 +97,62 @@ export default function AdminUsers() {
           Novo Usuário
         </Button>
       </motion.div>
+
+      {/* Stats Cards */}
+      <div className="grid gap-6 md:grid-cols-4">
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Total Usuários</p>
+                <p className="text-2xl font-bold text-text-primary mt-1">{totalUsers}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-accent-primary/10 text-accent-primary">
+                <Users className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Usuários Ativos</p>
+                <p className="text-2xl font-bold text-green-400 mt-1">{activeUsers}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-green-500/10 text-green-400">
+                <UserCheck className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Usuários Inativos</p>
+                <p className="text-2xl font-bold text-yellow-400 mt-1">{inactiveUsers}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-yellow-500/10 text-yellow-400">
+                <UserX className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card border-white/10">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-text-muted">Admins</p>
+                <p className="text-2xl font-bold text-purple-400 mt-1">{adminUsers}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-purple-500/10 text-purple-400">
+                <TrendingUp className="h-5 w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Users Table */}
       <motion.div

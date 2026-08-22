@@ -11,7 +11,7 @@ import { useModal } from '@/hooks/useModal';
 import type { Product } from '@/types';
 
 export default function TenantProducts() {
-  const { products, loading, fetch, create, update, delete: deleteProduct } = useTenantProductStore();
+  const { products, isLoading, fetch, create, update, delete: deleteProduct } = useTenantProductStore();
   const [searchTerm, setSearchTerm] = useState('');
   const tenantId = 'current-tenant-id'; // Substituir pelo tenant real
   
@@ -161,7 +161,7 @@ export default function TenantProducts() {
             </div>
           </CardHeader>
           <CardContent>
-            {loading ? (
+            {isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
               </div>

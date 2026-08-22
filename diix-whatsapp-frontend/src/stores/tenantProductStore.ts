@@ -11,7 +11,7 @@ interface ProductFilters {
 
 interface TenantProductStore {
   products: Product[];
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
   filters: ProductFilters;
   
@@ -27,7 +27,7 @@ interface TenantProductStore {
 
 export const useTenantProductStore = create<TenantProductStore>((set, get) => ({
   products: [],
-  loading: false,
+  isLoading: false,
   error: null,
   filters: {
     search: '',
@@ -36,33 +36,33 @@ export const useTenantProductStore = create<TenantProductStore>((set, get) => ({
   },
 
   fetch: async (tenantId: string) => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
     try {
       const products = await productService.getAll(tenantId);
-      set({ products, loading: false });
+      set({ products, isLoading: false });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao buscar produtos';
-      set({ error: message, loading: false });
+      set({ error: message, isLoading: false });
       toast.error(message);
     }
   },
 
   create: async (tenantId: string, data: any) => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
     try {
       await productService.create({ ...data, tenantId });
       toast.success('Produto criado com sucesso');
       await get().fetch(tenantId);
-      set({ loading: false });
+      set({ isLoading: false });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao criar produto';
-      set({ error: message, loading: false });
+      set({ error: message, isLoading: false });
       toast.error(message);
     }
   },
 
   update: async (id: string, data: any) => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
     try {
       await productService.update(id, data);
       toast.success('Produto atualizado com sucesso');
@@ -70,16 +70,16 @@ export const useTenantProductStore = create<TenantProductStore>((set, get) => ({
       if (tenantId) {
         await get().fetch(tenantId);
       }
-      set({ loading: false });
+      set({ isLoading: false });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao atualizar produto';
-      set({ error: message, loading: false });
+      set({ error: message, isLoading: false });
       toast.error(message);
     }
   },
 
   delete: async (id: string) => {
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
     try {
       await productService.delete(id);
       toast.success('Produto removido com sucesso');
@@ -87,10 +87,10 @@ export const useTenantProductStore = create<TenantProductStore>((set, get) => ({
       if (tenantId) {
         await get().fetch(tenantId);
       }
-      set({ loading: false });
+      set({ isLoading: false });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erro ao remover produto';
-      set({ error: message, loading: false });
+      set({ error: message, isLoading: false });
       toast.error(message);
     }
   },
