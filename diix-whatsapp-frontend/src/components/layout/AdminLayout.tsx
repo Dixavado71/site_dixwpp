@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
   Users,
@@ -21,6 +22,8 @@ import Header from './Header'
 import { Footer } from './Footer'
 import { UserMenu } from './UserMenu'
 import { ThemeSwitcher } from './ThemeSwitcher'
+import { Backdrop } from '@/components/ui/Backdrop'
+import { useResponsiveSidebar } from '@/hooks/useResponsive'
 
 interface User {
   id: string;
@@ -55,7 +58,7 @@ const navigation: NavItem[] = [
 ]
 
 export default function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, close: closeSidebar, isDesktop } = useResponsiveSidebar()
   const [user, setUser] = useState<User | null>(null)
   const [expandedMenus, setExpandedMenus] = useState<string[]>(['Histórico'])
   const location = useLocation()
@@ -89,12 +92,20 @@ export default function AdminLayout() {
       {/* Animated background gradient */}
       <div className="fixed inset-0 bg-animated-gradient -z-10" />
 
+      {/* Backdrop para mobile */}
+      {!isDesktop && sidebarOpen && (
+        <Backdrop isOpen={sidebarOpen} onClose={closeSidebar} zIndex={39} />
+      )}
+
       {/* Sidebar */}
       <motion.aside
         initial={{ x: -300 }}
         animate={{ x: sidebarOpen ? 0 : -300 }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="fixed left-0 top-0 z-40 h-screen w-72 glass-panel border-r border-white/10"
+        className={cn(
+          "fixed left-0 top-0 z-40 h-screen w-72 glass-panel border-r border-white/10",
+          isDesktop ? "block" : "shadow-2xl"
+        )}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
@@ -220,11 +231,14 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <div
-        className={`transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-0'}`}
+        className={cn(
+          "transition-all duration-300",
+          sidebarOpen ? "ml-72" : "ml-0"
+        )}
       >
         {/* Topbar */}
         <Header 
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          onMenuClick={toggleSidebar}
           isSidebarOpen={sidebarOpen}
           title="Painel Administrativo"
           user={user}
