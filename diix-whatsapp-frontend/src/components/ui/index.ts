@@ -6,10 +6,10 @@
  */
 
 // Buttons & Actions
-export { Button, buttonVariants, type ButtonProps } from './button';
+export { Button, buttonVariants, type ButtonProps } from './Button/Button';
 
 // Form Inputs
-export { Input, inputVariants, type InputProps } from './input';
+export { Input, inputVariants, type InputProps } from './Input/Input';
 export { Textarea, type TextareaProps } from './Textarea';
 
 // Layout & Containers
@@ -22,7 +22,7 @@ export {
   CardFooter,
   cardVariants,
   type CardProps,
-} from './card';
+} from './Card/Card';
 
 // Dialogs & Modals
 export {
@@ -36,7 +36,7 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from './dialog';
+} from './Dialog/Dialog';
 
 // Selection Controls
 export {
@@ -50,24 +50,24 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-} from './select';
+} from './Select/Select';
 
 // Navigation & Tabs
-export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './Tabs/Tabs';
 
 // Accordion
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './accordion';
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion/Accordion';
 
 // Badges & Indicators
-export { Badge, badgeVariants, type BadgeProps } from './badge';
-export { Progress } from './progress';
+export { Badge, badgeVariants, type BadgeProps } from './Badge/Badge';
+export { Progress } from './ProgressBar/ProgressBar';
 
 // Avatars
-export { Avatar, AvatarImage, AvatarFallback } from './avatar';
+export { Avatar, AvatarImage, AvatarFallback } from './Avatar/Avatar';
 
-// Tooltips & Popovers
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip';
-export { Popover, PopoverTrigger, PopoverClose, PopoverContent } from './popover';
+// Tooltips & Popover
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './Tooltip/Tooltip';
+export { Popover, PopoverTrigger, PopoverClose, PopoverContent } from './popover/popover';
 
 // Dropdown Menus
 export {
@@ -86,10 +86,10 @@ export {
   DropdownMenuShortcut,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-} from './dropdown-menu';
+} from './dropdown-menu/dropdown-menu';
 
 // Feedback & Loading
-export { Skeleton, type SkeletonProps } from './skeleton';
+export { Skeleton, type SkeletonProps } from './Skeleton/Skeleton';
 
 // Legacy exports for backward compatibility
 export { StatusBadge, type StatusBadgeProps } from './StatusBadge';
@@ -97,14 +97,22 @@ export { ActionButton, type ActionButtonProps } from './ActionButton';
 export { Backdrop } from './Backdrop';
 export { ThemeToggle } from './ThemeToggle';
 export { Toast } from './Toast';
-export { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from './Breadcrumb';
-export { Pagination, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext, PaginationEllipsis } from './Pagination';
+export { Breadcrumb, type BreadcrumbProps, type BreadcrumbItem } from './Breadcrumb/Breadcrumb';
+export { Pagination, type PaginationProps } from './Pagination/Pagination';
 export { KPICard, type KPICardProps } from './KPICard';
 export { EmptyState, type EmptyStateProps } from './EmptyState';
 export { LoadingState, type LoadingStateProps } from './LoadingState';
 
 // Form components
-export { Form, FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription, useFormField } from './form/Form';
+export {
+  Form,
+  FormInput,
+  FormSelect,
+  FormCheckbox,
+  FormRadio,
+  type FormProps,
+  type FormFieldProps,
+} from './form/Form';
 
 // Table components
 export { DataTable, type DataTableProps } from './table/DataTable';
