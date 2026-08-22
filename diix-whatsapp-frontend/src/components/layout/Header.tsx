@@ -1,17 +1,52 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Menu, X, Bell, Search } from 'lucide-react'
+import { Menu, X, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { NotificationBell } from '@/components/notifications/NotificationBell'
+import { UserMenu } from './UserMenu'
+import type { Notification } from '@/components/notifications/NotificationBell'
 
 interface HeaderProps {
   onMenuClick: () => void;
   isSidebarOpen: boolean;
   title?: string;
+  user?: any | null;
+  onLogout?: () => void;
 }
 
-export default function Header({ onMenuClick, isSidebarOpen, title }: HeaderProps) {
+// Mock notifications for demo - should come from store/API
+const mockNotifications: Notification[] = [
+  {
+    id: '1',
+    type: 'appointment',
+    title: 'Novo agendamento',
+    message: 'Cliente João Silva agendou para amanhã às 14:00',
+    timestamp: new Date().toISOString(),
+    read: false,
+  },
+  {
+    id: '2',
+    type: 'payment',
+    title: 'Pagamento recebido',
+    message: 'R$ 150,00 de Maria Santos',
+    timestamp: new Date(Date.now() - 3600000).toISOString(),
+    read: false,
+  },
+  {
+    id: '3',
+    type: 'stock',
+    title: 'Estoque baixo',
+    message: 'Produto X está com apenas 5 unidades',
+    timestamp: new Date(Date.now() - 7200000).toISOString(),
+    read: true,
+  },
+]
+
+export default function Header({ onMenuClick, isSidebarOpen, title, user, onLogout }: HeaderProps) {
   const [isMobile, setIsMobile] = useState(false)
+  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -23,6 +58,17 @@ export default function Header({ onMenuClick, isSidebarOpen, title }: HeaderProp
     
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(n => n.id === id ? { ...n, read: true } : n)
+    )
+  }
+
+  const handleViewAll = () => {
+    // Navigate to notifications page
+    console.log('View all notifications')
+  }
 
   return (
     <header 
@@ -69,16 +115,15 @@ export default function Header({ onMenuClick, isSidebarOpen, title }: HeaderProp
             </div>
           </div>
 
+          {/* Theme Toggle - Dark/Light mode */}
+          <ThemeToggle variant="icon" size="sm" />
+
           {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="min-h-[44px] min-w-[44px] p-2 relative"
-            aria-label="Notificações"
-          >
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-accent-primary rounded-full" />
-          </Button>
+          <NotificationBell 
+            notifications={notifications}
+            onMarkAsRead={handleMarkAsRead}
+            onViewAll={handleViewAll}
+          />
 
           {/* Date - hidden on mobile */}
           <span className="hidden lg:block text-sm text-text-muted">
@@ -89,6 +134,9 @@ export default function Header({ onMenuClick, isSidebarOpen, title }: HeaderProp
               day: 'numeric',
             })}
           </span>
+
+          {/* User Menu */}
+          <UserMenu user={user} onLogout={onLogout} />
         </div>
       </div>
     </header>

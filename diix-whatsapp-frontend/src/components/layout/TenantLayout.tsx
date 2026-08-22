@@ -18,6 +18,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import Header from './Header'
 import { Footer } from './Footer'
 import { UserMenu } from './UserMenu'
 import { ThemeSwitcher } from './ThemeSwitcher'
@@ -234,28 +235,13 @@ export default function TenantLayout() {
         className={`transition-all duration-300 ${sidebarOpen ? 'ml-72' : 'ml-0'}`}
       >
         {/* Topbar */}
-        <header className="sticky top-0 z-30 glass-panel border-b border-white/10 backdrop-blur-xl">
-          <div className="flex items-center justify-between px-6 py-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-lg hover:bg-white/5 text-text-secondary hover:text-text-primary transition-colors"
-            >
-              {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-text-muted">
-                {new Date().toLocaleDateString('pt-BR', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </span>
-              <ThemeSwitcher />
-              <UserMenu user={user} onLogout={handleLogout} />
-            </div>
-          </div>
-        </header>
+        <Header 
+          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          isSidebarOpen={sidebarOpen}
+          title="Painel do Cliente"
+          user={user}
+          onLogout={handleLogout}
+        />
 
         {/* Page Content */}
         <main className="flex flex-col min-h-screen p-6">
