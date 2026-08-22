@@ -1,5 +1,5 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card } from '../ui/Card';
+import { Card } from '@/components/ui/Card';
 
 interface ChartData {
   date: string;
