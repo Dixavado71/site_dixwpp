@@ -109,7 +109,7 @@ export function ThemeSwitcher({ align = 'right', variant = 'dropdown' }: ThemeSw
         aria-expanded={isOpen}
       >
         <Palette className="w-4 h-4" />
-        <span className="hidden sm:inline text-sm">{currentTheme.name}</span>
+        <span className="hidden sm:inline text-sm">{currentTheme?.name || 'Tema'}</span>
       </Button>
 
       <AnimatePresence>

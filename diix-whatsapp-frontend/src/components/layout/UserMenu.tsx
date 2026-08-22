@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 
 interface UserMenuProps {
   align?: 'left' | 'right';
+  user?: UserType | null;
+  onLogout?: () => void;
 }
 
 interface UserType {
@@ -18,19 +20,25 @@ interface UserType {
   avatar?: string;
 }
 
-export function UserMenu({ align = 'right' }: UserMenuProps) {
-  const { user, logout } = useAuth();
+export function UserMenu({ align = 'right', user, onLogout }: UserMenuProps) {
+  const { user: authUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
 
   useEffect(() => {
-    if (user) {
-      setCurrentUser(user as UserType);
+    // Usa o user passado como prop ou o do auth
+    const effectiveUser = user || (authUser as UserType);
+    if (effectiveUser) {
+      setCurrentUser(effectiveUser);
     }
-  }, [user]);
+  }, [user, authUser]);
 
   const handleLogout = async () => {
-    await logout();
+    if (onLogout) {
+      onLogout();
+    } else {
+      await logout();
+    }
     setIsOpen(false);
   };
 

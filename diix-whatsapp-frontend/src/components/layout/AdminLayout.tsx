@@ -15,6 +15,9 @@ import {
   DollarSign,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { Footer } from './Footer'
+import { UserMenu } from './UserMenu'
+import { ThemeSwitcher } from './ThemeSwitcher'
 
 interface User {
   id: string;
@@ -202,12 +205,14 @@ export default function AdminLayout() {
                   day: 'numeric',
                 })}
               </span>
+              <ThemeSwitcher />
+              <UserMenu user={user} onLogout={handleLogout} />
             </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="p-6">
+        <main className="flex flex-col min-h-screen p-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
@@ -219,6 +224,7 @@ export default function AdminLayout() {
               <Outlet />
             </motion.div>
           </AnimatePresence>
+          <Footer className="mt-auto" />
         </main>
       </div>
     </div>
